@@ -1,0 +1,26 @@
+//
+// Created by Alex on 11/30/2017.
+//
+
+#ifndef FINALPROJECT_LINKEDNODE_H
+#define FINALPROJECT_LINKEDNODE_H
+#ifndef LINKEDNODE_H
+#define LINKEDNODE_H
+
+#include <string>
+template <class T>
+class LinkedNode {
+
+private:
+    T item;
+    LinkedNode* next;
+
+public:
+    LinkedNode(T item);
+    LinkedNode(const LinkedNode& nodeToCopy); //only copies item, next is set to nullptr
+    T getItem();
+    LinkedNode* getNext();
+    void setItem(T newItem);
+    void setNext(LinkedNode* newNext);
+};
+#endif //FINALPROJECT_LINKEDNODE_H
