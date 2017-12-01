@@ -11,16 +11,35 @@
 class Library{
 private:
     //pointer to list of library members
-    People* memberList;
+    List<People> memberList;
     //pointer to list of books in library
-    Book* inBooks;
+    List<Book> inBooks;
     //pointer to list of books checked out
-    Book* outBooks;
+    List<Book> outBooks;
 
 public:
     /**
      * Constructor
-     * Creates a library
      */
+    Library();
+
+    /**
+     * Copy Constructor
+     * @param libraryListToCopy
+     */
+    Library(const Library& libraryListToCopy);
+
+
+    /**
+     * Copy Constructor
+     * @param libraryListToCopy
+     * @return
+     */
+    Library& operator=(const Library& libraryListToCopy);
+
+    /**
+     * Destructor
+     */
+    ~ArrayList();
 };
 #endif //FINALPROJECT_LIBRARY_H
