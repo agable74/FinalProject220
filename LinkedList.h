@@ -9,10 +9,11 @@
 #include "LinkedNode.h"
 #include "IntList.h"
 
-class LinkedList : public List{
+template <class T>
+class LinkedList : public List<T>{
 private:
-    LinkedNode* front;
-    LinkedNode* end;
+    LinkedNode<T>* front;
+    LinkedNode<T>* end;
     int numElements
     ;
 public:
@@ -21,25 +22,25 @@ public:
      * Creates an empty queue
      * O(1)
      */
-    IntLinkedList();
+    LinkedList();
 
     /**
      * Copy Constructor
      * O(N)
      */
-    IntLinkedList(const IntLinkedList& listToCopy);
+    LinkedList(const LinkedList& listToCopy);
 
     /**
      * Destructor
      * O(N)
      */
-    ~IntLinkedList();
+    ~LinkedList();
 
     /**
      * Assignment Operator
      * O(N)
      */
-    IntLinkedList& operator=(const IntLinkedList& listToCopy);
+    LinkedList& operator=(const LinkedList& listToCopy);
 
     /**
      * appends the new item to the end of the list
@@ -47,7 +48,7 @@ public:
      * @post the list has an additional value in it, at the end
      * O(1)
      */
-    void insertAtEnd(int itemToAdd);
+    void insertAtEnd(T itemToAdd);
 
     /**
      * appends the new item to the beginning of the list
@@ -56,7 +57,7 @@ public:
      *    all other items are shifted down by one index
      * O(1)
      */
-    void insertAtFront(int itemToAdd);
+    void insertAtFront(T itemToAdd);
 
     /**
      * inserts the item into the list so that it can be found with get(index)
@@ -67,7 +68,7 @@ public:
      * @throws out_of_range exception if index is invalid (< 0 or >currItemCount)
      * O(N)
      */
-    void insertAt(int itemToAdd, int index);
+    void insertAt(T itemToAdd, int index);
 
     /**
      * gets a value from the list
@@ -76,7 +77,7 @@ public:
      * @throws out_of_range exception if index is invalid
      * O(N)
      */
-    int getValueAt(int index);
+     T getValueAt(int index);
 
     /**
      * removes the item at index from the list, and returns a copy of that item
@@ -86,7 +87,7 @@ public:
      * @throws out_of_range exception if index is invalid
      * O(N)
      */
-    int removeValueAt(int index);
+    T removeValueAt(int index);
 
     /**
      * checks if there are any valid items in the list
