@@ -7,15 +7,14 @@
 
 #include <string>
 #include "LinkedNode.h"
-#include "IntList.h"
+#include "List.h"
 
 template <class T>
 class LinkedList : public List<T>{
 private:
     LinkedNode<T>* front;
     LinkedNode<T>* end;
-    int numElements
-    ;
+    int numElements;
 public:
 
     /**

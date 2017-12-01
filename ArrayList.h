@@ -5,6 +5,8 @@
 #ifndef FINALPROJECT_ARRAYLIST_H
 #define FINALPROJECT_ARRAYLIST_H
 
+#include "List.h"
+
 template <class T>
 class ArrayList : public List<T> {
 private:
@@ -136,7 +138,7 @@ public:
      * @return the index of the first occurrence of numToFind if it is present, otherwise returns -1
      * O(N)
      */
-    int find(T numToFind);
+    int find(int numToFind);
 
     /**
      * Searches an int array for a certain value
@@ -144,6 +146,6 @@ public:
      * @return the index of the last occurrence of numToFind if it is present, otherwise returns -1
      * O(N)
      */
-    int findLast(T numToFind);
+    int findLast(int numToFind);
 };
 #endif //FINALPROJECT_ARRAYLIST_H
