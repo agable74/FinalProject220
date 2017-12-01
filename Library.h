@@ -73,5 +73,13 @@ public:
      * @param bookToReturn
      */
     void returnBook(Book bookToReturn);
+
+    /**
+     * Puts a request in for book to be delivered
+     * @param desiredBook
+     */
+    void requestLoan(Book desiredBook);
+
+
 };
 #endif //FINALPROJECT_LIBRARY_H
