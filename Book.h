@@ -37,6 +37,12 @@ public:
     Book (const Book &bookToCopy);
 
     /**
+     * assignment operator
+     * @param bookToCopy
+     */
+    Book& operator=(const Book& bookToCopy);
+
+    /**
      * destructor
      */
     ~Book();
@@ -60,6 +66,11 @@ public:
      * @return number of available books
      */
     int getHaveShelf();
+    /**
+     * getter for number of books of its title total owned by library
+     * @return number of books library owns
+     */
+    int getHaveTotal();
     /**
      * change number of books of this title to reflect current number
      * @param newTotal : number of books the library -now- has of this title

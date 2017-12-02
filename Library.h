@@ -35,15 +35,14 @@ public:
      * Copy Constructor
      * @param libraryListToCopy
      */
-    Library(const Library& libraryListToCopy);
+    Library(const Library& libraryToCopy);
 
 
     /**
-     * Copy Constructor
+     * Assignment Operator
      * @param libraryListToCopy
-     * @return
      */
-    Library& operator=(const Library& libraryListToCopy);
+    Library& operator=(const Library& libraryToCopy);
 
     /**
      * Destructor
