@@ -10,6 +10,8 @@
 #include "List.h"
 #include <iostream>
 #include <fstream>
+#include "LinkedList.h"
+#include "ArrayList.h"
 
 class Library{
 private:
@@ -41,14 +43,14 @@ public:
      * @param fileToGenerate
      * @return list of books
      */
-    List<Book> generateBookList(std::ifstream fileToGenerate);
+    ArrayList<Book> generateBookList(std::ifstream& fileToGenerate);
 
     /**
      * Generates the list of library members from the file
      * @param fileToGenerate
      * @return list of members
      */
-    List<People> generatePeopleList(std::ifstream fileToGenerate);
+    List<People> generatePeopleList(std::ifstream& fileToGenerate);
 
     /**
      * Copy Constructor
@@ -122,5 +124,10 @@ public:
      */
     void bookDelivery(std::string deliveryFileName);
 
+    /**
+     * Adds book to inBooks list
+     * @param bookToAdd
+     */
+    void Library::addBook(std::string titleToAdd, int numToAdd);
 };
 #endif //FINALPROJECT_LIBRARY_H

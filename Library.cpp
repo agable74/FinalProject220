@@ -2,7 +2,7 @@
 // Created by Alex on 12/3/2017.
 //
 
-#include "Library.h
+#include "Library.h"
 
 /**
  * Constructor
@@ -31,13 +31,24 @@ Library::Library(std::string inBooksTxt, std::string allBooksTxt, std::string me
      * @param fileToGenerate
      * @return list of books
      */
-List<Book> generateBookList(std::ifstream& fileToGenerate){
+ArrayList<Book> Library::generateBookList(std::ifstream& fileToGenerate){
     List<Book> bookList;
     if(!fileToGenerate){
         std::cerr << "The file could not be opened!" << std::endl;
     }
+    std::string title;
+    std::string author;
+    std::string isbnSTR;
+    std::string numBooksSTR;
     while(fileToGenerate){
-        std::string title = fileToGenerate.get("\t");
+        getline(fileToGenerate,title);
+        getline(fileToGenerate,author);
+        getline(fileToGenerate,isbnSTR);
+        getline(fileToGenerate,numBooksSTR);
+        int isbn = std::stoi(isbnSTR);
+        int numBooks = std::stoi(numBooksSTR);
+        Book newBook = Book(title,author,isbn,numBooks);
+        allBooks.insertAtEnd(newBook);
     }
 
 }
@@ -61,12 +72,12 @@ Library::Library(const Library& libraryToCopy);
  * Assignment Operator
  * @param libraryListToCopy
  */
-Library::Library& operator=(const Library& libraryToCopy);
+Library& Library::operator=(const Library& libraryToCopy);
 
 /**
  * Destructor
  */
-Library::~Library();
+~Library();
 
 /**
  * Creates a new library member (Person) given prompts about information
@@ -81,7 +92,7 @@ bool Library::addMember();
 void Library::quit(){
     libMembersOUT.close();
     inBooksOUT.close();
-    outBooksOUT.close();
+    allBooksOUT.close();
 }
 
 /**
@@ -104,7 +115,7 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
         std::cout << "What is the ISBN number of this book?" << std::endl;
         int isbn;
         std::cin >> isbn;
-        Book newBook = new Book(titleToAdd,author,isbn,numToAdd);
+        Book newBook = Book(titleToAdd,author,isbn,numToAdd);
         allBooks.insertAtEnd(newBook);
     }
 }
