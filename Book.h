@@ -37,12 +37,6 @@ public:
     Book (const Book &bookToCopy);
 
     /**
-     * assignment operator
-     * @param bookToCopy
-     */
-    Book& operator=(const Book& bookToCopy);
-
-    /**
      * destructor
      */
     ~Book();
@@ -67,16 +61,16 @@ public:
      */
     int getHaveShelf();
     /**
-     * getter for number of books of its title total owned by library
-     * @return number of books library owns
+     * getter for number of books of its title library has
+     * @return number of total books of this title of this library
      */
     int getHaveTotal();
     /**
      * change number of books of this title to reflect current number
-     * @param newTotal : number of books the library -now- has of this title
-     * @post book's haveTotal is updated to newTotal
+     * @param change : number of title books being added / subtracted
+     * @post book's haveTotal and shelfTotal updated by amount _change_
      */
-    void setHaveTotal(int newTotal);
+    void modHaveTotal(int change);
     /**
      * decrease available number of books on shelf by 1
      * @post book's haveShelf count is decreased by 1
@@ -98,7 +92,7 @@ public:
      * @return string of the book's title, author, ISBN, and number currently available for checkout,
      * each on own separate line
      */
-    std::string printInquiry(Book* book);
+    std::string printInquiry();
 };
 
 #endif //FINALPROJECT_BOOK_H
