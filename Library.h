@@ -7,6 +7,7 @@
 
 #include "People.h"
 #include "Book.h"
+#include "List.h"
 #include <iostream>
 #include <fstream>
 
@@ -14,6 +15,9 @@ class Library{
 private:
     //pointer to list of library members
     List<People> memberList;
+    //fstream parts
+    std::ifstream libMembersIN;
+    std::ofstream libMembersOUT;
     //pointer to list of books in library
     List<Book> inBooks;
     //fstream parts
@@ -24,12 +28,13 @@ private:
     //fstream parts
     std::ifstream outBooksIN;
     std::ofstream outBooksOUT;
+    //list of people waiting for book
 
 public:
     /**
      * Constructor
      */
-    Library();
+    Library(std::string inBooksTxt, std::string outBooksTxt, std::string memberListTxt);
 
     /**
      * Copy Constructor
@@ -47,7 +52,7 @@ public:
     /**
      * Destructor
      */
-    ~ArrayList();
+    ~Library();
 
     /**
      * Creates a new library member (Person) given prompts about information
@@ -79,6 +84,29 @@ public:
      */
     void requestLoan(Book desiredBook);
 
+    /**
+     * Removes a book from the library due to loss/damage
+     * @param bookToRemove
+     */
+    void removeBook(Book bookToRemove);
+
+    /**
+     * Prints a summary of all available commands
+     */
+    void libraryHelp();
+
+    /**
+     * Print all information for the book
+     * @param bookToInquire
+     */
+    void inquireAboutBook(Book bookToInquire);
+
+    /**
+     * Performs a delivery, increasing haveTotal and haveShelf for already owned books
+     * adds books to library which aren't already there
+     * @param deliveryFileName
+     */
+    void bookDelivery(std::string deliveryFileName);
 
 };
 #endif //FINALPROJECT_LIBRARY_H
