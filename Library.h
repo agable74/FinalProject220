@@ -24,10 +24,10 @@ private:
     std::ifstream inBooksIN;
     std::ofstream inBooksOUT;
     //pointer to list of books checked out
-    List<Book> outBooks;
+    List<Book> allBooks;
     //fstream parts
-    std::ifstream outBooksIN;
-    std::ofstream outBooksOUT;
+    std::ifstream allBooksIN;
+    std::ofstream allBooksOUT;
     //list of people waiting for book
 
 public:
@@ -35,6 +35,20 @@ public:
      * Constructor
      */
     Library(std::string inBooksTxt, std::string outBooksTxt, std::string memberListTxt);
+
+    /**
+     * Generates the list of books from the file
+     * @param fileToGenerate
+     * @return list of books
+     */
+    List<Book> generateBookList(std::ifstream fileToGenerate);
+
+    /**
+     * Generates the list of library members from the file
+     * @param fileToGenerate
+     * @return list of members
+     */
+    List<People> generatePeopleList(std::ifstream fileToGenerate);
 
     /**
      * Copy Constructor

@@ -7,7 +7,7 @@
 /**
  * Constructor
  */
-Library::Library(std::string inBooksTxt, std::string outBooksTxt, std::string memberListTxt){
+Library::Library(std::string inBooksTxt, std::string allBooksTxt, std::string memberListTxt){
     //pointer to list of library members
     memberList;
     //fstream parts
@@ -19,12 +19,30 @@ Library::Library(std::string inBooksTxt, std::string outBooksTxt, std::string me
     inBooksIN = std::ifstream(inBooksTxt);
     inBooksOUT = std::ofstream(inBooksTxt);
     //pointer to list of books checked out
-    outBooks;
+    allBooks;
     //fstream parts
-    outBooksIN = std::ifstream(outBooksTxt);
-    outBooksOUT = std::ofstream(outBooksTxt);
+    allBooksIN = std::ifstream(allBooksTxt);
+    allBooksOUT = std::ofstream(allBooksTxt);
     //list of people waiting for book
 }
+
+/**
+     * Generates the list of books from the file
+     * @param fileToGenerate
+     * @return list of books
+     */
+List<Book> generateBookList(std::ifstream fileToGenerate){
+    List<Book> bookList;
+
+}
+
+/**
+ * Generates the list of library members from the file
+ * @param fileToGenerate
+ * @return list of members
+ */
+List<People> generatePeopleList(std::ifstream fileToGenerate);
+
 
 /**
  * Copy Constructor
@@ -54,13 +72,36 @@ bool Library::addMember();
 /**
  * Save the inventory and wait lists in a file and terminate execution.
  */
-void Library::quit();
+void Library::quit(){
+    libMembersOUT.close();
+    inBooksOUT.close();
+    outBooksOUT.close();
+}
 
 /**
  * Adds book to inBooks list
  * @param bookToAdd
  */
-void Library::addBook(Book bookToAdd);
+void Library::addBook(std::string titleToAdd, int numToAdd){
+    //looks in book list to see if it exists
+    bool inList = false;
+    for(int i = 0; i < allBooks.itemCount(); i++){
+        if(allBooks.getValueAt(i).getTitle() == titleToAdd){
+            inList = true;
+            allBooks.getValueAt(i).modHaveTotal(numToAdd);
+        }
+    }
+    if(!inList){
+        std::cout << "Who is the author of this book?" << std::endl;
+        std::string author;
+        std::cin >> author;
+        std::cout << "What is the ISBN number of this book?" << std::endl;
+        int isbn;
+        std::cin >> isbn;
+        Book newBook = new Book(titleToAdd,author,isbn,numToAdd);
+        allBooks.insertAtEnd(newBook);
+    }
+}
 
 /**
  * Moves a book from the outBooks list to the inBooks list
