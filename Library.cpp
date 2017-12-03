@@ -31,8 +31,14 @@ Library::Library(std::string inBooksTxt, std::string allBooksTxt, std::string me
      * @param fileToGenerate
      * @return list of books
      */
-List<Book> generateBookList(std::ifstream fileToGenerate){
+List<Book> generateBookList(std::ifstream& fileToGenerate){
     List<Book> bookList;
+    if(!fileToGenerate){
+        std::cerr << "The file could not be opened!" << std::endl;
+    }
+    while(fileToGenerate){
+        std::string title = fileToGenerate.get("\t");
+    }
 
 }
 
@@ -41,7 +47,7 @@ List<Book> generateBookList(std::ifstream fileToGenerate){
  * @param fileToGenerate
  * @return list of members
  */
-List<People> generatePeopleList(std::ifstream fileToGenerate);
+List<People> generatePeopleList(std::ifstream& fileToGenerate);
 
 
 /**
