@@ -23,4 +23,6 @@ public:
     void setItem(T newItem);
     void setNext(LinkedNode* newNext);
 };
+
+#include "LinkedNode.inl"
 #endif //FINALPROJECT_LINKEDNODE_H

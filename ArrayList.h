@@ -123,29 +123,7 @@ public:
      * O(N)
      */
     std::string toString();
-
-    /**
-     * finds the largest value in the array
-     * @post numLinesRun is updated to include lines run by this function
-     * @return the first index of the maximum value, or -1 if size < 1
-     * O(N)
-     */
-    int findMaxIndex();
-
-    /**
-     * Searches an int array for a certain value
-     * @post numLinesRun is updated to include lines run by this function
-     * @return the index of the first occurrence of numToFind if it is present, otherwise returns -1
-     * O(N)
-     */
-    int find(int numToFind);
-
-    /**
-     * Searches an int array for a certain value
-     * @post numLinesRun is updated to include lines run by this function
-     * @return the index of the last occurrence of numToFind if it is present, otherwise returns -1
-     * O(N)
-     */
-    int findLast(int numToFind);
 };
+
+#include "ArrayList.inl"
 #endif //FINALPROJECT_ARRAYLIST_H

@@ -76,24 +76,6 @@ public:
      * {1, 2, 3, 4, 5}
      */
     virtual std::string toString()=0;
-
-    /**
-     * finds the largest value in the array
-     * @return the first index of the maximum value, or -1 if size < 1
-     */
-    virtual int findMaxIndex()=0;
-
-    /**
-     * Searches an int array for a certain value
-     * @return the index of the first occurrence of numToFind if it is present, otherwise returns -1
-     */
-    virtual int find(int numToFind)=0;
-
-    /**
-     * Searches an int array for a certain value
-     * @return the index of the last occurrence of numToFind if it is present, otherwise returns -1
-     */
-    virtual int findLast(int numToFind)=0;
 };
 
 #endif //FINALPROJECT_LIST_H
