@@ -182,40 +182,6 @@ void ArrayList<T>::clearList(){
 }
 
 
-template <class T>
-std::string ArrayList<Book>::toString(const Book* const arrayPtr, const int size, const std::string stringSoFar) {
-    //base case
-    if(size < 1){
-        return stringSoFar;
-    }else {
-        std::string newString;
-        //if last element in the array, then don't add an additional comma+space
-        if (size == 1) {
-            std::string addString = *arrayPtr->toString();
-            newString = stringSoFar + addString;
-        }
-            //add a comma+space
-        else {
-            std::string addString = *arrayPtr->toString() + ", ";
-            newString = stringSoFar + addString;
-        }
-        //recursive call
-        std::string buildString = toString(arrayPtr + 1, size - 1, newString);
-        return buildString;
-    }
-}
-//main toString function (stub)
-template <class T>
-std::string ArrayList<T>::toString(const T* const arrayPtr, const int size){
-    //return empty set if size 0
-    if(size < 1){
-        return "{}";
-    }
-        //builds the string between the two curly braces
-    else{
-        return "{" + toString(arrayPtr,size,"") + "}";
-    }
-}
 
 /**
  * gives a string representation of the current list
@@ -224,5 +190,53 @@ std::string ArrayList<T>::toString(const T* const arrayPtr, const int size){
  */
 template <class T>
 std::string ArrayList<T>::toString(){
-    return toString(array,currItemCount);
+        std::string arrayString = "{";
+        std::string newString = "";
+        for(int i = 0; i < currItemCount; i++){
+            newString = array->toString();
+            arrayString += newString;
+            if(currItemCount > 1 && currItemCount < currItemCount - 1){
+                arrayString += ", ";
+            }
+        }
+        arrayString += "}";
+        return arrayString;
 }
+
+
+//template <class T>
+//std::string ArrayList<T>::toString(const People* const arrayPtr, const int size, const std::string stringSoFar) {
+//    //base case
+//    if(size < 1){
+//        return stringSoFar;
+//    }else {
+//        std::string newString;
+//        //if last element in the array, then don't add an additional comma+space
+//        if (size == 1) {
+//            std::string addString = *arrayPtr->toString();
+//            newString = stringSoFar + addString;
+//        }
+//            //add a comma+space
+//        else {
+//            std::string addString = *arrayPtr->toString() + ", ";
+//            newString = stringSoFar + addString;
+//        }
+//        //recursive call
+//        std::string buildString = toString(arrayPtr + 1, size - 1, newString);
+//        return buildString;
+//    }
+//}
+////main toString function (stub)
+//template <class T>
+//std::string ArrayList<T>::toString(const People* const arrayPtr, const int size){
+//    //return empty set if size 0
+//    if(size < 1){
+//        return "{}";
+//    }
+//        //builds the string between the two curly braces
+//    else{
+//        return "{" + toString(arrayPtr,size,"") + "}";
+//    }
+//}
+//
+//

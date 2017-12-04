@@ -22,9 +22,8 @@
         wantValue = bookToCopy.wantValue;
     }
 
-    //Book::~Book() {
-    //    delete;
-    //}
+    Book::~Book() {
+    }
 
     std::string Book::getTitle() {
         return title;

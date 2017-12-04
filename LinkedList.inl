@@ -260,8 +260,8 @@ std::string LinkedList<T>::toString(){
     if(front != nullptr) {
         LinkedNode<T> *currentSpot = front;
         for (int i = 0; i < numElements; i++) {
-            int listItem = currentSpot->getItem();
-            stringToReturn += toString(listItem);
+            T listItem = currentSpot->getItem();
+            stringToReturn += listItem.toString();
             if (i != numElements - 1) {
                 stringToReturn += ", ";
             }

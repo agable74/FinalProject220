@@ -16,7 +16,7 @@
 class Library{
 private:
     //pointer to list of library members
-    ArrayList<People> memberList;
+    //ArrayList<People> memberList;
     //fstream parts
     std::ifstream libMembersIN;
     std::ofstream libMembersOUT;
@@ -50,7 +50,7 @@ public:
      * @param fileToGenerate
      * @return list of members
      */
-    ArrayList<People> generatePeopleList(std::ifstream& fileToGenerate);
+    //ArrayList<People> generatePeopleList(std::ifstream& fileToGenerate);
 
     /**
      * Copy Constructor
@@ -83,10 +83,11 @@ public:
     void quit();
 
     /**
-     * Adds book to inBooks list
-     * @param bookToAdd
+     * adds a book to allBooks
+     * @param titleToAdd
+     * @param numToAdd
      */
-    void addBook(Book bookToAdd);
+    void addBook(std::string titleToAdd, int numToAdd);
 
     /**
      * Moves a book from the outBooks list to the inBooks list
@@ -124,10 +125,6 @@ public:
      */
     void bookDelivery(std::string deliveryFileName);
 
-    /**
-     * Adds book to inBooks list
-     * @param bookToAdd
-     */
-    void addBook(std::string titleToAdd, int numToAdd);
+
 };
 #endif //FINALPROJECT_LIBRARY_H

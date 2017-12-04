@@ -9,7 +9,7 @@
  */
 Library::Library(std::string inBooksTxt, std::string allBooksTxt, std::string memberListTxt){
     //pointer to list of library members
-    memberList;
+    //memberList;
     //fstream parts
     libMembersIN = std::ifstream(memberListTxt);
     libMembersOUT = std::ofstream(memberListTxt);
@@ -58,7 +58,7 @@ ArrayList<Book> Library::generateBookList(std::ifstream& fileToGenerate){
  * @param fileToGenerate
  * @return list of members
  */
-ArrayList<People> generatePeopleList(std::ifstream& fileToGenerate);
+//ArrayList<People> generatePeopleList(std::ifstream& fileToGenerate);
 
 
 /**
