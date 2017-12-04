@@ -93,19 +93,19 @@ public:
      * Moves a book from the outBooks list to the inBooks list
      * @param bookToReturn
      */
-    void returnBook(Book bookToReturn);
+    void returnBook(std::string titleToReturn);
 
     /**
      * Puts a request in for book to be delivered
      * @param desiredBook
      */
-    void requestLoan(Book desiredBook);
+    void requestLoan(std::string desiredBookTitle);
 
     /**
      * Removes a book from the library due to loss/damage
      * @param bookToRemove
      */
-    void removeBook(Book bookToRemove);
+    void removeBook(std::string bookToRemove, int numRemove);
 
     /**
      * Prints a summary of all available commands

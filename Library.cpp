@@ -139,24 +139,58 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
  * Moves a book from the outBooks list to the inBooks list
  * @param bookToReturn
  */
-void Library::returnBook(Book bookToReturn){
-
+void Library::returnBook(std::string titleToReturn){
+    bool inList = false;
+    for(int i = 0; i < allBooks.itemCount(); i++){
+        if(allBooks.getValueAt(i)->getTitle() == titleToReturn){
+            inList = true;
+            allBooks.getValueAt(i)->checkBookIn();
+        }
+    }
+    if(!inList){
+        std::cout << "That book does not belong to this library." << std::endl;
+    }
 }
 
 /**
  * Puts a request in for book to be delivered
  * @param desiredBook
  */
-void Library::requestLoan(Book desiredBook){
-
+void Library::requestLoan(std::string desiredBookTitle){
+//    bool inList = false;
+//    for(int i = 0; i < allBooks.itemCount(); i++){
+//        if(allBooks.getValueAt(i)->getTitle() == desiredBookTitle){
+//            inList = true;
+//            allBooks.getValueAt(i)->modHaveTotal(numToAdd);
+//        }
+//    }
+//    if(!inList){
+//        std::cout << "Who is the author of this book?" << std::endl;
+//        std::string author;
+//        std::cin >> author;
+//        std::cout << "What is the ISBN number of this book?" << std::endl;
+//        int isbn;
+//        std::cin >> isbn;
+//        Book* newBook = new Book(titleToAdd,author,isbn,numToAdd);
+//        allBooks.insertAtEnd(newBook);
+//    }
 }
 
 /**
  * Removes a book from the library due to loss/damage
  * @param bookToRemove
  */
-void Library::removeBook(Book bookToRemove){
-
+void Library::removeBook(std::string bookToRemove, int numRemove){
+    bool inList = false;
+    for(int i = 0; i < allBooks.itemCount(); i++){
+        if(allBooks.getValueAt(i)->getTitle() == bookToRemove){
+            inList = true;
+            allBooks.getValueAt(i)->modHaveTotal(numRemove);
+        }
+    }
+    if(!inList){
+        std::cout << "That book does not belong to this library." << std::endl;
+    }
 }
 
 /**
