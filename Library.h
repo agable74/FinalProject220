@@ -16,17 +16,17 @@
 class Library{
 private:
     //pointer to list of library members
-    //ArrayList<People> memberList;
+    //ArrayList<People*> memberList;
     //fstream parts
     std::ifstream libMembersIN;
     std::ofstream libMembersOUT;
     //pointer to list of books in library
-    ArrayList<Book> inBooks;
+    ArrayList<Book*> inBooks;
     //fstream parts
     std::ifstream inBooksIN;
     std::ofstream inBooksOUT;
     //pointer to list of books checked out
-    ArrayList<Book> allBooks;
+    ArrayList<Book*> allBooks;
     //fstream parts
     std::ifstream allBooksIN;
     std::ofstream allBooksOUT;
@@ -43,7 +43,7 @@ public:
      * @param fileToGenerate
      * @return list of books
      */
-    ArrayList<Book> generateAllBookList();
+    ArrayList<Book*> generateAllBookList();
 
     /**
      * Generates the list of library members from the file

@@ -32,8 +32,8 @@ Library::Library(const std::string& inBooksTxtIN,const std::string& inBooksTxtOU
      * @param fileToGenerate
      * @return list of books
      */
-ArrayList<Book> Library::generateAllBookList(){
-    ArrayList<Book> bookList;
+ArrayList<Book*> Library::generateAllBookList(){
+    ArrayList<Book*> bookList;
     if(!allBooksIN){
         std::cerr << "The file could not be opened!" << std::endl;
     }
@@ -47,10 +47,14 @@ ArrayList<Book> Library::generateAllBookList(){
             getline(allBooksIN, author);
             getline(allBooksIN, isbnSTR);
             getline(allBooksIN, numBooksSTR);
-            int isbn = std::stoi(isbnSTR);
+            if (!title.empty() && title[title.size() - 1] == '\r') {
+            title.erase(title.size() - 1);
+            }if (!author.empty() && author[author.size() - 1] == '\r') {
+                author.erase(author.size() - 1);
+            }int isbn = std::stoi(isbnSTR);
             int numBooks = std::stoi(numBooksSTR);
-            Book newBook = Book(title, author, isbn, numBooks);
-            std::cout << newBook.bookInquiry() << std::endl;
+            Book* newBook = new Book(title, author, isbn, numBooks);
+            std::cout << newBook->bookInquiry() << std::endl;
             allBooks.insertAtEnd(newBook);
         }
     }
@@ -114,9 +118,9 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
     //looks in book list to see if it exists
     bool inList = false;
     for(int i = 0; i < allBooks.itemCount(); i++){
-        if(allBooks.getValueAt(i).getTitle() == titleToAdd){
+        if(allBooks.getValueAt(i)->getTitle() == titleToAdd){
             inList = true;
-            allBooks.getValueAt(i).modHaveTotal(numToAdd);
+            allBooks.getValueAt(i)->modHaveTotal(numToAdd);
         }
     }
     if(!inList){
@@ -126,7 +130,7 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
         std::cout << "What is the ISBN number of this book?" << std::endl;
         int isbn;
         std::cin >> isbn;
-        Book newBook = Book(titleToAdd,author,isbn,numToAdd);
+        Book* newBook = new Book(titleToAdd,author,isbn,numToAdd);
         allBooks.insertAtEnd(newBook);
     }
 }
