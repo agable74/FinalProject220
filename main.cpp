@@ -27,5 +27,12 @@ int main() {
 //    inf.close();
     Library testLib = Library("TestIO.txt","TestIO.txt","TestAllBooksIN.txt","TestAllBooksOUT.txt","TestMembers.txt");
     testLib.printAllOwnedBooks();
+    Book testBook = Book("Lord of the Flies","William Golding",055235,6);
+    testLib.addBook(testBook);
+    testLib.printAllOwnedBooks();
+    testLib.checkOutBook("Lord of the Flies");
+    testLib.printAllOwnedBooks();
+    testLib.returnBook("Lord of the Flies");
+    testLib.printAllOwnedBooks();
     return 0;
 }

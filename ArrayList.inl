@@ -193,7 +193,6 @@ std::string ArrayList<T>::toString(){
     this;
     std::string arrayString = "{";
     std::string newString = "";
-    std::cout << currItemCount << std::endl;
     for(int i = 0; i < currItemCount; i++){
         newString = array[i]->bookInquiry();
         arrayString += newString;

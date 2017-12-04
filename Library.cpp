@@ -54,10 +54,20 @@ ArrayList<Book*> Library::generateAllBookList(){
             }int isbn = std::stoi(isbnSTR);
             int numBooks = std::stoi(numBooksSTR);
             Book* newBook = new Book(title, author, isbn, numBooks);
-            std::cout << newBook->bookInquiry() << std::endl;
-            allBooks.insertAtEnd(newBook);
+            bool inList = false;
+            for(int i = 0; i < allBooks.itemCount(); i++){
+                if(allBooks.getValueAt(i)->getTitle() == newBook->getTitle()){
+                    inList = true;
+                    allBooks.getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
+                }
+            }
+            if(!inList) {
+                bookList.insertAtEnd(newBook);
+            }
+            int num = allBooks.itemCount();
         }
     }
+    return bookList;
 }
 
 /**
@@ -135,6 +145,10 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
     }
 }
 
+void Library::addBook(Book bookToAdd){
+    allBooks.insertAtEnd(&bookToAdd);
+}
+
 /**
  * Moves a book from the outBooks list to the inBooks list
  * @param bookToReturn
@@ -203,8 +217,17 @@ void Library::libraryHelp(){}
  * Print all information for the book
  * @param bookToInquire
  */
-void Library::inquireAboutBook(Book bookToInquire){
-
+void Library::inquireAboutBook(std::string bookToInquire){
+    bool inList = false;
+    for(int i = 0; i < allBooks.itemCount(); i++){
+        if(allBooks.getValueAt(i)->getTitle() == bookToInquire){
+            inList = true;
+            std::cout << allBooks.getValueAt(i)->bookInquiry() << std::endl;
+        }
+    }
+    if(!inList){
+        std::cout << "That book does not belong to this library." << std::endl;
+    }
 }
 
 
@@ -219,4 +242,17 @@ void Library::bookDelivery(std::string deliveryFileName){
 
 void Library::printAllOwnedBooks(){
     std::cout << allBooks.toString() << std::endl;
+}
+
+void Library::checkOutBook(std::string bookToCheckOut){
+    bool inList = false;
+    for(int i = 0; i < allBooks.itemCount(); i++){
+        if(allBooks.getValueAt(i)->getTitle() == bookToCheckOut){
+            inList = true;
+            allBooks.getValueAt(i)->checkBookOut();
+        }
+    }
+    if(!inList){
+        std::cout << "That book does not belong to this library." << std::endl;
+    }
 }

@@ -89,6 +89,8 @@ public:
      */
     void addBook(std::string titleToAdd, int numToAdd);
 
+    void addBook(Book bookToAdd);
+
     /**
      * Moves a book from the outBooks list to the inBooks list
      * @param bookToReturn
@@ -116,7 +118,7 @@ public:
      * Print all information for the book
      * @param bookToInquire
      */
-    void inquireAboutBook(Book bookToInquire);
+    void inquireAboutBook(std::string bookToInquire);
 
     /**
      * Performs a delivery, increasing haveTotal and haveShelf for already owned books
@@ -126,6 +128,8 @@ public:
     void bookDelivery(std::string deliveryFileName);
 
     void printAllOwnedBooks();
+
+    void checkOutBook(std::string bookToCheckOut);
 
 
 };
