@@ -190,17 +190,19 @@ void ArrayList<T>::clearList(){
  */
 template <class T>
 std::string ArrayList<T>::toString(){
-        std::string arrayString = "{";
-        std::string newString = "";
-        for(int i = 0; i < currItemCount; i++){
-            newString = array->toString();
-            arrayString += newString;
-            if(currItemCount > 1 && currItemCount < currItemCount - 1){
-                arrayString += ", ";
-            }
+    this;
+    std::string arrayString = "{";
+    std::string newString = "";
+    std::cout << currItemCount << std::endl;
+    for(int i = 0; i < currItemCount; i++){
+        newString = array[i].bookInquiry();
+        arrayString += newString;
+        if(currItemCount > 1 && currItemCount < currItemCount - 1){
+            arrayString += ", ";
         }
-        arrayString += "}";
-        return arrayString;
+    }
+    arrayString += "}";
+    return arrayString;
 }
 
 

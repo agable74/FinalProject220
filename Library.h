@@ -36,14 +36,14 @@ public:
     /**
      * Constructor
      */
-    Library(std::string inBooksTxt, std::string outBooksTxt, std::string memberListTxt);
+    Library(const std::string& inBooksTxtIN,const std::string& inBooksTxtOUT,const std::string& allBooksTxtIN,const std::string& allBooksTxtOUT,const std::string& memberListTxt);
 
     /**
      * Generates the list of books from the file
      * @param fileToGenerate
      * @return list of books
      */
-    ArrayList<Book> generateBookList(std::ifstream& fileToGenerate);
+    ArrayList<Book> generateAllBookList();
 
     /**
      * Generates the list of library members from the file
@@ -124,6 +124,8 @@ public:
      * @param deliveryFileName
      */
     void bookDelivery(std::string deliveryFileName);
+
+    void printAllOwnedBooks();
 
 
 };

@@ -92,7 +92,7 @@ public:
      * @return string of the book's title, author, ISBN, and number currently available for checkout,
      * each on own separate line
      */
-    std::string toString();
+    std::string bookInquiry();
 };
 
 #endif //FINALPROJECT_BOOK_H

@@ -7,22 +7,23 @@
 /**
  * Constructor
  */
-Library::Library(std::string inBooksTxt, std::string allBooksTxt, std::string memberListTxt){
+Library::Library(const std::string& inBooksTxtIN,const std::string& inBooksTxtOUT,const std::string& allBooksTxtIN,const std::string& allBooksTxtOUT,const std::string& memberListTxt){
     //pointer to list of library members
     //memberList;
     //fstream parts
     libMembersIN = std::ifstream(memberListTxt);
     libMembersOUT = std::ofstream(memberListTxt);
+
+    //fstream parts
+    inBooksIN.open(inBooksTxtIN);
+    inBooksOUT.open(inBooksTxtOUT);
     //pointer to list of books in library
-    inBooks;
+    //inBooks = generateAllBookList();
     //fstream parts
-    inBooksIN = std::ifstream(inBooksTxt);
-    inBooksOUT = std::ofstream(inBooksTxt);
+    allBooksIN.open(allBooksTxtIN);
+    allBooksOUT.open(allBooksTxtOUT);
     //pointer to list of books checked out
-    allBooks;
-    //fstream parts
-    allBooksIN = std::ifstream(allBooksTxt);
-    allBooksOUT = std::ofstream(allBooksTxt);
+    allBooks = generateAllBookList();
     //list of people waiting for book
 }
 
@@ -31,26 +32,28 @@ Library::Library(std::string inBooksTxt, std::string allBooksTxt, std::string me
      * @param fileToGenerate
      * @return list of books
      */
-ArrayList<Book> Library::generateBookList(std::ifstream& fileToGenerate){
+ArrayList<Book> Library::generateAllBookList(){
     ArrayList<Book> bookList;
-    if(!fileToGenerate){
+    if(!allBooksIN){
         std::cerr << "The file could not be opened!" << std::endl;
     }
-    std::string title;
-    std::string author;
-    std::string isbnSTR;
-    std::string numBooksSTR;
-    while(fileToGenerate){
-        getline(fileToGenerate,title);
-        getline(fileToGenerate,author);
-        getline(fileToGenerate,isbnSTR);
-        getline(fileToGenerate,numBooksSTR);
-        int isbn = std::stoi(isbnSTR);
-        int numBooks = std::stoi(numBooksSTR);
-        Book newBook = Book(title,author,isbn,numBooks);
-        allBooks.insertAtEnd(newBook);
+    else {
+        std::string title;
+        std::string author;
+        std::string isbnSTR;
+        std::string numBooksSTR;
+        while (allBooksIN) {
+            getline(allBooksIN, title);
+            getline(allBooksIN, author);
+            getline(allBooksIN, isbnSTR);
+            getline(allBooksIN, numBooksSTR);
+            int isbn = std::stoi(isbnSTR);
+            int numBooks = std::stoi(numBooksSTR);
+            Book newBook = Book(title, author, isbn, numBooks);
+            std::cout << newBook.bookInquiry() << std::endl;
+            allBooks.insertAtEnd(newBook);
+        }
     }
-
 }
 
 /**
@@ -174,4 +177,8 @@ void Library::inquireAboutBook(Book bookToInquire){
  */
 void Library::bookDelivery(std::string deliveryFileName){
 
+}
+
+void Library::printAllOwnedBooks(){
+    std::cout << allBooks.toString() << std::endl;
 }
