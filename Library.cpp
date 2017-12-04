@@ -19,8 +19,10 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& allBooksTxt
     allBooksIN.open(allBooksTxtIN);
     allBooksOUT.open(allBooksTxtOUT);
     //pointer to list of books checked out
-    allBooks = generateAllBookList();
-    inBooks = generateShelfBookList();
+    allBooks = new ArrayList<Book*>;
+    inBooks = new ArrayList<Book*>;
+    generateAllBookList();
+    generateShelfBookList();
     //list of people waiting for book
 }
 
@@ -29,8 +31,7 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& allBooksTxt
      * @param fileToGenerate
      * @return list of books
      */
-ArrayList<Book*> Library::generateAllBookList(){
-    ArrayList<Book*> bookList;
+void Library::generateAllBookList(){
     if(!allBooksIN){
         std::cerr << "The file could not be opened!" << std::endl;
     }
@@ -45,40 +46,38 @@ ArrayList<Book*> Library::generateAllBookList(){
             getline(allBooksIN, isbnSTR);
             getline(allBooksIN, numBooksSTR);
             if (!title.empty() && title[title.size() - 1] == '\r') {
-            title.erase(title.size() - 1);
-            }if (!author.empty() && author[author.size() - 1] == '\r') {
+                title.erase(title.size() - 1);
+            }
+            if (!author.empty() && author[author.size() - 1] == '\r') {
                 author.erase(author.size() - 1);
-            }int isbn = std::stoi(isbnSTR);
+            }
+            int isbn = std::stoi(isbnSTR);
             int numBooks = std::stoi(numBooksSTR);
-            Book* newBook = new Book(title, author, isbn, numBooks);
+            Book *newBook = new Book(title, author, isbn, numBooks);
             bool inList = false;
-            for(int i = 0; i < allBooks.itemCount(); i++){
-                if(allBooks.getValueAt(i)->getTitle() == newBook->getTitle()){
+            for (int i = 0; i < allBooks->itemCount(); i++) {
+                if (allBooks->getValueAt(i)->getTitle() == newBook->getTitle()) {
                     inList = true;
-                    allBooks.getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
+                    allBooks->getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
                 }
             }
-            if(!inList) {
-                bookList.insertAtEnd(newBook);
+            if (!inList) {
+                allBooks->insertAtEnd(newBook);
             }
-            int num = allBooks.itemCount();
         }
     }
-    return bookList;
 }
 
     /**
     * Generates the list of books on the shelf from allBooks list
     * @return list of shelf books
     */
-ArrayList<Book*> Library::generateShelfBookList(){
-    ArrayList<Book*> bookList;
-    for(int i=0; i<allBooks.itemCount();i++){
-        if(allBooks.getValueAt(i)->getHaveTotal()>0){
-            bookList.insertAtEnd(allBooks.getValueAt(i));
+void Library::generateShelfBookList(){
+    for(int i=0; i<allBooks->itemCount();i++){
+        if(allBooks->getValueAt(i)->getHaveTotal()>0){
+            inBooks->insertAtEnd(allBooks->getValueAt(i));
             }
         }
-    return bookList;
 }
 
 /**
@@ -138,10 +137,10 @@ void Library::quit(){
 void Library::addBook(std::string titleToAdd, int numToAdd){
     //looks in book list to see if it exists
     bool inList = false;
-    for(int i = 0; i < allBooks.itemCount(); i++){
-        if(allBooks.getValueAt(i)->getTitle() == titleToAdd){
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        if(allBooks->getValueAt(i)->getTitle() == titleToAdd){
             inList = true;
-            allBooks.getValueAt(i)->modHaveTotal(numToAdd);
+            allBooks->getValueAt(i)->modHaveTotal(numToAdd);
         }
     }
     if(!inList){
@@ -152,12 +151,12 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
         int isbn;
         std::cin >> isbn;
         Book* newBook = new Book(titleToAdd,author,isbn,numToAdd);
-        allBooks.insertAtEnd(newBook);
+        allBooks->insertAtEnd(newBook);
     }
 }
 
 void Library::addBook(Book bookToAdd){
-    allBooks.insertAtEnd(&bookToAdd);
+    allBooks->insertAtEnd(&bookToAdd);
 }
 
 /**
@@ -166,10 +165,10 @@ void Library::addBook(Book bookToAdd){
  */
 void Library::returnBook(std::string titleToReturn){
     bool inList = false;
-    for(int i = 0; i < allBooks.itemCount(); i++){
-        if(allBooks.getValueAt(i)->getTitle() == titleToReturn){
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        if(allBooks->getValueAt(i)->getTitle() == titleToReturn){
             inList = true;
-            allBooks.getValueAt(i)->checkBookIn();
+            allBooks->getValueAt(i)->checkBookIn();
         }
     }
     if(!inList){
@@ -207,10 +206,10 @@ void Library::requestLoan(std::string desiredBookTitle){
  */
 void Library::removeBook(std::string bookToRemove, int numRemove){
     bool inList = false;
-    for(int i = 0; i < allBooks.itemCount(); i++){
-        if(allBooks.getValueAt(i)->getTitle() == bookToRemove){
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        if(allBooks->getValueAt(i)->getTitle() == bookToRemove){
             inList = true;
-            allBooks.getValueAt(i)->modHaveTotal(numRemove);
+            allBooks->getValueAt(i)->modHaveTotal(numRemove);
         }
     }
     if(!inList){
@@ -230,10 +229,10 @@ void Library::libraryHelp(){}
  */
 void Library::inquireAboutBook(std::string bookToInquire){
     bool inList = false;
-    for(int i = 0; i < allBooks.itemCount(); i++){
-        if(allBooks.getValueAt(i)->getTitle() == bookToInquire){
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        if(allBooks->getValueAt(i)->getTitle() == bookToInquire){
             inList = true;
-            std::cout << allBooks.getValueAt(i)->bookInquiry() << std::endl;
+            std::cout << allBooks->getValueAt(i)->bookInquiry() << std::endl;
         }
     }
     if(!inList){
@@ -252,15 +251,15 @@ void Library::bookDelivery(std::string deliveryFileName){
 }
 
 void Library::printAllOwnedBooks(){
-    std::cout << allBooks.toString() << std::endl;
+    std::cout << allBooks->toString() << std::endl;
 }
 
 void Library::checkOutBook(std::string bookToCheckOut){
     bool inList = false;
-    for(int i = 0; i < allBooks.itemCount(); i++){
-        if(allBooks.getValueAt(i)->getTitle() == bookToCheckOut){
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        if(allBooks->getValueAt(i)->getTitle() == bookToCheckOut){
             inList = true;
-            allBooks.getValueAt(i)->checkBookOut();
+            allBooks->getValueAt(i)->checkBookOut();
         }
     }
     if(!inList){
