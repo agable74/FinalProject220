@@ -20,16 +20,13 @@ private:
     //fstream parts
     std::ifstream libMembersIN;
     std::ofstream libMembersOUT;
-    //pointer to list of books in library
-    List<Book*>* inBooks;
-    //fstream parts
-    std::ifstream inBooksIN;
-    std::ofstream inBooksOUT;
-    //pointer to list of books checked out
+    //pointer to list of books owned by library
     List<Book*>* allBooks;
     //fstream parts
     std::ifstream allBooksIN;
     std::ofstream allBooksOUT;
+    //pointer to list of books in library
+    List<Book*>* shelfBooks;
     //list of people waiting for book
 
 public:

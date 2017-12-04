@@ -13,15 +13,15 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& allBooksTxt
     //fstream parts
     libMembersIN = std::ifstream(memberListTxt);
     libMembersOUT = std::ofstream(memberListTxt);
-
-
     //fstream parts
     allBooksIN.open(allBooksTxtIN);
     allBooksOUT.open(allBooksTxtOUT);
     //pointer to list of books checked out
     allBooks = new ArrayList<Book*>;
-    inBooks = new ArrayList<Book*>;
+    shelfBooks = new ArrayList<Book*>;
+    //generate the list from text file
     generateAllBookList();
+    //generate shelf from allBooks
     generateShelfBookList();
     //list of people waiting for book
 }
@@ -75,7 +75,7 @@ void Library::generateAllBookList(){
 void Library::generateShelfBookList(){
     for(int i=0; i<allBooks->itemCount();i++){
         if(allBooks->getValueAt(i)->getHaveTotal()>0){
-            inBooks->insertAtEnd(allBooks->getValueAt(i));
+            shelfBooks->insertAtEnd(allBooks->getValueAt(i));
             }
         }
 }
@@ -126,7 +126,6 @@ bool Library::addMember(){
  */
 void Library::quit(){
     libMembersOUT.close();
-    inBooksOUT.close();
     allBooksOUT.close();
 }
 
