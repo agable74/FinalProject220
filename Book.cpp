@@ -74,7 +74,7 @@
             std::cout << "\nCan't remove a book we don't have!\n";
     }
 
-    std::string Book::printInquiry() {
+    std::string Book::toString() {
         std::string printedInq;
         printedInq = "\nTitle: \t" + getTitle() + "\nAuthor:\t" + getAuthor();
         printedInq += "\nISBN: \t" + std::to_string(getIsbn());

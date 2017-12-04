@@ -3,9 +3,9 @@
 //
 
 template <class T>
-void ArrayList::doubleCapacity(){
+void ArrayList<T>::doubleCapacity(){
     currCapacity = 2 * currCapacity;
-    int* newArray = new T[currCapacity];
+    T* newArray = new T[currCapacity];
     for(int i = 0; i < currItemCount; i++){
         newArray[i] = array[i];
     }
@@ -13,7 +13,7 @@ void ArrayList::doubleCapacity(){
     array = newArray;
 }
 template <class T>
-ArrayList::ArrayList(int initialCapacity){
+ArrayList<T>::ArrayList(int initialCapacity){
      array = new T[initialCapacity];
      currItemCount = 0;
      currCapacity = initialCapacity;
@@ -23,7 +23,7 @@ ArrayList::ArrayList(int initialCapacity){
 
 //Copy Constructor
 template <class T>
-ArrayList::ArrayList(const ArrayList& arrayListToCopy){
+ArrayList<T>::ArrayList(const ArrayList<T>& arrayListToCopy){
     currItemCount = arrayListToCopy.currItemCount;
     currCapacity = arrayListToCopy.currCapacity;
     array = new T[currCapacity];
@@ -34,7 +34,7 @@ ArrayList::ArrayList(const ArrayList& arrayListToCopy){
 
 //Overloaded Assignment Operator
 template <class T>
-ArrayList& ArrayList::operator=(const ArrayList& arrayListToCopy){
+ArrayList<T>& ArrayList<T>::operator=(const ArrayList<T>& arrayListToCopy){
     if(this != &arrayListToCopy){
         delete[] array;
         currItemCount = arrayListToCopy.currItemCount;
@@ -48,7 +48,8 @@ ArrayList& ArrayList::operator=(const ArrayList& arrayListToCopy){
 }
 
 //Destructor - MUST EDIT FOR CLASSES
-ArrayList::~ArrayList(){
+template <class T>
+ArrayList<T>::~ArrayList(){
     delete[] array;
     array = nullptr;
 }
@@ -59,7 +60,7 @@ ArrayList::~ArrayList(){
  * @post the list has an additional value in it, at the end
  */
 template <class T>
-void ArrayList::insertAtEnd(T itemToAdd){
+void ArrayList<T>::insertAtEnd(T itemToAdd){
     if(currItemCount >= currCapacity){
         doubleCapacity();
     }
@@ -74,7 +75,7 @@ void ArrayList::insertAtEnd(T itemToAdd){
  *    all other items are shifted down by one index
  */
 template <class T>
-void ArrayList::insertAtFront(T itemToAdd){
+void ArrayList<T>::insertAtFront(T itemToAdd){
     if(currItemCount >= currCapacity){
         doubleCapacity();
     }
@@ -94,7 +95,7 @@ void ArrayList::insertAtFront(T itemToAdd){
  * @throws out_of_range exception if index is invalid (< 0 or >currItemCount)
  */
 template <class T>
-void ArrayList::insertAt(T itemToAdd, int index){
+void ArrayList<T>::insertAt(T itemToAdd, int index){
 
     if(index < 0 || index > currItemCount){
         throw std::out_of_range("<Error: Index out of range>");
@@ -118,7 +119,7 @@ void ArrayList::insertAt(T itemToAdd, int index){
  * @throws out_of_range exception if index is invalid
  */
 template <class T>
-T ArrayList::getValueAt(int index){
+T ArrayList<T>::getValueAt(int index){
     if(index < 0 || index > currItemCount-1){
         throw std::out_of_range("<Error: Index out of range>");
     }
@@ -135,7 +136,7 @@ T ArrayList::getValueAt(int index){
  * @throws out_of_range exception if index is invalid
  */
 template <class T>
-T ArrayList::removeValueAt(int index){
+T ArrayList<T>::removeValueAt(int index){
     if(index < 0 || index > currItemCount-1){
         throw std::out_of_range("<Error: Index out of range>");
     }
@@ -153,7 +154,8 @@ T ArrayList::removeValueAt(int index){
  * checks if there are any valid items in the list
  * @returns true if there are no valid items in the list, false otherwise
  */
-bool ArrayList::isEmpty(){
+template <class T>
+bool ArrayList<T>::isEmpty(){
     if(currItemCount < 1){
         return true;
     }else{
@@ -165,7 +167,8 @@ bool ArrayList::isEmpty(){
  * returns a count of valid items currently in the list
  * @returns the number of valid items in the list
  */
-int ArrayList::itemCount(){
+template <class T>
+int ArrayList<T>::itemCount(){
     return currItemCount;
 }
 
@@ -173,8 +176,45 @@ int ArrayList::itemCount(){
  * removes all valid items from the list, -MODIFY FOR CLASSES-
  * @post the list is completely clear of valid items
  */
-void ArrayList::clearList(){
+template <class T>
+void ArrayList<T>::clearList(){
     currItemCount = 0;
+}
+
+
+template <class T>
+std::string ArrayList<Book>::toString(const Book* const arrayPtr, const int size, const std::string stringSoFar) {
+    //base case
+    if(size < 1){
+        return stringSoFar;
+    }else {
+        std::string newString;
+        //if last element in the array, then don't add an additional comma+space
+        if (size == 1) {
+            std::string addString = *arrayPtr->toString();
+            newString = stringSoFar + addString;
+        }
+            //add a comma+space
+        else {
+            std::string addString = *arrayPtr->toString() + ", ";
+            newString = stringSoFar + addString;
+        }
+        //recursive call
+        std::string buildString = toString(arrayPtr + 1, size - 1, newString);
+        return buildString;
+    }
+}
+//main toString function (stub)
+template <class T>
+std::string ArrayList<T>::toString(const T* const arrayPtr, const int size){
+    //return empty set if size 0
+    if(size < 1){
+        return "{}";
+    }
+        //builds the string between the two curly braces
+    else{
+        return "{" + toString(arrayPtr,size,"") + "}";
+    }
 }
 
 /**
@@ -182,6 +222,7 @@ void ArrayList::clearList(){
  * @returns a string representing the given list in the exact format shown below
  * {1, 2, 3, 4, 5}
  */
-std::string ArrayList::toString(){
-    return ::toString(array,currItemCount);
+template <class T>
+std::string ArrayList<T>::toString(){
+    return toString(array,currItemCount);
 }

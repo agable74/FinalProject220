@@ -6,6 +6,6 @@ git pull origin master
 
 To push:
 
-git add .
+git add "Thing to add"
 git commit -m "Message about changes"
 git push -u origin master

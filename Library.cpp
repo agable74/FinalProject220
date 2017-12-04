@@ -32,7 +32,7 @@ Library::Library(std::string inBooksTxt, std::string allBooksTxt, std::string me
      * @return list of books
      */
 ArrayList<Book> Library::generateBookList(std::ifstream& fileToGenerate){
-    List<Book> bookList;
+    ArrayList<Book> bookList;
     if(!fileToGenerate){
         std::cerr << "The file could not be opened!" << std::endl;
     }
@@ -58,33 +58,41 @@ ArrayList<Book> Library::generateBookList(std::ifstream& fileToGenerate){
  * @param fileToGenerate
  * @return list of members
  */
-List<People> generatePeopleList(std::ifstream& fileToGenerate);
+ArrayList<People> generatePeopleList(std::ifstream& fileToGenerate);
 
 
 /**
  * Copy Constructor
  * @param libraryListToCopy
  */
-Library::Library(const Library& libraryToCopy);
+Library::Library(const Library& libraryToCopy){
+
+}
 
 
 /**
  * Assignment Operator
  * @param libraryListToCopy
  */
-Library& Library::operator=(const Library& libraryToCopy);
+Library& Library::operator=(const Library& libraryToCopy){
+
+}
 
 /**
  * Destructor
  */
-~Library();
+Library::~Library(){
+
+}
 
 /**
  * Creates a new library member (Person) given prompts about information
  * Adds to the memberList
  * @return true if successful, false if unsuccessful
  */
-bool Library::addMember();
+bool Library::addMember(){
+    return false;
+}
 
 /**
  * Save the inventory and wait lists in a file and terminate execution.
@@ -124,34 +132,46 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
  * Moves a book from the outBooks list to the inBooks list
  * @param bookToReturn
  */
-void Library::returnBook(Book bookToReturn);
+void Library::returnBook(Book bookToReturn){
+
+}
 
 /**
  * Puts a request in for book to be delivered
  * @param desiredBook
  */
-void Library::requestLoan(Book desiredBook);
+void Library::requestLoan(Book desiredBook){
+
+}
 
 /**
  * Removes a book from the library due to loss/damage
  * @param bookToRemove
  */
-void Library::removeBook(Book bookToRemove);
+void Library::removeBook(Book bookToRemove){
+
+}
 
 /**
  * Prints a summary of all available commands
  */
-void Library::libraryHelp();
+void Library::libraryHelp(){}
+
 
 /**
  * Print all information for the book
  * @param bookToInquire
  */
-void Library::inquireAboutBook(Book bookToInquire);
+void Library::inquireAboutBook(Book bookToInquire){
+
+}
+
 
 /**
  * Performs a delivery, increasing haveTotal and haveShelf for already owned books
  * adds books to library which aren't already there
  * @param deliveryFileName
  */
-void Library::bookDelivery(std::string deliveryFileName);
+void Library::bookDelivery(std::string deliveryFileName){
+
+}

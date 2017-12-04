@@ -2,28 +2,33 @@
 // Created by Alex on 12/3/2017.
 //
 template <class T>
-LinkedNode::LinkedNode<T>(T item){
+LinkedNode<T>::LinkedNode(T item){
     this->item = item;
     next = nullptr;
 }
 template <class T>
-LinkedNode::LinkedNode<T>(const LinkedNode<T>& nodeToCopy){
+LinkedNode<T>::LinkedNode(const LinkedNode<T>& nodeToCopy){
     item = nodeToCopy.item;
     next = nullptr;
 }
 template <class T>
-T LinkedNode::getItem(){
+T LinkedNode<T>::getItem(){
     return item;
 }
 
-LinkedNode<T>* LinkedNode::getNext(){
+template <class T>
+LinkedNode<T>::~LinkedNode(){
+    delete item;
+}
+template <class T>
+LinkedNode<T>* LinkedNode<T>::getNext(){
     return next;
 }
 template <class T>
-void LinkedNode::setItem(T newItem){
+void LinkedNode<T>::setItem(T newItem){
     item = newItem;
 }
-
-void LinkedNode::setNext(LinkedNode<T>* newNext){
+template <class T>
+void LinkedNode<T>::setNext(LinkedNode<T>* newNext){
     next = newNext;
 }

@@ -28,7 +28,7 @@ public:
      * @param isbnIn : book's ISBN
      * @param haveTotalIn : number of books by this title owned by this library
      */
-    Book(std::string titleIn, std::string authorIn, int isbnIn, int haveTotalIn);
+    Book(std::string titleIn="", std::string authorIn="", int isbnIn=-1, int haveTotalIn=-1);
 
     /**
      * copy contructor
@@ -92,7 +92,7 @@ public:
      * @return string of the book's title, author, ISBN, and number currently available for checkout,
      * each on own separate line
      */
-    std::string printInquiry();
+    std::string toString();
 };
 
 #endif //FINALPROJECT_BOOK_H

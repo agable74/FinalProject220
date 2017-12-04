@@ -4,8 +4,6 @@
 
 #ifndef FINALPROJECT_LINKEDNODE_H
 #define FINALPROJECT_LINKEDNODE_H
-#ifndef LINKEDNODE_H
-#define LINKEDNODE_H
 
 #include <string>
 template <class T>
@@ -18,6 +16,7 @@ private:
 public:
     LinkedNode(T item);
     LinkedNode(const LinkedNode& nodeToCopy); //only copies item, next is set to nullptr
+    ~LinkedNode();
     T getItem();
     LinkedNode* getNext();
     void setItem(T newItem);

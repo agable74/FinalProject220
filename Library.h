@@ -16,17 +16,17 @@
 class Library{
 private:
     //pointer to list of library members
-    List<People> memberList;
+    ArrayList<People> memberList;
     //fstream parts
     std::ifstream libMembersIN;
     std::ofstream libMembersOUT;
     //pointer to list of books in library
-    List<Book> inBooks;
+    ArrayList<Book> inBooks;
     //fstream parts
     std::ifstream inBooksIN;
     std::ofstream inBooksOUT;
     //pointer to list of books checked out
-    List<Book> allBooks;
+    ArrayList<Book> allBooks;
     //fstream parts
     std::ifstream allBooksIN;
     std::ofstream allBooksOUT;
@@ -50,7 +50,7 @@ public:
      * @param fileToGenerate
      * @return list of members
      */
-    List<People> generatePeopleList(std::ifstream& fileToGenerate);
+    ArrayList<People> generatePeopleList(std::ifstream& fileToGenerate);
 
     /**
      * Copy Constructor
@@ -128,6 +128,6 @@ public:
      * Adds book to inBooks list
      * @param bookToAdd
      */
-    void Library::addBook(std::string titleToAdd, int numToAdd);
+    void addBook(std::string titleToAdd, int numToAdd);
 };
 #endif //FINALPROJECT_LIBRARY_H
