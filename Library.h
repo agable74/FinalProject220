@@ -36,7 +36,7 @@ public:
     /**
      * Constructor
      */
-    Library(const std::string& inBooksTxtIN,const std::string& inBooksTxtOUT,const std::string& allBooksTxtIN,const std::string& allBooksTxtOUT,const std::string& memberListTxt);
+    Library(const std::string& allBooksTxtIN,const std::string& allBooksTxtOUT,const std::string& memberListTxt);
 
     /**
      * Generates the list of books from the file
@@ -44,6 +44,12 @@ public:
      * @return list of books
      */
     ArrayList<Book*> generateAllBookList();
+
+    /**
+     * Generates the list of books on the shelf from allBooks list
+     * @return list of shelf books
+     */
+    ArrayList<Book*> generateShelfBookList();
 
     /**
      * Generates the list of library members from the file

@@ -25,7 +25,7 @@ int main() {
 //
 //              //<< " " << author << " " << isbnSTR << " " << numBooksSTR << std::endl;
 //    inf.close();
-    Library testLib = Library("TestIO.txt","TestIO.txt","TestAllBooksIN.txt","TestAllBooksOUT.txt","TestMembers.txt");
+    Library testLib = Library("TestAllBooksIN.txt","TestAllBooksOUT.txt","TestMembers.txt");
     testLib.printAllOwnedBooks();
     Book testBook = Book("Lord of the Flies","William Golding",055235,6);
     testLib.addBook(testBook);

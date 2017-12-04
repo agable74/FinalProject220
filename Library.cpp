@@ -7,23 +7,20 @@
 /**
  * Constructor
  */
-Library::Library(const std::string& inBooksTxtIN,const std::string& inBooksTxtOUT,const std::string& allBooksTxtIN,const std::string& allBooksTxtOUT,const std::string& memberListTxt){
+Library::Library(const std::string& allBooksTxtIN,const std::string& allBooksTxtOUT,const std::string& memberListTxt){
     //pointer to list of library members
     //memberList;
     //fstream parts
     libMembersIN = std::ifstream(memberListTxt);
     libMembersOUT = std::ofstream(memberListTxt);
 
-    //fstream parts
-    inBooksIN.open(inBooksTxtIN);
-    inBooksOUT.open(inBooksTxtOUT);
-    //pointer to list of books in library
-    //inBooks = generateAllBookList();
+
     //fstream parts
     allBooksIN.open(allBooksTxtIN);
     allBooksOUT.open(allBooksTxtOUT);
     //pointer to list of books checked out
     allBooks = generateAllBookList();
+    inBooks = generateShelfBookList();
     //list of people waiting for book
 }
 
@@ -67,6 +64,20 @@ ArrayList<Book*> Library::generateAllBookList(){
             int num = allBooks.itemCount();
         }
     }
+    return bookList;
+}
+
+    /**
+    * Generates the list of books on the shelf from allBooks list
+    * @return list of shelf books
+    */
+ArrayList<Book*> Library::generateShelfBookList(){
+    ArrayList<Book*> bookList;
+    for(int i=0; i<allBooks.itemCount();i++){
+        if(allBooks.getValueAt(i)->getHaveTotal()>0){
+            bookList.insertAtEnd(allBooks.getValueAt(i));
+            }
+        }
     return bookList;
 }
 
