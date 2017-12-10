@@ -5,7 +5,7 @@
 #ifndef FINALPROJECT_LIBRARY_H
 #define FINALPROJECT_LIBRARY_H
 
-#include "People.h"
+#include "Member.h"
 #include "Book.h"
 #include "List.h"
 #include <iostream>
