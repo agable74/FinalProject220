@@ -208,7 +208,7 @@ void Library::removeBook(std::string bookToRemove, int numRemove){
     for(int i = 0; i < allBooks->itemCount(); i++){
         if(allBooks->getValueAt(i)->getTitle() == bookToRemove){
             inList = true;
-            allBooks->getValueAt(i)->modHaveTotal(numRemove);
+            allBooks->getValueAt(i)->modHaveTotal(-numRemove);
         }
     }
     if(!inList){
@@ -231,6 +231,7 @@ void Library::inquireAboutBook(std::string bookToInquire){
     for(int i = 0; i < allBooks->itemCount(); i++){
         if(allBooks->getValueAt(i)->getTitle() == bookToInquire){
             inList = true;
+            std::cout << "Information about " << bookToInquire << ":" << std::endl;
             std::cout << allBooks->getValueAt(i)->bookInquiry() << std::endl;
         }
     }
@@ -246,7 +247,41 @@ void Library::inquireAboutBook(std::string bookToInquire){
  * @param deliveryFileName
  */
 void Library::bookDelivery(std::string deliveryFileName){
-
+    std::ifstream deliveryIN = std::ifstream(deliveryFileName);
+    if(deliveryIN){
+        std::cerr << "The file could not be opened!" << std::endl;
+    }
+    else {
+        std::string title;
+        std::string author;
+        std::string isbnSTR;
+        std::string numBooksSTR;
+        while (deliveryIN) {
+            getline(deliveryIN, title);
+            getline(deliveryIN, author);
+            getline(deliveryIN, isbnSTR);
+            getline(deliveryIN, numBooksSTR);
+            if (!title.empty() && title[title.size() - 1] == '\r') {
+                title.erase(title.size() - 1);
+            }
+            if (!author.empty() && author[author.size() - 1] == '\r') {
+                author.erase(author.size() - 1);
+            }
+            int isbn = std::stoi(isbnSTR);
+            int numBooks = std::stoi(numBooksSTR);
+            Book *newBook = new Book(title, author, isbn, numBooks);
+            bool inList = false;
+            for (int i = 0; i < allBooks->itemCount(); i++) {
+                if (allBooks->getValueAt(i)->getTitle() == newBook->getTitle()) {
+                    inList = true;
+                    allBooks->getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
+                }
+            }
+            if (!inList) {
+                allBooks->insertAtEnd(newBook);
+            }
+        }
+    }
 }
 
 void Library::printAllOwnedBooks(){

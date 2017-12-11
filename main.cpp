@@ -34,5 +34,10 @@ int main() {
     testLib.printAllOwnedBooks();
     testLib.returnBook("Lord of the Flies");
     testLib.printAllOwnedBooks();
+    testLib.inquireAboutBook("Lord of the Flies");
+    testLib.removeBook("Lord of the Flies", 3);
+    testLib.inquireAboutBook("Lord of the Flies");
+    testLib.bookDelivery("TestDeliveryIN.txt");
+    testLib.inquireAboutBook("Doggo's Are Good");
     return 0;
 }
