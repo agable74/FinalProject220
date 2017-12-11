@@ -45,24 +45,26 @@ void Library::generateAllBookList(){
             getline(allBooksIN, author);
             getline(allBooksIN, isbnSTR);
             getline(allBooksIN, numBooksSTR);
-            if (!title.empty() && title[title.size() - 1] == '\r') {
-                title.erase(title.size() - 1);
-            }
-            if (!author.empty() && author[author.size() - 1] == '\r') {
-                author.erase(author.size() - 1);
-            }
-            int isbn = std::stoi(isbnSTR);
-            int numBooks = std::stoi(numBooksSTR);
-            Book *newBook = new Book(title, author, isbn, numBooks);
-            bool inList = false;
-            for (int i = 0; i < allBooks->itemCount(); i++) {
-                if (allBooks->getValueAt(i)->getTitle() == newBook->getTitle()) {
-                    inList = true;
-                    allBooks->getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
+            if(allBooksIN) {    //makes sure that it doesn't duplicate the last line, and works on empty text files
+                if (!title.empty() && title[title.size() - 1] == '\r') {
+                    title.erase(title.size() - 1);
                 }
-            }
-            if (!inList) {
-                allBooks->insertAtEnd(newBook);
+                if (!author.empty() && author[author.size() - 1] == '\r') {
+                    author.erase(author.size() - 1);
+                }
+                int isbn = std::stoi(isbnSTR);
+                int numBooks = std::stoi(numBooksSTR);
+                Book *newBook = new Book(title, author, isbn, numBooks);
+                bool inList = false;
+                for (int i = 0; i < allBooks->itemCount(); i++) {
+                    if (allBooks->getValueAt(i)->getTitle() == newBook->getTitle()) {
+                        inList = true;
+                        allBooks->getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
+                    }
+                }
+                if (!inList) {
+                    allBooks->insertAtEnd(newBook);
+                }
             }
         }
     }
@@ -122,7 +124,7 @@ bool Library::addMember(){
 }
 
 /**
- * Save the inventory and wait lists in a file and terminate execution.
+ * Save the inventory and wait lists in a file and terminate execution. Clean up too!
  */
 void Library::quit(){
     libMembersOUT.close();
@@ -246,9 +248,10 @@ void Library::inquireAboutBook(std::string bookToInquire){
  * adds books to library which aren't already there
  * @param deliveryFileName
  */
-void Library::bookDelivery(std::string deliveryFileName){
-    std::ifstream deliveryIN = std::ifstream(deliveryFileName);
-    if(deliveryIN){
+void Library::bookDelivery(const std::string& deliveryFileName){
+    std::ifstream deliveryIN;
+    deliveryIN.open(deliveryFileName);
+    if(!deliveryIN){
         std::cerr << "The file could not be opened!" << std::endl;
     }
     else {
@@ -261,24 +264,26 @@ void Library::bookDelivery(std::string deliveryFileName){
             getline(deliveryIN, author);
             getline(deliveryIN, isbnSTR);
             getline(deliveryIN, numBooksSTR);
-            if (!title.empty() && title[title.size() - 1] == '\r') {
-                title.erase(title.size() - 1);
-            }
-            if (!author.empty() && author[author.size() - 1] == '\r') {
-                author.erase(author.size() - 1);
-            }
-            int isbn = std::stoi(isbnSTR);
-            int numBooks = std::stoi(numBooksSTR);
-            Book *newBook = new Book(title, author, isbn, numBooks);
-            bool inList = false;
-            for (int i = 0; i < allBooks->itemCount(); i++) {
-                if (allBooks->getValueAt(i)->getTitle() == newBook->getTitle()) {
-                    inList = true;
-                    allBooks->getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
+            if(deliveryIN){ //makes sure that it doesn't duplicate the last line, and works on empty text files
+                if (!title.empty() && title[title.size() - 1] == '\r') {
+                    title.erase(title.size() - 1);
                 }
-            }
-            if (!inList) {
-                allBooks->insertAtEnd(newBook);
+                if (!author.empty() && author[author.size() - 1] == '\r') {
+                    author.erase(author.size() - 1);
+                }
+                int isbn = std::stoi(isbnSTR);
+                int numBooks = std::stoi(numBooksSTR);
+                Book *newBook = new Book(title, author, isbn, numBooks);
+                bool inList = false;
+                for (int i = 0; i < allBooks->itemCount(); i++) {
+                    if (allBooks->getValueAt(i)->getTitle() == newBook->getTitle()) {
+                        inList = true;
+                        allBooks->getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
+                    }
+                }
+                if (!inList) {
+                    allBooks->insertAtEnd(newBook);
+                }
             }
         }
     }

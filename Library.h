@@ -128,7 +128,7 @@ public:
      * adds books to library which aren't already there
      * @param deliveryFileName
      */
-    void bookDelivery(std::string deliveryFileName);
+    void bookDelivery(const std::string& deliveryFileName);
 
     void printAllOwnedBooks();
 
