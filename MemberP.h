@@ -6,7 +6,7 @@
 #define FINALPROJECT_PEOPLE_H
 #include <iostream>
 
-class People{
+class Member{
 
 private:
     //add email and contact preference (function)
@@ -21,8 +21,8 @@ private:
 
 public:
 
-    People(std::string nameIn="", int cardNumberIn=-1, std::string emailIn="", int phoneNumIn=-1, std::string preferenceIn="");
-    ~ People(); //default de-constructor
+    Member(std::string nameIn="", int cardNumberIn=-1, std::string emailIn="", int phoneNumIn=-1, std::string preferenceIn="");
+    ~ Member(); //default de-constructor
     int GetphoneNumber();
     int GetNum(); //returns member's number
     std::string Getpreference();

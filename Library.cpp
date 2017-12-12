@@ -87,7 +87,7 @@ void Library::generateShelfBookList(){
  * @param fileToGenerate
  * @return list of members
  */
-//ArrayList<People> generatePeopleList(std::ifstream& fileToGenerate);
+//ArrayList<Member> generateMemberList(std::ifstream& fileToGenerate);
 
 
 /**

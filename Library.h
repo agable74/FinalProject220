@@ -5,7 +5,7 @@
 #ifndef FINALPROJECT_LIBRARY_H
 #define FINALPROJECT_LIBRARY_H
 
-#include "Member.h"
+#include "MemberP.h"
 #include "Book.h"
 #include "List.h"
 #include <iostream>
@@ -16,7 +16,7 @@
 class Library{
 private:
     //pointer to list of library members
-    //ArrayList<People*> memberList;
+    //ArrayList<Member*> memberList;
     //fstream parts
     std::ifstream libMembersIN;
     std::ofstream libMembersOUT;
@@ -53,7 +53,7 @@ public:
      * @param fileToGenerate
      * @return list of members
      */
-    //ArrayList<People> generatePeopleList(std::ifstream& fileToGenerate);
+    //ArrayList<Member> generateMemberList(std::ifstream& fileToGenerate);
 
     /**
      * Copy Constructor
