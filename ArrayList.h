@@ -112,9 +112,14 @@ public:
     /**
      * removes all valid items from the list
      * @post the list is completely clear of valid items
-     * O(1)
+     * O(n)
      */
-    void clearList();
+    void clearData();
+
+    /**
+     * sets all pointers to nullptrs
+     */
+    void clearPointers();
 
     /**
      * gives a string representation of the current list

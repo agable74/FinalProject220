@@ -47,7 +47,7 @@ ArrayList<T>& ArrayList<T>::operator=(const ArrayList<T>& arrayListToCopy){
     return *this;
 }
 
-//Destructor - MUST EDIT FOR CLASSES
+
 template <class T>
 ArrayList<T>::~ArrayList(){
     delete[] array;
@@ -177,11 +177,19 @@ int ArrayList<T>::itemCount(){
  * @post the list is completely clear of valid items
  */
 template <class T>
-void ArrayList<T>::clearList(){
+void ArrayList<T>::clearData(){
+    for(int i = 0; i < currItemCount; i++){
+        delete array[i];
+    }
     currItemCount = 0;
 }
 
-
+void ArrayList<T>::clearPointers(){
+    for(int i = 0; i < currItemCount; i++){
+        array[i] = nullptr;
+    }
+    currItemCount = 0;
+}
 
 /**
  * gives a string representation of the current list

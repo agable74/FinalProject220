@@ -12,7 +12,7 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& allBooksTxt
     //memberList;
     //fstream parts
     libMembersIN.open(memberListTxt);
-    libMembersOUT = std::ofstream(memberListTxt);
+    //libMembersOUT = std::ofstream(memberListTxt);
     //fstream parts
     allBooksIN.open(allBooksTxtIN);
     allBooksOUT.open(allBooksTxtOUT);
@@ -24,6 +24,8 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& allBooksTxt
     //generate shelf from allBooks
     generateShelfBookList();
     //list of people waiting for book
+    generateMemberList();
+    run = true;
 }
 
 /**
@@ -84,10 +86,16 @@ void Library::generateShelfBookList(){
 
 /**
  * Generates the list of library members from the file
- * @param fileToGenerate
- * @return list of members
+ * @post members list generated from text file
  */
-//ArrayList<Member> generateMemberList(std::ifstream& fileToGenerate);
+void Library::generateMemberList(){
+    if(!libMembersIN){
+        std::cerr << "The file could not be opened!" << std::endl;
+    }
+    else{
+
+    }
+}
 
 
 /**
@@ -120,13 +128,15 @@ Library::~Library(){
  * @return true if successful, false if unsuccessful
  */
 bool Library::addMember(){
-    return false;
+    Member* newMember = new Member();
+    members->insertAtEnd(newMember);
 }
 
 /**
  * Save the inventory and wait lists in a file and terminate execution. Clean up too!
  */
 void Library::quit(){
+    run = false;
     libMembersOUT.close();
     allBooksOUT.close();
 }
@@ -221,7 +231,9 @@ void Library::removeBook(std::string bookToRemove, int numRemove){
 /**
  * Prints a summary of all available commands
  */
-void Library::libraryHelp(){}
+void Library::libraryHelp(){
+    std::cout << "pst" << std::endl;
+}
 
 
 /**
@@ -303,5 +315,11 @@ void Library::checkOutBook(std::string bookToCheckOut){
     }
     if(!inList){
         std::cout << "That book does not belong to this library." << std::endl;
+    }
+}
+
+void Library::runUI(){
+    while(run){
+
     }
 }

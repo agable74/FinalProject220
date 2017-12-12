@@ -28,6 +28,8 @@ private:
     //pointer to list of books in library
     List<Book*>* shelfBooks;
     //list of people waiting for book
+    List<Member*>* members;
+    bool run;
 
 public:
     /**
@@ -50,10 +52,9 @@ public:
 
     /**
      * Generates the list of library members from the file
-     * @param fileToGenerate
-     * @return list of members
+     * @post sets the list of library members
      */
-    //ArrayList<Member> generateMemberList(std::ifstream& fileToGenerate);
+    void generateMemberList();
 
     /**
      * Copy Constructor
@@ -133,6 +134,8 @@ public:
     void printAllOwnedBooks();
 
     void checkOutBook(std::string bookToCheckOut);
+
+    void runUI();
 
 
 };
