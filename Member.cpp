@@ -2,16 +2,25 @@
 // Created by Pravesh Patel on 12/11/17.
 //
 
-#include <iostream>
 #include "Member.h"
 
 
-People::People(std::string nameIn, std::string emailIn, int phoneNumIn) {
+People::People(std::string nameIn, int cardNumberIn, std::string emailIn, int phoneNumIn, std::string preferenceIn) {
     name = nameIn;
-    cardNumber = People:: GenerateNum();
+    if(cardNumberIn == -1) {
+        cardNumber = People::GenerateNum();
+    }
+    else{
+        cardNumber = cardNumberIn;
+    }
     email = emailIn;
     phoneNumber = phoneNumIn;
-    preference = Getpreference();
+    if(preferenceIn == "") {
+        preference = Getpreference();
+    }
+    else{
+        preference = preferenceIn;
+    }
     //email and phone number and contact preference
 }
 int People::GetphoneNumber() {
@@ -26,7 +35,7 @@ std:: string People::Getpreference() {
     std::cin >> pref;
     if (pref == std::to_string(1)){
 
-        preference = " Preference: email";
+        preference = "Preference: email";
     }
     else if (pref == std::to_string(2)){
 
@@ -43,7 +52,7 @@ std::string People::Getemail() {
     return email;
 }
 
-float People::GetNum() {
+int People::GetNum() {
     return cardNumber;
 }
 
@@ -58,7 +67,7 @@ std:: string People:: toString() {
     return name +":" + idNum + "\n" + email + "\n" + phoneNum;
 }
 
-float People::GenerateNum() {
+int People::GenerateNum() {
     cardNumber = rand()% 1004356327 + 1000000000;
     return cardNumber;
 }

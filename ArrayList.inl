@@ -194,7 +194,7 @@ std::string ArrayList<T>::toString(){
     std::string arrayString = "{";
     std::string newString = "";
     for(int i = 0; i < currItemCount; i++){
-        newString = array[i]->bookInquiry();
+        newString = array[i]->toString();
         arrayString += newString;
         if(currItemCount > 1 && i < currItemCount - 1){
             arrayString += "\n";

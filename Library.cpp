@@ -11,7 +11,7 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& allBooksTxt
     //pointer to list of library members
     //memberList;
     //fstream parts
-    libMembersIN = std::ifstream(memberListTxt);
+    libMembersIN.open(memberListTxt);
     libMembersOUT = std::ofstream(memberListTxt);
     //fstream parts
     allBooksIN.open(allBooksTxtIN);
@@ -234,7 +234,7 @@ void Library::inquireAboutBook(std::string bookToInquire){
         if(allBooks->getValueAt(i)->getTitle() == bookToInquire){
             inList = true;
             std::cout << "Information about " << bookToInquire << ":" << std::endl;
-            std::cout << allBooks->getValueAt(i)->bookInquiry() << std::endl;
+            std::cout << allBooks->getValueAt(i)->toString() << std::endl;
         }
     }
     if(!inList){
