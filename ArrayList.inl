@@ -183,8 +183,8 @@ void ArrayList<T>::clearData(){
     }
     currItemCount = 0;
 }
-
-void ArrayList<T>::clearPointers(){
+template <class T>
+void ArrayList<T>::clearList(){
     for(int i = 0; i < currItemCount; i++){
         array[i] = nullptr;
     }

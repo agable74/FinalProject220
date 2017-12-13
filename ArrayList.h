@@ -119,7 +119,7 @@ public:
     /**
      * sets all pointers to nullptrs
      */
-    void clearPointers();
+    void clearList();
 
     /**
      * gives a string representation of the current list
