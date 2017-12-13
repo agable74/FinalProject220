@@ -5,6 +5,8 @@
 #ifndef FINALPROJECT_BOOK_H
 #define FINALPROJECT_BOOK_H
 
+#include "LinkedList.h"
+#include "Member.h"
 #include <string>
 #include <iostream>
 
@@ -18,6 +20,8 @@ private:
     int haveTotal;
     int haveShelf;
     int wantValue;
+    LinkedList waitList;
+
 
 public:
 
@@ -93,6 +97,12 @@ public:
      * each on own separate line
      */
     std::string toString();
+
+    void addWaiter(Member* waiter);
+
+    int getNumberOfWaiters();
+
+    Member* removeWaiter();
 };
 
 #endif //FINALPROJECT_BOOK_H
