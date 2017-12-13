@@ -5,7 +5,7 @@
 #ifndef FINALPROJECT_LIBRARY_H
 #define FINALPROJECT_LIBRARY_H
 
-#include "MemberP.h"
+#include "Member.h"
 #include "Book.h"
 #include "List.h"
 #include <iostream>
@@ -30,6 +30,7 @@ private:
     //list of people waiting for book
     List<Member*>* members;
     bool run;
+    std::string bookListTxt;
 
 public:
     /**
@@ -57,6 +58,16 @@ public:
     void generateMemberList();
 
     /**
+     * Saves the list of books to a file
+     */
+    void saveBooksToFile();
+
+    /**
+     * Saves the list of members to a file
+     */
+    void saveMembersToFile();
+
+    /**
      * Copy Constructor
      * @param libraryListToCopy
      */
@@ -77,9 +88,9 @@ public:
     /**
      * Creates a new library member (Person) given prompts about information
      * Adds to the memberList
-     * @return true if successful, false if unsuccessful
+     * @post member added to memberList
      */
-    bool addMember();
+    void addMember();
 
     /**
      * Save the inventory and wait lists in a file and terminate execution.

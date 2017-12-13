@@ -15,7 +15,7 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& allBooksTxt
     //libMembersOUT = std::ofstream(memberListTxt);
     //fstream parts
     allBooksIN.open(allBooksTxtIN);
-    allBooksOUT.open(allBooksTxtOUT);
+   // allBooksOUT.open(allBooksTxtOUT);
     //pointer to list of books checked out
     allBooks = new ArrayList<Book*>;
     shelfBooks = new ArrayList<Book*>;
@@ -26,6 +26,7 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& allBooksTxt
     //list of people waiting for book
     generateMemberList();
     run = true;
+    bookListTxt = allBooksTxtOUT;
 }
 
 /**
@@ -97,6 +98,20 @@ void Library::generateMemberList(){
     }
 }
 
+void Library::saveBooksToFile(){
+    allBooksOUT.open(bookListTxt);
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        allBooksOUT << allBooks->getValueAt(i)->getTitle() << '\n';
+        allBooksOUT << allBooks->getValueAt(i)->getAuthor() << '\n';
+        allBooksOUT << allBooks->getValueAt(i)->getIsbn() << '\n';
+        allBooksOUT << allBooks->getValueAt(i)->getHaveTotal() << '\n';
+    }
+    allBooksOUT.close();
+}
+
+void Library::saveMembersToFile(){
+
+}
 
 /**
  * Copy Constructor
@@ -127,7 +142,7 @@ Library::~Library(){
  * Adds to the memberList
  * @return true if successful, false if unsuccessful
  */
-bool Library::addMember(){
+void Library::addMember(){
     Member* newMember = new Member();
     members->insertAtEnd(newMember);
 }
