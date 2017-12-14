@@ -41,11 +41,15 @@ int main() {
     testLib.bookDelivery("TestDeliveryIN.txt");
     testLib.inquireAboutBook("Doggo's Are Good");
     testLib.saveBooksToFile();
+   // testLib.saveMembersToFile();
     //testLib.masterRun();
     testLib.printAllOwnedBooks();
     testLib.sortBookList();
     testLib.printAllOwnedBooks();
+    testLib.requestLoan("Pride and Prejudice");
+    testLib.saveDeliveryRequestToFile();
 
     //need to add a default constructor in book to store the shelf count
+    //need to add the waitlist part in requesting books
     return 0;
 }

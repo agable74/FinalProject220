@@ -26,9 +26,12 @@ private:
     std::ifstream allBooksIN;
     std::ofstream allBooksOUT;
     //pointer to list of books in library
+    std::ifstream requestBooksIN;
+    std::ofstream requestBooksOUT;
     List<Book*>* shelfBooks;
     //list of people waiting for book
     List<Member*>* members;
+    List<Book*>* requestBooks;
     bool runUIBool;
     bool runMasterBool;
     std::string bookListTxt;
@@ -69,6 +72,11 @@ public:
      * Saves the list of members to a file
      */
     void saveMembersToFile();
+
+    /**
+     * Saves the request list of books to a file
+     */
+    void saveDeliveryRequestToFile();
 
     /**
      * Copy Constructor

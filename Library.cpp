@@ -8,14 +8,11 @@
  * Constructor
  */
 Library::Library(const std::string& allBooksTxtIN,const std::string& memberListTxtIN,const std::string& deliveryTxtIN){
-    //pointer to list of library members
-    //memberList;
     //fstream parts
     libMembersIN.open(memberListTxtIN);
     //libMembersOUT = std::ofstream(memberListTxt);
     //fstream parts
     allBooksIN.open(allBooksTxtIN);
-   // allBooksOUT.open(allBooksTxtOUT);
     //pointer to list of books checked out
     allBooks = new ArrayList<Book*>;
     shelfBooks = new ArrayList<Book*>;
@@ -23,9 +20,9 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& memberListT
     generateAllBookList();
     //generate shelf from allBooks
     generateShelfBookList();
-    //list of people waiting for book
     members = new ArrayList<Member*>;
     generateMemberList();
+    requestBooks = new ArrayList<Book*>;
     runUIBool = true;
     runMasterBool = true;
     bookListTxt = allBooksTxtIN;
@@ -294,9 +291,41 @@ void Library::generateMemberList(){
     if(!libMembersIN){
         std::cerr << "The file could not be opened!" << std::endl;
     }
-    else{
-
-    }
+//    else{
+//        std::string name;
+//        std::string ID;
+//        std::string phoneSTR;
+//        std::string email;
+//        std::string preference;
+//        while (libMembersIN) {
+//            getline(libMembersIN, name);
+//            getline(libMembersIN, ID);
+//            getline(libMembersIN, phoneSTR);
+//            getline(libMembersIN, email);
+//            getline(libMembersIN,preference);
+//            if(libMembersIN) {    //makes sure that it doesn't duplicate the last line, and works on empty text files
+//                if (!name.empty() && name[name.size() - 1] == '\r') {
+//                    name.erase(name.size() - 1);
+//                }
+//                if (!ID.empty() && ID[ID.size() - 1] == '\r') {
+//                    ID.erase(ID.size() - 1);
+//                }
+//                int phone = std::stoi(phoneSTR);
+//                int numBooks = std::stoi(email);
+//                Member* newMember = new Member(name,phone,email,ID,preference);
+//                bool inList = false;
+//                for (int i = 0; i < members->itemCount(); i++) {
+//                    if (members->getValueAt(i)->getName() == newMember->getName()) {
+//                        inList = true;
+//                        std::cout << "Member already exists!" << std::endl;
+//                    }
+//                }
+//                if (!inList) {
+//                    members->insertAtEnd(newMember);
+//                }
+//            }
+//        }
+//    }
 }
 
 void Library::saveBooksToFile(){
@@ -322,6 +351,17 @@ void Library::saveMembersToFile(){
         libMembersOUT << members->getValueAt(i)->getContactPref() << '\n';
     }
     libMembersOUT.close();
+}
+
+void Library::saveDeliveryRequestToFile(){
+    requestBooksOUT.open(deliveryTxt);
+    for(int i = 0; i < requestBooks->itemCount(); i++){
+        requestBooksOUT << requestBooks->getValueAt(i)->getTitle() << '\n';
+        requestBooksOUT << requestBooks->getValueAt(i)->getAuthor() << '\n';
+        requestBooksOUT << requestBooks->getValueAt(i)->getIsbn() << '\n';
+        requestBooksOUT << requestBooks->getValueAt(i)->getHaveTotal() << '\n';
+    }
+    requestBooksOUT.close();
 }
 
 /**
@@ -416,6 +456,7 @@ void Library::addMember(Member& memberToAdd){
  */
 void Library::quit(){
     runUIBool = false;
+    saveDeliveryRequestToFile();
     saveBooksToFile();
     saveMembersToFile();
     libMembersOUT.close();
@@ -445,6 +486,7 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
         int isbn = checkIfNum(isbnStr);
         Book* newBook = new Book(titleToAdd,author,isbn,numToAdd);
         allBooks->insertAtEnd(newBook);
+        sortBookList();
     }
 }
 
@@ -458,6 +500,7 @@ void Library::addBook(Book& bookToAdd){
     }
     if(!inList) {
         allBooks->insertAtEnd(&bookToAdd);
+        sortBookList();
     }
 }
 
@@ -483,23 +526,33 @@ void Library::returnBook(std::string titleToReturn){
  * @param desiredBook
  */
 void Library::requestLoan(std::string desiredBookTitle){
-//    bool inList = false;
-//    for(int i = 0; i < allBooks.itemCount(); i++){
-//        if(allBooks.getValueAt(i)->getTitle() == desiredBookTitle){
-//            inList = true;
-//            allBooks.getValueAt(i)->modHaveTotal(numToAdd);
-//        }
-//    }
-//    if(!inList){
-//        std::cout << "Who is the author of this book?" << std::endl;
-//        std::string author;
-//        std::cin >> author;
-//        std::cout << "What is the ISBN number of this book?" << std::endl;
-//        int isbn;
-//        std::cin >> isbn;
-//        Book* newBook = new Book(titleToAdd,author,isbn,numToAdd);
-//        allBooks.insertAtEnd(newBook);
-//    }
+    bool inList = false;
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        if(allBooks->getValueAt(i)->getTitle() == desiredBookTitle){
+            inList = true;
+            if(allBooks->getValueAt(i)->getHaveShelf() > 0) {
+                std::cout << "We have this book in our library." << std::endl;
+            }
+            else{
+                Book* requestBook = new Book(*allBooks->getValueAt(i));
+                requestBook->modHaveTotal(-requestBook->getHaveTotal()+1); //makes it so it only does one
+                requestBooks->insertAtEnd(requestBook);
+                //add to waitlist
+                std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
+            }
+        }
+    }
+    if(!inList){
+        std::string author;
+        std::cout << "Who is the author of this book?" << std::endl;
+        std::getline(std::cin,author);
+        std::string isbnStr;
+        std::cout << "What is the ISBN number of this book?" << std::endl;
+        std::getline(std::cin,isbnStr);
+        int isbn = checkIfNum(isbnStr);
+        Book* requestBook = new Book(desiredBookTitle,author,isbn,1);
+        requestBooks->insertAtEnd(requestBook);
+    }
 }
 
 /**
