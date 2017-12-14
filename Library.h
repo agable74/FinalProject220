@@ -31,12 +31,13 @@ private:
     List<Member*>* members;
     bool run;
     std::string bookListTxt;
+    std::string memberListTxt;
 
 public:
     /**
      * Constructor
      */
-    Library(const std::string& allBooksTxtIN,const std::string& allBooksTxtOUT,const std::string& memberListTxt);
+    Library(const std::string& allBooksTxtIN, const std::string& memberListTxtIN);
 
     /**
      * Generates the list of books from the file
@@ -93,6 +94,12 @@ public:
     void addMember();
 
     /**
+     * Adds already-created member to member list
+     * @param memberToAdd
+     */
+    void addMember(Member& memberToAdd);
+
+    /**
      * Save the inventory and wait lists in a file and terminate execution.
      */
     void quit();
@@ -104,7 +111,7 @@ public:
      */
     void addBook(std::string titleToAdd, int numToAdd);
 
-    void addBook(Book bookToAdd);
+    void addBook(Book& bookToAdd);
 
     /**
      * Moves a book from the outBooks list to the inBooks list

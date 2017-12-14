@@ -250,6 +250,15 @@ void LinkedList<T>::clearList(){
 }
 
 /**
+ * removes all valid items from the list (deep)
+ * @post the list os completely clear of valid items
+ */
+template <class T>
+void LinkedList<T>::clearData(){
+    //needs implementing
+}
+
+/**
  * gives a string representation of the current list
  * @returns a string representing the given list in the exact format shown below
  * {1, 2, 3, 4, 5}

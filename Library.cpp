@@ -7,11 +7,11 @@
 /**
  * Constructor
  */
-Library::Library(const std::string& allBooksTxtIN,const std::string& allBooksTxtOUT,const std::string& memberListTxt){
+Library::Library(const std::string& allBooksTxtIN,const std::string& memberListTxtIN){
     //pointer to list of library members
     //memberList;
     //fstream parts
-    libMembersIN.open(memberListTxt);
+    libMembersIN.open(memberListTxtIN);
     //libMembersOUT = std::ofstream(memberListTxt);
     //fstream parts
     allBooksIN.open(allBooksTxtIN);
@@ -24,9 +24,11 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& allBooksTxt
     //generate shelf from allBooks
     generateShelfBookList();
     //list of people waiting for book
+    members = new ArrayList<Member*>;
     generateMemberList();
     run = true;
-    bookListTxt = allBooksTxtOUT;
+    bookListTxt = allBooksTxtIN;
+    memberListTxt = memberListTxtIN;
 }
 
 /**
@@ -110,7 +112,15 @@ void Library::saveBooksToFile(){
 }
 
 void Library::saveMembersToFile(){
-
+    libMembersOUT.open(memberListTxt);
+    for(int i = 0; i < members->itemCount(); i++){
+        libMembersOUT << members->getValueAt(i)->getName() << '\n';
+        libMembersOUT << members->getValueAt(i)->getPhoneNumber() << '\n';
+        libMembersOUT << members->getValueAt(i)->getEmail() << '\n';
+        libMembersOUT << members->getValueAt(i)->getId() << '\n';
+        libMembersOUT << members->getValueAt(i)->getContactPref() << '\n';
+    }
+    libMembersOUT.close();
 }
 
 /**
@@ -118,7 +128,33 @@ void Library::saveMembersToFile(){
  * @param libraryListToCopy
  */
 Library::Library(const Library& libraryToCopy){
+    libMembersIN;
+    libMembersOUT;
+    //pointer to list of books owned by library
 
+    allBooks = new ArrayList<Book*>;
+    for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
+        Book* copyBook = libraryToCopy.allBooks->getValueAt(i);
+        addBook(*copyBook);
+    }
+
+    //fstream parts
+    allBooksIN;
+    allBooksOUT;
+    //pointer to list of books in library
+    shelfBooks = new ArrayList<Book*>;
+    generateShelfBookList();
+    //list of people waiting for book
+
+    members = new ArrayList<Member*>;
+    for(int i = 0; i < libraryToCopy.members->itemCount(); i++){
+        Member* copyMember = libraryToCopy.members->getValueAt(i);
+        addMember(*copyMember);
+    }
+
+    run = true;
+    bookListTxt = libraryToCopy.bookListTxt;
+    memberListTxt = libraryToCopy.memberListTxt;
 }
 
 
@@ -127,14 +163,37 @@ Library::Library(const Library& libraryToCopy){
  * @param libraryListToCopy
  */
 Library& Library::operator=(const Library& libraryToCopy){
+    if(this!=&libraryToCopy){
+        shelfBooks->clearList();
+        allBooks->clearData();
+        members->clearData();
 
+
+        for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
+            Book* copyBook = libraryToCopy.allBooks->getValueAt(i);
+            addBook(*copyBook);
+        }
+
+        generateShelfBookList();
+
+        for(int i = 0; i < libraryToCopy.members->itemCount(); i++){
+            Member* copyMember = libraryToCopy.members->getValueAt(i);
+            addMember(*copyMember);
+        }
+    }
+    return *this;
 }
 
 /**
  * Destructor
  */
 Library::~Library(){
-
+    shelfBooks->clearList();
+    //delete[] shelfBooks;
+    allBooks->clearData();
+    //delete[] allBooks;
+    members->clearData();
+    //delete[] members;
 }
 
 /**
@@ -145,6 +204,10 @@ Library::~Library(){
 void Library::addMember(){
     Member* newMember = new Member();
     members->insertAtEnd(newMember);
+}
+
+void Library::addMember(Member& memberToAdd){
+    members->insertAtEnd(&memberToAdd);
 }
 
 /**
@@ -181,8 +244,17 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
     }
 }
 
-void Library::addBook(Book bookToAdd){
-    allBooks->insertAtEnd(&bookToAdd);
+void Library::addBook(Book& bookToAdd){
+    bool inList = false;
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        if(allBooks->getValueAt(i)->getTitle() == bookToAdd.getTitle()){
+            inList = true;
+            allBooks->getValueAt(i)->modHaveTotal(bookToAdd.getHaveTotal());
+        }
+    }
+    if(!inList) {
+        allBooks->insertAtEnd(&bookToAdd);
+    }
 }
 
 /**

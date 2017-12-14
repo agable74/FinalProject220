@@ -180,6 +180,7 @@ template <class T>
 void ArrayList<T>::clearData(){
     for(int i = 0; i < currItemCount; i++){
         delete array[i];
+        array[i] = nullptr;
     }
     currItemCount = 0;
 }

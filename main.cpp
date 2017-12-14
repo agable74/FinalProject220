@@ -26,7 +26,7 @@ int main() {
 //              //<< " " << author << " " << isbnSTR << " " << numBooksSTR << std::endl;
 //    inf.close();
 
-    Library testLib = Library("TestAllBooksIN.txt","TestAllBooksOUT.txt","TestMembers.txt");
+    Library testLib = Library("AllBooks.txt","TestMembers.txt");
     testLib.printAllOwnedBooks();
     Book testBook = Book("Lord of the Flies","William Golding",055235,6);
     testLib.addBook(testBook);
@@ -42,5 +42,6 @@ int main() {
     testLib.inquireAboutBook("Doggo's Are Good");
     testLib.saveBooksToFile();
 
+    //need to add a default constructor in book to store the shelf count
     return 0;
 }
