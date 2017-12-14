@@ -7,7 +7,7 @@
 /**
  * Constructor
  */
-Library::Library(const std::string& allBooksTxtIN,const std::string& memberListTxtIN){
+Library::Library(const std::string& allBooksTxtIN,const std::string& memberListTxtIN,const std::string& deliveryTxtIN){
     //pointer to list of library members
     //memberList;
     //fstream parts
@@ -30,6 +30,7 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& memberListT
     runMasterBool = true;
     bookListTxt = allBooksTxtIN;
     memberListTxt = memberListTxtIN;
+    deliveryTxt = deliveryTxtIN;
 }
 
 int checkIfNum(std::string& stringToCheck){
@@ -122,6 +123,111 @@ void Library::generateShelfBookList(){
         }
 }
 
+
+
+int* copyArray(const int* arrayToCopy, const int size, int& numLinesRun){
+    int* newArrayCopy = new int[size];
+    numLinesRun += 5;
+    for(int i = 0; i < size; i++){
+        numLinesRun += 1;
+        newArrayCopy[i] = arrayToCopy[i];
+    }
+    return newArrayCopy;
+}
+
+int* merge(const int*a1, int size1, const int* a2, int size2, int& numLinesRun){
+    //checks for two arrays of size 0
+    numLinesRun += 6;
+    if(size1+size2 < 1){
+        return nullptr;
+    }
+    //create a new array to hold the merge values
+    int* arrayToReturn = new int[size1+size2];
+    int pos1 = 0;
+    int pos2 = 0;
+    numLinesRun += 4;
+    for (int i = 0; i < size1 + size2; i++) {
+        numLinesRun += 4;
+        //checks both are within the bounds of respective array
+        if(pos2 < size2 && pos1 < size1) {
+            //moves along the index of the array with lesser value
+            if (a1[pos1] < a2[pos2]) {
+                arrayToReturn[i] = a1[pos1];
+                pos1++;
+                numLinesRun+= 2;
+            } else if (a1[pos1] > a2[pos2]) {
+                arrayToReturn[i] = a2[pos2];
+                pos2++;
+                numLinesRun += 2;
+            } //if values are equal, I choose to do the first array and continue through loop
+            else if (a1[pos1] == a2[pos2]) {
+                arrayToReturn[i] = a1[pos1];
+                pos1++;
+                numLinesRun += 2;
+            }
+            //if one array is out of bounds, finish with values of other array
+        }else if(pos2 < size2 && pos1 >= size1){
+            arrayToReturn[i] = a2[pos2];
+            pos2++;
+            numLinesRun += 2;
+        }else if(pos1 < size1 && pos2 >= size2){
+            arrayToReturn[i] = a1[pos1];
+            pos1++;
+            numLinesRun += 2;
+        }else{
+            return arrayToReturn;
+        }
+    }
+    return arrayToReturn;
+}
+
+int* mergeSort(const int* arrayToSort, int size, int& numLinesRun){
+    numLinesRun += 5;
+    //checks for empty array
+    if(size < 1){
+        return nullptr;
+    }
+        //if size == 1, then send back a copy of array
+    else if(size == 1){
+        int* arrayCopy = copyArray(arrayToSort,size,numLinesRun);
+        numLinesRun += 1;
+        return arrayCopy;
+    }
+    else{
+        int midIndex = size / 2;
+        int* lowerArray = mergeSort(arrayToSort,size/2,numLinesRun);
+        int* upperArray;
+        int* mergedArray;
+        numLinesRun += 5;
+        //has to do it one way for even arrays
+        if(size % 2 == 0){
+            //breaks apart and merges in order smaller arrays
+            upperArray = mergeSort(arrayToSort + midIndex, size/2, numLinesRun);
+            mergedArray = merge(lowerArray,size/2,upperArray,size/2,numLinesRun);
+            numLinesRun += 2;
+        }//other way for odd arrays
+        else {
+            upperArray = mergeSort(arrayToSort + midIndex, size / 2 + 1, numLinesRun);
+            mergedArray = merge(lowerArray,size/2,upperArray,size/2+1,numLinesRun);
+            numLinesRun += 2;
+        }
+        //cleanup
+        delete[] lowerArray;
+        lowerArray = nullptr;
+        delete[] upperArray;
+        upperArray = nullptr;
+        numLinesRun += 4;
+        return mergedArray;
+    }
+}
+
+/**
+ * Sorts the allBooks and shelfBooks lists alphabetically
+ * @post allBooks and shelfBooks are sorted alphabetically by title
+ */
+void sortBookList(){
+
+}
 /**
  * Generates the list of library members from the file
  * @post members list generated from text file
@@ -443,7 +549,11 @@ void Library::checkOutBook(std::string bookToCheckOut){
     for(int i = 0; i < allBooks->itemCount(); i++){
         if(allBooks->getValueAt(i)->getTitle() == bookToCheckOut){
             inList = true;
-            allBooks->getValueAt(i)->checkBookOut();
+            if(allBooks->getValueAt(i)->getHaveShelf() > 0) {
+                allBooks->getValueAt(i)->checkBookOut();
+            }else{
+                std::cout << "There are currently no copies of that book on the shelves. Try again at a later date." << std::endl;
+            }
         }
     }
     if(!inList){
@@ -461,6 +571,7 @@ bool Library::runUI(){
     std::cout << "Welcome to the library!" << std::endl;
     std::string userInput;
     while(runUIBool){
+        std::cout << std::endl;
         std::cout << "Type H for a list of functions or type the function which you wish to use: ";
         std::getline (std::cin,userInput);
         std::cout << std::endl;
@@ -472,7 +583,7 @@ bool Library::runUI(){
             libraryHelp();
         }
         else if(userInput == "I" || userInput == "i"){
-            std::cout << "You have chosen to inquire about a book. Are you certain?"
+            std::cout << "You have chosen to inquire about a book. Are you certain?";
             std::string userResponse;
             std::getline(std::cin,userResponse);
             bool yes = checkYesOrNo(userResponse);
@@ -522,7 +633,7 @@ bool Library::runUI(){
             addMember();
         }
         else if(userInput == "r" || userInput == "R"){
-            std::cout << "You wish to return a book. Correct? " << std::endl;
+            std::cout << "You wish to return a book. Are you certain?";
             std::string userResponse;
             std::getline(std::cin,userResponse);
             bool yes = checkYesOrNo(userResponse);
@@ -537,7 +648,38 @@ bool Library::runUI(){
                 std::cout << "Returning to the main menu" << std::endl;
             }
         }
+        else if(userInput == "W" || userInput == "w"){
+            std::cout << "You have chosen to withdraw a book. Are you certain? ";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                std::cout << "Enter the title of the book you wish to withdraw :";
+                std::string title;
+                std::getline(std::cin,title);
+                checkOutBook(title);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+        else if(userInput == "d" || userInput == "D"){
+            std::cout << "You have selected to intake a delivery. Are you certain? ";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                //intake delivery from txt file
+                bookDelivery(deliveryTxt);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
     }
+    //Program keeps running after you quit unless you terminate
     while(!runUIBool){
         std::cout << "Do you wish to terminate the program? ";
         std::string userResponse;

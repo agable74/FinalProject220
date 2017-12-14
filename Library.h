@@ -33,12 +33,13 @@ private:
     bool runMasterBool;
     std::string bookListTxt;
     std::string memberListTxt;
+    std::string deliveryTxt;
 
 public:
     /**
      * Constructor
      */
-    Library(const std::string& allBooksTxtIN, const std::string& memberListTxtIN);
+    Library(const std::string& allBooksTxtIN, const std::string& memberListTxtIN,const std::string& deliveryTxtIN);
 
     /**
      * Generates the list of books from the file
