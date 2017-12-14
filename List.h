@@ -4,6 +4,8 @@
 
 #ifndef FINALPROJECT_LIST_H
 #define FINALPROJECT_LIST_H
+
+#include <stdexcept>
 template <class T>
 class List {
 public:
