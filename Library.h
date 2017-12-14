@@ -107,6 +107,11 @@ public:
     void quit();
 
     /**
+     * Sorts the book list alphabetically
+     */
+    void sortBookList();
+
+    /**
      * adds a book to allBooks
      * @param titleToAdd
      * @param numToAdd

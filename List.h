@@ -53,6 +53,13 @@ public:
     virtual T removeValueAt(int index)=0;
 
     /**
+     * replaces the item at the index in the list with new item
+     * @param index location of thing to replace
+     * @param newItem thing to replace with
+     */
+    virtual void replaceValueAt(int index, T newItem)=0;
+
+    /**
      * checks if there are any valid items in the list
      * @returns true if there are no valid items in the list, false otherwise
      */

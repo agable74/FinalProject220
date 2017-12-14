@@ -151,6 +151,21 @@ T ArrayList<T>::removeValueAt(int index){
 }
 
 /**
+ * Replaces the value at an index
+ * @param index index to replace
+ * @param newItem item to replace old item
+ */
+template <class T>
+void ArrayList<T>::replaceValueAt(int index, T newItem){
+    if(index < 0 || index > currItemCount-1){
+        throw std::out_of_range("<Error: Index out of range>");
+    }
+    else{
+        array[index] = newItem;
+    }
+}
+
+/**
  * checks if there are any valid items in the list
  * @returns true if there are no valid items in the list, false otherwise
  */

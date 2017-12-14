@@ -32,6 +32,31 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& memberListT
     memberListTxt = memberListTxtIN;
     deliveryTxt = deliveryTxtIN;
 }
+int compareBookTitles(Book* book1, Book* book2){
+    std::string bookTitle1 = book1->getTitle();
+    std::string bookTitle2 = book2->getTitle();
+    for(int i = 0; i < bookTitle1.length(); i++){
+        if(bookTitle1[i] > bookTitle2[i]){
+            return 1;
+        }else if(bookTitle1[i] < bookTitle2[i]){
+            return 2;
+        }
+    }
+    return 3;
+}
+
+Book* compareBookTitlesBook(Book* book1, Book* book2){
+    std::string bookTitle1 = book1->getTitle();
+    std::string bookTitle2 = book2->getTitle();
+    for(int i = 0; i < bookTitle1.length(); i++){
+        if(bookTitle1[i] > bookTitle2[i]){
+            return book1;
+        }else if(bookTitle1[i] < bookTitle2[i]){
+            return book2;
+        }
+    }
+    return book1;
+}
 
 int checkIfNum(std::string& stringToCheck){
     bool isValidNum = true;
@@ -124,110 +149,145 @@ void Library::generateShelfBookList(){
 }
 
 
+//
+//List<Book*>* copyArray(List<Book*>* arrayToCopy, const int size, int& numLinesRun){
+//    List<Book*>* newArrayCopy = new ArrayList<Book*>;
+//    numLinesRun += 5;
+//    for(int i = 0; i < size; i++){
+//        numLinesRun += 1;
+//        newArrayCopy->insertAt(arrayToCopy->getValueAt(i),i);
+//    }
+//    return newArrayCopy;
+//}
+//
+//List<Book*>* merge(List<Book*>* a1, int size1, List<Book*>* a2, int size2, int& numLinesRun){
+//    //checks for two arrays of size 0
+//    numLinesRun += 6;
+//    if(size1+size2 < 1){
+//        return nullptr;
+//    }
+//    //create a new array to hold the merge values
+//    List<Book*>* arrayToReturn = new ArrayList<Book*>(size1+size2);
+//    int pos1 = 0;
+//    int pos2 = 0;
+//    numLinesRun += 4;
+//    for (int i = 0; i < size1 + size2; i++) {
+//        numLinesRun += 4;
+//        //checks both are within the bounds of respective array
+//        if(pos2 < size2 && pos1 < size1) {
+//            int bookToAdd = compareBookTitles(a1->getValueAt(pos1),a2->getValueAt(pos2));
+//            //moves along the index of the array with lesser value
+//            if (bookToAdd == 2) {
+//                arrayToReturn->insertAt(a1->getValueAt(pos1),i);
+//                pos1++;
+//                numLinesRun+= 2;
+//            } else if (bookToAdd == 1) {
+//                arrayToReturn->insertAt(a2->getValueAt(pos2),i);
+//                pos2++;
+//                numLinesRun += 2;
+//            } //if values are equal, I choose to do the first array and continue through loop
+//            else if (bookToAdd == 3) {
+//                arrayToReturn->insertAt(a1->getValueAt(pos1),i);
+//                pos1++;
+//                numLinesRun += 2;
+//            }
+//            //if one array is out of bounds, finish with values of other array
+//        }else if(pos2 < size2 && pos1 >= size1){
+//            arrayToReturn->insertAt(a2->getValueAt(pos2),i);
+//            pos2++;
+//            numLinesRun += 2;
+//        }else if(pos1 < size1 && pos2 >= size2){
+//            arrayToReturn->insertAt(a1->getValueAt(pos1),i);
+//            pos1++;
+//            numLinesRun += 2;
+//        }else{
+//            return arrayToReturn;
+//        }
+//    }
+//    return arrayToReturn;
+//}
+//
+//List<Book*>* mergeSort(List<Book*>* arrayToSort, int size, int& numLinesRun){
+//    numLinesRun += 5;
+//
+//    //checks for empty array
+//    if(size < 1){
+//        return nullptr;
+//    }
+//        //if size == 1, then send back a copy of array
+//    else if(size == 1){
+//        List<Book*>* arrayCopy = copyArray(arrayToSort,size,numLinesRun);
+//        numLinesRun += 1;
+//        return arrayCopy;
+//    }
+//    else{
+//        std::cout << "bark" << std::endl;
+//        int midIndex = size / 2;
+//        List<Book*>* lowerArray = mergeSort(arrayToSort,size/2,numLinesRun);
+//        List<Book*>* upperArray;
+//        List<Book*>* mergedArray;
+//        numLinesRun += 5;
+//        //has to do it one way for even arrays
+//        if(size % 2 == 0){
+//            //breaks apart and merges in order smaller arrays
+//            upperArray = mergeSort(arrayToSort + midIndex, size/2, numLinesRun);
+//            mergedArray = merge(lowerArray,size/2,upperArray,size/2,numLinesRun);
+//            numLinesRun += 2;
+//        }//other way for odd arrays
+//        else {
+//            upperArray = mergeSort(arrayToSort + midIndex, size / 2 + 1, numLinesRun);
+//            mergedArray = merge(lowerArray,size/2,upperArray,size/2+1,numLinesRun);
+//            numLinesRun += 2;
+//        }
+//        //cleanup
+//        delete lowerArray;
+//        lowerArray = nullptr;
+//        delete upperArray;
+//        upperArray = nullptr;
+//        numLinesRun += 4;
+//        return mergedArray;
+//    }
+//}
+//
+///**
+// * Sorts the allBooks and shelfBooks lists alphabetically
+// * @post allBooks and shelfBooks are sorted alphabetically by title
+// */
+//void Library::sortBookList(){
+//    int numLines = 0;
+//    List<Book*>* sortedList = mergeSort(allBooks,allBooks->itemCount(),numLines);
+//    allBooks = sortedList;
+//}
 
-int* copyArray(const int* arrayToCopy, const int size, int& numLinesRun){
-    int* newArrayCopy = new int[size];
-    numLinesRun += 5;
-    for(int i = 0; i < size; i++){
-        numLinesRun += 1;
-        newArrayCopy[i] = arrayToCopy[i];
-    }
-    return newArrayCopy;
-}
 
-int* merge(const int*a1, int size1, const int* a2, int size2, int& numLinesRun){
-    //checks for two arrays of size 0
-    numLinesRun += 6;
-    if(size1+size2 < 1){
-        return nullptr;
-    }
-    //create a new array to hold the merge values
-    int* arrayToReturn = new int[size1+size2];
-    int pos1 = 0;
-    int pos2 = 0;
+//Uses Insertion Sort
+void sort(List<Book*>* arrayToSort, int size, int& numLinesRun){
     numLinesRun += 4;
-    for (int i = 0; i < size1 + size2; i++) {
-        numLinesRun += 4;
-        //checks both are within the bounds of respective array
-        if(pos2 < size2 && pos1 < size1) {
-            //moves along the index of the array with lesser value
-            if (a1[pos1] < a2[pos2]) {
-                arrayToReturn[i] = a1[pos1];
-                pos1++;
-                numLinesRun+= 2;
-            } else if (a1[pos1] > a2[pos2]) {
-                arrayToReturn[i] = a2[pos2];
-                pos2++;
-                numLinesRun += 2;
-            } //if values are equal, I choose to do the first array and continue through loop
-            else if (a1[pos1] == a2[pos2]) {
-                arrayToReturn[i] = a1[pos1];
-                pos1++;
-                numLinesRun += 2;
+    for(int j = 0; j < size; j++){
+        //loops through the positions
+        numLinesRun += 2;
+        Book* minVal = arrayToSort->getValueAt(j);
+        for(int i = j; i < size; i++){
+            //starts at i=j so that it doesn't go back into the already-sorted section
+            //only looks through unsorted section
+            numLinesRun += 1;
+            if(compareBookTitles(arrayToSort->getValueAt(i),minVal)==2){
+                //swaps the lowest value with the value at the j position
+                numLinesRun += 5;
+                minVal = arrayToSort->getValueAt(i);
+                int minIndex = i;
+                Book* tempSwap = arrayToSort->getValueAt(j)
+//                arrayToSort.;
+//                arrayToSort->insertAt(tempSwap,minIndex);
+//                arrayToSort.insertAt()
+//                arrayToSort[j] = minVal;
             }
-            //if one array is out of bounds, finish with values of other array
-        }else if(pos2 < size2 && pos1 >= size1){
-            arrayToReturn[i] = a2[pos2];
-            pos2++;
-            numLinesRun += 2;
-        }else if(pos1 < size1 && pos2 >= size2){
-            arrayToReturn[i] = a1[pos1];
-            pos1++;
-            numLinesRun += 2;
-        }else{
-            return arrayToReturn;
         }
-    }
-    return arrayToReturn;
-}
 
-int* mergeSort(const int* arrayToSort, int size, int& numLinesRun){
-    numLinesRun += 5;
-    //checks for empty array
-    if(size < 1){
-        return nullptr;
-    }
-        //if size == 1, then send back a copy of array
-    else if(size == 1){
-        int* arrayCopy = copyArray(arrayToSort,size,numLinesRun);
-        numLinesRun += 1;
-        return arrayCopy;
-    }
-    else{
-        int midIndex = size / 2;
-        int* lowerArray = mergeSort(arrayToSort,size/2,numLinesRun);
-        int* upperArray;
-        int* mergedArray;
-        numLinesRun += 5;
-        //has to do it one way for even arrays
-        if(size % 2 == 0){
-            //breaks apart and merges in order smaller arrays
-            upperArray = mergeSort(arrayToSort + midIndex, size/2, numLinesRun);
-            mergedArray = merge(lowerArray,size/2,upperArray,size/2,numLinesRun);
-            numLinesRun += 2;
-        }//other way for odd arrays
-        else {
-            upperArray = mergeSort(arrayToSort + midIndex, size / 2 + 1, numLinesRun);
-            mergedArray = merge(lowerArray,size/2,upperArray,size/2+1,numLinesRun);
-            numLinesRun += 2;
-        }
-        //cleanup
-        delete[] lowerArray;
-        lowerArray = nullptr;
-        delete[] upperArray;
-        upperArray = nullptr;
-        numLinesRun += 4;
-        return mergedArray;
     }
 }
 
-/**
- * Sorts the allBooks and shelfBooks lists alphabetically
- * @post allBooks and shelfBooks are sorted alphabetically by title
- */
-void sortBookList(){
 
-}
 /**
  * Generates the list of library members from the file
  * @post members list generated from text file
@@ -251,6 +311,8 @@ void Library::saveBooksToFile(){
     }
     allBooksOUT.close();
 }
+
+
 
 void Library::saveMembersToFile(){
     libMembersOUT.open(memberListTxt);

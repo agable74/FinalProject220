@@ -219,6 +219,15 @@ T LinkedList<T>::removeValueAt(int index){
     }
 }
 
+    /**
+     * Replaces the value at an index
+     * @param index index to replace
+     * @param newItem item to replace old item
+     */
+    void replaceValueAt(int index, T newItem){
+        //need to implement
+    }
+
 
 /**
  * checks if there are any valid items in the list

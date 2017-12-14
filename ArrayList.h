@@ -96,6 +96,14 @@ public:
     T removeValueAt(int index);
 
     /**
+     * Replaces the value at an index
+     * @param index index to replace
+     * @param newItem item to replace old item
+     */
+    void replaceValueAt(int index, T newItem);
+
+
+    /**
      * checks if there are any valid items in the list
      * @returns true if there are no valid items in the list, false otherwise
      * O(1)
