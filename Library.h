@@ -5,7 +5,7 @@
 #ifndef FINALPROJECT_LIBRARY_H
 #define FINALPROJECT_LIBRARY_H
 
-#include "MemberP.h"
+#include "Member.h"
 #include "Book.h"
 #include "List.h"
 #include <iostream>
@@ -29,13 +29,17 @@ private:
     List<Book*>* shelfBooks;
     //list of people waiting for book
     List<Member*>* members;
-    bool run;
+    bool runUIBool;
+    bool runMasterBool;
+    std::string bookListTxt;
+    std::string memberListTxt;
+    std::string deliveryTxt;
 
 public:
     /**
      * Constructor
      */
-    Library(const std::string& allBooksTxtIN,const std::string& allBooksTxtOUT,const std::string& memberListTxt);
+    Library(const std::string& allBooksTxtIN, const std::string& memberListTxtIN,const std::string& deliveryTxtIN);
 
     /**
      * Generates the list of books from the file
@@ -55,6 +59,16 @@ public:
      * @post sets the list of library members
      */
     void generateMemberList();
+
+    /**
+     * Saves the list of books to a file
+     */
+    void saveBooksToFile();
+
+    /**
+     * Saves the list of members to a file
+     */
+    void saveMembersToFile();
 
     /**
      * Copy Constructor
@@ -77,9 +91,15 @@ public:
     /**
      * Creates a new library member (Person) given prompts about information
      * Adds to the memberList
-     * @return true if successful, false if unsuccessful
+     * @post member added to memberList
      */
-    bool addMember();
+    void addMember();
+
+    /**
+     * Adds already-created member to member list
+     * @param memberToAdd
+     */
+    void addMember(Member& memberToAdd);
 
     /**
      * Save the inventory and wait lists in a file and terminate execution.
@@ -93,7 +113,7 @@ public:
      */
     void addBook(std::string titleToAdd, int numToAdd);
 
-    void addBook(Book bookToAdd);
+    void addBook(Book& bookToAdd);
 
     /**
      * Moves a book from the outBooks list to the inBooks list
@@ -135,7 +155,9 @@ public:
 
     void checkOutBook(std::string bookToCheckOut);
 
-    void runUI();
+    void masterRun();
+
+    bool runUI();
 
 
 };

@@ -103,11 +103,17 @@ public:
     int itemCount();
 
     /**
-     * removes all valid items from the list
+     * removes all valid items from the list (shallow)
      * @post the list is completely clear of valid items
      * O(N)  (because I only remove the first value each loop, which is O(1))
      */
     void clearList();
+
+    /**
+     * removes all valid items from the list (deep)
+     * @post the list os completely clear of valid items
+     */
+    void clearData();
 
     /**
      * gives a string representation of the current list

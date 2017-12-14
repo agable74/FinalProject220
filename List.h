@@ -65,10 +65,16 @@ public:
     virtual int itemCount()=0;
 
     /**
-     * removes all valid items from the list
+     * removes all valid items from the list (shallow)
      * @post the list is completely clear of valid items
      */
     virtual void clearList()=0;
+
+    /**
+     * removes all valid items from the list (deep)
+     * @post the list os completely clear of valid items
+     */
+    virtual void clearData()=0;
 
     /**
      * gives a string representation of the current list

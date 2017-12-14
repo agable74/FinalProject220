@@ -1,16 +1,20 @@
 Pride and Prejudice
 Jane Austen
-00119
+119
 3
 The Great Gatsby
 F. Scott Fitzgerald
-01234
+1234
 33
 Doggo's Are Good
 Alex Gable
 2222
-0
-Dogs rule!beep
-yeah!
-Dogs rule!beep
-yeah!
+68
+Lord of the Flies
+William Golding
+23197
+56
+To Kill a Mockingbird
+Harper Lee
+1239041
+8

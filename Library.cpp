@@ -7,15 +7,15 @@
 /**
  * Constructor
  */
-Library::Library(const std::string& allBooksTxtIN,const std::string& allBooksTxtOUT,const std::string& memberListTxt){
+Library::Library(const std::string& allBooksTxtIN,const std::string& memberListTxtIN,const std::string& deliveryTxtIN){
     //pointer to list of library members
     //memberList;
     //fstream parts
-    libMembersIN.open(memberListTxt);
+    libMembersIN.open(memberListTxtIN);
     //libMembersOUT = std::ofstream(memberListTxt);
     //fstream parts
     allBooksIN.open(allBooksTxtIN);
-    allBooksOUT.open(allBooksTxtOUT);
+   // allBooksOUT.open(allBooksTxtOUT);
     //pointer to list of books checked out
     allBooks = new ArrayList<Book*>;
     shelfBooks = new ArrayList<Book*>;
@@ -24,8 +24,47 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& allBooksTxt
     //generate shelf from allBooks
     generateShelfBookList();
     //list of people waiting for book
+    members = new ArrayList<Member*>;
     generateMemberList();
-    run = true;
+    runUIBool = true;
+    runMasterBool = true;
+    bookListTxt = allBooksTxtIN;
+    memberListTxt = memberListTxtIN;
+    deliveryTxt = deliveryTxtIN;
+}
+
+int checkIfNum(std::string& stringToCheck){
+    bool isValidNum = true;
+    for(int i = 0; i < stringToCheck.length(); i++){
+        if(!isdigit(stringToCheck[i])){
+            isValidNum = false;
+        }
+    }
+    while(!isValidNum){
+        isValidNum = true;
+        std::cout << "Error in your number. Please enter a valid number: ";
+        std::getline(std::cin,stringToCheck);
+        for(int i = 0; i < stringToCheck.length(); i++){
+            if(!isdigit(stringToCheck[i])){
+                isValidNum = false;
+            }
+        }
+    }
+    int validNum = std::stoi(stringToCheck);
+    return validNum;
+}
+
+bool checkYesOrNo(std::string& stringToCheck){
+    while(stringToCheck!="y"&&stringToCheck!="Y"&&stringToCheck!="Yes"&&stringToCheck!="yes"&&stringToCheck!="n"&&stringToCheck!="N"&&stringToCheck!="No"&&stringToCheck!="no"){
+        std::cout << "Invalid input, please enter 'yes' or 'no': ";
+        std::getline(std::cin,stringToCheck);
+    }
+    if(stringToCheck == "y" || stringToCheck == "Y" || stringToCheck == "yes" || stringToCheck == "Yes"){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 /**
@@ -84,6 +123,111 @@ void Library::generateShelfBookList(){
         }
 }
 
+
+
+int* copyArray(const int* arrayToCopy, const int size, int& numLinesRun){
+    int* newArrayCopy = new int[size];
+    numLinesRun += 5;
+    for(int i = 0; i < size; i++){
+        numLinesRun += 1;
+        newArrayCopy[i] = arrayToCopy[i];
+    }
+    return newArrayCopy;
+}
+
+int* merge(const int*a1, int size1, const int* a2, int size2, int& numLinesRun){
+    //checks for two arrays of size 0
+    numLinesRun += 6;
+    if(size1+size2 < 1){
+        return nullptr;
+    }
+    //create a new array to hold the merge values
+    int* arrayToReturn = new int[size1+size2];
+    int pos1 = 0;
+    int pos2 = 0;
+    numLinesRun += 4;
+    for (int i = 0; i < size1 + size2; i++) {
+        numLinesRun += 4;
+        //checks both are within the bounds of respective array
+        if(pos2 < size2 && pos1 < size1) {
+            //moves along the index of the array with lesser value
+            if (a1[pos1] < a2[pos2]) {
+                arrayToReturn[i] = a1[pos1];
+                pos1++;
+                numLinesRun+= 2;
+            } else if (a1[pos1] > a2[pos2]) {
+                arrayToReturn[i] = a2[pos2];
+                pos2++;
+                numLinesRun += 2;
+            } //if values are equal, I choose to do the first array and continue through loop
+            else if (a1[pos1] == a2[pos2]) {
+                arrayToReturn[i] = a1[pos1];
+                pos1++;
+                numLinesRun += 2;
+            }
+            //if one array is out of bounds, finish with values of other array
+        }else if(pos2 < size2 && pos1 >= size1){
+            arrayToReturn[i] = a2[pos2];
+            pos2++;
+            numLinesRun += 2;
+        }else if(pos1 < size1 && pos2 >= size2){
+            arrayToReturn[i] = a1[pos1];
+            pos1++;
+            numLinesRun += 2;
+        }else{
+            return arrayToReturn;
+        }
+    }
+    return arrayToReturn;
+}
+
+int* mergeSort(const int* arrayToSort, int size, int& numLinesRun){
+    numLinesRun += 5;
+    //checks for empty array
+    if(size < 1){
+        return nullptr;
+    }
+        //if size == 1, then send back a copy of array
+    else if(size == 1){
+        int* arrayCopy = copyArray(arrayToSort,size,numLinesRun);
+        numLinesRun += 1;
+        return arrayCopy;
+    }
+    else{
+        int midIndex = size / 2;
+        int* lowerArray = mergeSort(arrayToSort,size/2,numLinesRun);
+        int* upperArray;
+        int* mergedArray;
+        numLinesRun += 5;
+        //has to do it one way for even arrays
+        if(size % 2 == 0){
+            //breaks apart and merges in order smaller arrays
+            upperArray = mergeSort(arrayToSort + midIndex, size/2, numLinesRun);
+            mergedArray = merge(lowerArray,size/2,upperArray,size/2,numLinesRun);
+            numLinesRun += 2;
+        }//other way for odd arrays
+        else {
+            upperArray = mergeSort(arrayToSort + midIndex, size / 2 + 1, numLinesRun);
+            mergedArray = merge(lowerArray,size/2,upperArray,size/2+1,numLinesRun);
+            numLinesRun += 2;
+        }
+        //cleanup
+        delete[] lowerArray;
+        lowerArray = nullptr;
+        delete[] upperArray;
+        upperArray = nullptr;
+        numLinesRun += 4;
+        return mergedArray;
+    }
+}
+
+/**
+ * Sorts the allBooks and shelfBooks lists alphabetically
+ * @post allBooks and shelfBooks are sorted alphabetically by title
+ */
+void sortBookList(){
+
+}
 /**
  * Generates the list of library members from the file
  * @post members list generated from text file
@@ -97,13 +241,61 @@ void Library::generateMemberList(){
     }
 }
 
+void Library::saveBooksToFile(){
+    allBooksOUT.open(bookListTxt);
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        allBooksOUT << allBooks->getValueAt(i)->getTitle() << '\n';
+        allBooksOUT << allBooks->getValueAt(i)->getAuthor() << '\n';
+        allBooksOUT << allBooks->getValueAt(i)->getIsbn() << '\n';
+        allBooksOUT << allBooks->getValueAt(i)->getHaveTotal() << '\n';
+    }
+    allBooksOUT.close();
+}
+
+void Library::saveMembersToFile(){
+    libMembersOUT.open(memberListTxt);
+    for(int i = 0; i < members->itemCount(); i++){
+        libMembersOUT << members->getValueAt(i)->getName() << '\n';
+        libMembersOUT << members->getValueAt(i)->getPhoneNumber() << '\n';
+        libMembersOUT << members->getValueAt(i)->getEmail() << '\n';
+        libMembersOUT << members->getValueAt(i)->getId() << '\n';
+        libMembersOUT << members->getValueAt(i)->getContactPref() << '\n';
+    }
+    libMembersOUT.close();
+}
 
 /**
  * Copy Constructor
  * @param libraryListToCopy
  */
 Library::Library(const Library& libraryToCopy){
+    libMembersIN;
+    libMembersOUT;
+    //pointer to list of books owned by library
 
+    allBooks = new ArrayList<Book*>;
+    for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
+        Book* copyBook = libraryToCopy.allBooks->getValueAt(i);
+        addBook(*copyBook);
+    }
+
+    //fstream parts
+    allBooksIN;
+    allBooksOUT;
+    //pointer to list of books in library
+    shelfBooks = new ArrayList<Book*>;
+    generateShelfBookList();
+    //list of people waiting for book
+
+    members = new ArrayList<Member*>;
+    for(int i = 0; i < libraryToCopy.members->itemCount(); i++){
+        Member* copyMember = libraryToCopy.members->getValueAt(i);
+        addMember(*copyMember);
+    }
+
+    runUIBool = true;
+    bookListTxt = libraryToCopy.bookListTxt;
+    memberListTxt = libraryToCopy.memberListTxt;
 }
 
 
@@ -112,14 +304,37 @@ Library::Library(const Library& libraryToCopy){
  * @param libraryListToCopy
  */
 Library& Library::operator=(const Library& libraryToCopy){
+    if(this!=&libraryToCopy){
+        shelfBooks->clearList();
+        allBooks->clearData();
+        members->clearData();
 
+
+        for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
+            Book* copyBook = libraryToCopy.allBooks->getValueAt(i);
+            addBook(*copyBook);
+        }
+
+        generateShelfBookList();
+
+        for(int i = 0; i < libraryToCopy.members->itemCount(); i++){
+            Member* copyMember = libraryToCopy.members->getValueAt(i);
+            addMember(*copyMember);
+        }
+    }
+    return *this;
 }
 
 /**
  * Destructor
  */
 Library::~Library(){
-
+    shelfBooks->clearList();
+    delete shelfBooks;
+    allBooks->clearData();
+    delete allBooks;
+    members->clearData();
+    delete members;
 }
 
 /**
@@ -127,16 +342,22 @@ Library::~Library(){
  * Adds to the memberList
  * @return true if successful, false if unsuccessful
  */
-bool Library::addMember(){
+void Library::addMember(){
     Member* newMember = new Member();
     members->insertAtEnd(newMember);
+}
+
+void Library::addMember(Member& memberToAdd){
+    members->insertAtEnd(&memberToAdd);
 }
 
 /**
  * Save the inventory and wait lists in a file and terminate execution. Clean up too!
  */
 void Library::quit(){
-    run = false;
+    runUIBool = false;
+    saveBooksToFile();
+    saveMembersToFile();
     libMembersOUT.close();
     allBooksOUT.close();
 }
@@ -155,19 +376,29 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
         }
     }
     if(!inList){
-        std::cout << "Who is the author of this book?" << std::endl;
         std::string author;
-        std::cin >> author;
+        std::cout << "Who is the author of this book?" << std::endl;
+        std::getline(std::cin,author);
+        std::string isbnStr;
         std::cout << "What is the ISBN number of this book?" << std::endl;
-        int isbn;
-        std::cin >> isbn;
+        std::getline(std::cin,isbnStr);
+        int isbn = checkIfNum(isbnStr);
         Book* newBook = new Book(titleToAdd,author,isbn,numToAdd);
         allBooks->insertAtEnd(newBook);
     }
 }
 
-void Library::addBook(Book bookToAdd){
-    allBooks->insertAtEnd(&bookToAdd);
+void Library::addBook(Book& bookToAdd){
+    bool inList = false;
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        if(allBooks->getValueAt(i)->getTitle() == bookToAdd.getTitle()){
+            inList = true;
+            allBooks->getValueAt(i)->modHaveTotal(bookToAdd.getHaveTotal());
+        }
+    }
+    if(!inList) {
+        allBooks->insertAtEnd(&bookToAdd);
+    }
 }
 
 /**
@@ -232,7 +463,15 @@ void Library::removeBook(std::string bookToRemove, int numRemove){
  * Prints a summary of all available commands
  */
 void Library::libraryHelp(){
-    std::cout << "pst" << std::endl;
+    std::cout << "I - Inquire about a book" << std::endl;
+    std::cout << "L - List all available books" << std::endl;
+    std::cout << "A - Add a book to the library" << std::endl;
+    std::cout << "N - Add a new member to the library" << std::endl;
+    std::cout << "R - Return a book to the library" << std::endl;
+    std::cout << "W - Withdraw a book from the library" << std::endl;
+    std::cout << "D - Delivery of books from requests" << std::endl;
+    std::cout << "O - Order books through interlibrary loans" << std::endl;
+    std::cout << "Q - Quit" << std::endl;
 }
 
 
@@ -310,7 +549,11 @@ void Library::checkOutBook(std::string bookToCheckOut){
     for(int i = 0; i < allBooks->itemCount(); i++){
         if(allBooks->getValueAt(i)->getTitle() == bookToCheckOut){
             inList = true;
-            allBooks->getValueAt(i)->checkBookOut();
+            if(allBooks->getValueAt(i)->getHaveShelf() > 0) {
+                allBooks->getValueAt(i)->checkBookOut();
+            }else{
+                std::cout << "There are currently no copies of that book on the shelves. Try again at a later date." << std::endl;
+            }
         }
     }
     if(!inList){
@@ -318,8 +561,145 @@ void Library::checkOutBook(std::string bookToCheckOut){
     }
 }
 
-void Library::runUI(){
-    while(run){
+void Library::masterRun(){
+    while(runMasterBool){
+        runUI();
+    }
+}
 
+bool Library::runUI(){
+    std::cout << "Welcome to the library!" << std::endl;
+    std::string userInput;
+    while(runUIBool){
+        std::cout << std::endl;
+        std::cout << "Type H for a list of functions or type the function which you wish to use: ";
+        std::getline (std::cin,userInput);
+        std::cout << std::endl;
+        while(userInput!="h"&&userInput!="H"&&userInput!="I"&&userInput!="i"&&userInput!="a"&&userInput!="A"&&userInput!="L"&&userInput!="l"&&userInput!="N"&&userInput!="n"&&userInput!="R"&&userInput!="r"&&userInput!="W"&&userInput!="w"&&userInput!="D"&&userInput!="d"&&userInput!="o"&&userInput!="O"&&userInput!="help"&&userInput!="Help"&&userInput!="Q"&&userInput!="q"&&userInput!="quit"&&userInput!="Quit"){
+            std::cout << "Invalid input. Please enter the letter corresponding to the command you wish to perform: ";
+            std::getline (std::cin,userInput);
+        }
+        if(userInput=="h"||userInput=="H"){
+            libraryHelp();
+        }
+        else if(userInput == "I" || userInput == "i"){
+            std::cout << "You have chosen to inquire about a book. Are you certain?";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes) {
+                std::string bookTitle;
+                "Please enter the title of the book which interests you:";
+                std::getline(std::cin, bookTitle);
+                inquireAboutBook(bookTitle);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{std::cout << "Returning to the main menu" << std::endl;}
+        }
+        else if(userInput == "a" || userInput == "A"){
+            std::cout << "You have chosen to add a book. Are you certain?";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes) {
+                std::string bookTitle;
+                std::string numToAddStr;
+                std::cout << "Please enter the title of the book which you wish to add:";
+                std::getline(std::cin, bookTitle);
+                std::cout << "Please enter the amount of this book you are adding:";
+                std::getline(std::cin, numToAddStr);
+                int numToAdd = checkIfNum(numToAddStr);
+                addBook(bookTitle, numToAdd);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+        else if(userInput == "q" || userInput == "Q" || userInput == "quit" || userInput == "Quit"){
+            std::string userResponse;
+            std::cout << "Are you sure you wish to quit? ";
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                quit();
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+        else if(userInput == "n" || userInput == "N"){
+            std::cout << "You wish to add a new member." << std::endl;
+            addMember();
+        }
+        else if(userInput == "r" || userInput == "R"){
+            std::cout << "You wish to return a book. Are you certain?";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                std::cout << "Enter the title of the book you wish to return :";
+                std::string title;
+                std::getline(std::cin,title);
+                returnBook(title);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+        else if(userInput == "W" || userInput == "w"){
+            std::cout << "You have chosen to withdraw a book. Are you certain? ";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                std::cout << "Enter the title of the book you wish to withdraw :";
+                std::string title;
+                std::getline(std::cin,title);
+                checkOutBook(title);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+        else if(userInput == "d" || userInput == "D"){
+            std::cout << "You have selected to intake a delivery. Are you certain? ";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                //intake delivery from txt file
+                bookDelivery(deliveryTxt);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+    }
+    //Program keeps running after you quit unless you terminate
+    while(!runUIBool){
+        std::cout << "Do you wish to terminate the program? ";
+        std::string userResponse;
+        std::getline(std::cin,userResponse);
+        bool yes = checkYesOrNo(userResponse);
+        if(!yes){
+            std::cout << "Do you wish to begin using the library again?";
+            std::getline(std::cin,userResponse);
+            yes = checkYesOrNo(userResponse);
+            if(yes){
+                runUIBool = true;
+            }
+            else{
+                std::cout << "You don't want to end the program, but you don't want to use it. Why? WHY???" << std::endl;
+            }
+        }
+        else{
+            std::cout << "Shutting down..." << std::endl;
+            runMasterBool = false;
+            return false;
+        }
     }
 }

@@ -110,13 +110,14 @@ public:
     int itemCount();
 
     /**
-     * removes all valid items from the list
+     * removes all valid items from the list (deep)
      * @post the list is completely clear of valid items
      * O(n)
      */
     void clearData();
 
     /**
+     * removes all valid items from the list (shallow)
      * sets all pointers to nullptrs
      */
     void clearList();
