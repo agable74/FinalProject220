@@ -515,7 +515,11 @@ void Library::returnBook(std::string titleToReturn){
     for(int i = 0; i < allBooks->itemCount(); i++){
         if(allBooks->getValueAt(i)->getTitle() == titleToReturn){
             inList = true;
-            allBooks->getValueAt(i)->checkBookIn();
+            if(allBooks->getValueAt(i)->getHaveTotal() > allBooks->getValueAt(i)->getHaveShelf()) {
+                allBooks->getValueAt(i)->checkBookIn();
+            }else{
+                std::cout << "We already have all copies of that book accounted for. This book does not belong to this library." << std::endl;
+            }
         }
     }
     if(!inList){
@@ -566,11 +570,15 @@ void Library::removeBook(std::string bookToRemove, int numRemove){
     for(int i = 0; i < allBooks->itemCount(); i++){
         if(allBooks->getValueAt(i)->getTitle() == bookToRemove){
             inList = true;
-            allBooks->getValueAt(i)->modHaveTotal(-numRemove);
+            if(allBooks->getValueAt(i)->getHaveTotal() >= numRemove) {
+                allBooks->getValueAt(i)->modHaveTotal(-numRemove);
+            }else{
+                std::cout << "You cannot remove more books than exist at the library! There are currently " << allBooks->getValueAt(i)->getHaveTotal() << " copies owned by this library." << std::endl;
+            }
         }
     }
     if(!inList){
-        std::cout << "That book does not belong to this library." << std::endl;
+        std::cout << "The library does not own that book to remove it." << std::endl;
     }
 }
 
@@ -580,12 +588,13 @@ void Library::removeBook(std::string bookToRemove, int numRemove){
 void Library::libraryHelp(){
     std::cout << "I - Inquire about a book" << std::endl;
     std::cout << "L - List all available books" << std::endl;
-    std::cout << "A - Add a book to the library" << std::endl;
     std::cout << "N - Add a new member to the library" << std::endl;
     std::cout << "R - Return a book to the library" << std::endl;
     std::cout << "W - Withdraw a book from the library" << std::endl;
     std::cout << "D - Delivery of books from requests" << std::endl;
     std::cout << "O - Order books through interlibrary loans" << std::endl;
+    std::cout << "A - Add a book to the library" << std::endl;
+    std::cout << "E - Remove a book which has been damaged or lost" << std::endl;
     std::cout << "Q - Quit" << std::endl;
 }
 
@@ -604,7 +613,7 @@ void Library::inquireAboutBook(std::string bookToInquire){
         }
     }
     if(!inList){
-        std::cout << "That book does not belong to this library." << std::endl;
+        std::cout << "The library does not own such a book. Consider requesting it through an interlibrary loan." << std::endl;
     }
 }
 
@@ -656,7 +665,11 @@ void Library::bookDelivery(const std::string& deliveryFileName){
 }
 
 void Library::printAllOwnedBooks(){
+    sortBookList();
+    std::cout << "List of all books:" << std::endl;
     std::cout << allBooks->toString() << std::endl;
+    std::cout << std::endl;
+    std::cout << "End of list" << std::endl;
 }
 
 void Library::checkOutBook(std::string bookToCheckOut){
@@ -672,7 +685,7 @@ void Library::checkOutBook(std::string bookToCheckOut){
         }
     }
     if(!inList){
-        std::cout << "That book does not belong to this library." << std::endl;
+        std::cout << "The library does not own that book. Consider writing the title exactly as listed or request an interlibrary loan." << std::endl;
     }
 }
 
@@ -690,7 +703,7 @@ bool Library::runUI(){
         std::cout << "Type H for a list of functions or type the function which you wish to use: ";
         std::getline (std::cin,userInput);
         std::cout << std::endl;
-        while(userInput!="h"&&userInput!="H"&&userInput!="I"&&userInput!="i"&&userInput!="a"&&userInput!="A"&&userInput!="L"&&userInput!="l"&&userInput!="N"&&userInput!="n"&&userInput!="R"&&userInput!="r"&&userInput!="W"&&userInput!="w"&&userInput!="D"&&userInput!="d"&&userInput!="o"&&userInput!="O"&&userInput!="help"&&userInput!="Help"&&userInput!="Q"&&userInput!="q"&&userInput!="quit"&&userInput!="Quit"){
+        while(userInput!="h"&&userInput!="H"&&userInput!="I"&&userInput!="i"&&userInput!="a"&&userInput!="A"&&userInput!="L"&&userInput!="l"&&userInput!="N"&&userInput!="n"&&userInput!="R"&&userInput!="r"&&userInput!="W"&&userInput!="w"&&userInput!="D"&&userInput!="d"&&userInput!="o"&&userInput!="O"&&userInput!="help"&&userInput!="Help"&&userInput!="Q"&&userInput!="q"&&userInput!="quit"&&userInput!="Quit"&&userInput!="e"&&userInput!="E"){
             std::cout << "Invalid input. Please enter the letter corresponding to the command you wish to perform: ";
             std::getline (std::cin,userInput);
         }
@@ -704,7 +717,7 @@ bool Library::runUI(){
             bool yes = checkYesOrNo(userResponse);
             if(yes) {
                 std::string bookTitle;
-                "Please enter the title of the book which interests you:";
+                std::cout << "Please enter the title of the book which interests you:";
                 std::getline(std::cin, bookTitle);
                 inquireAboutBook(bookTitle);
                 std::cout << "Returning to the main menu" << std::endl;
@@ -816,6 +829,26 @@ bool Library::runUI(){
             bool yes = checkYesOrNo(userResponse);
             if(yes){
                 printAllOwnedBooks();
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+        else if(userInput == "e" || userInput == "E"){
+            std::cout << "You have selected to remove a book. Are you certain? ";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                std::string bookTitle;
+                std::string numStr;
+                std::cout << "Please enter the title of the book you wish to remove: ";
+                std::getline(std::cin,bookTitle);
+                std::cout << "Please enter the amount you wish to remove: ";
+                std::getline(std::cin,numStr);
+                int numToRemove = checkIfNum(numStr);
+                removeBook(bookTitle, numToRemove);
                 std::cout << "Returning to the main menu" << std::endl;
             }
             else{

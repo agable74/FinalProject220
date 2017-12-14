@@ -275,18 +275,17 @@ void LinkedList<T>::clearData(){
  */
 template <class T>
 std::string LinkedList<T>::toString(){
-    std::string stringToReturn = "{";
+    std::string stringToReturn = "";
     if(front != nullptr) {
         LinkedNode<T> *currentSpot = front;
         for (int i = 0; i < numElements; i++) {
             T listItem = currentSpot->getItem();
             stringToReturn += listItem.toString();
             if (i != numElements - 1) {
-                stringToReturn += ", ";
+                stringToReturn += "\n";
             }
             currentSpot = currentSpot->getNext();
         }
     }
-    stringToReturn += "}";
     return stringToReturn;
 }

@@ -215,7 +215,7 @@ void ArrayList<T>::clearList(){
 template <class T>
 std::string ArrayList<T>::toString(){
     this;
-    std::string arrayString = "{";
+    std::string arrayString = "";
     std::string newString = "";
     for(int i = 0; i < currItemCount; i++){
         newString = array[i]->toString();
@@ -224,7 +224,6 @@ std::string ArrayList<T>::toString(){
             arrayString += "\n";
         }
     }
-    arrayString += "}";
     return arrayString;
 }
 
