@@ -429,6 +429,8 @@ Library& Library::operator=(const Library& libraryToCopy){
  * Destructor
  */
 Library::~Library(){
+    requestBooks->clearData();
+    delete requestBooks;
     shelfBooks->clearList();
     delete shelfBooks;
     allBooks->clearData();
@@ -785,6 +787,35 @@ bool Library::runUI(){
             if(yes){
                 //intake delivery from txt file
                 bookDelivery(deliveryTxt);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+        else if(userInput == "o" || userInput == "O"){
+            std::cout << "You have selected to order an interlibrary loan. Are you certain? ";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                std::string bookTitle;
+                std::cout << "Please enter the title of the book you desire: ";
+                std::getline(std::cin,bookTitle);
+                requestLoan(bookTitle);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+        else if(userInput == "l" || userInput == "L"){
+            std::cout << "You have selected to list all library books. Are you certain? ";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                printAllOwnedBooks();
                 std::cout << "Returning to the main menu" << std::endl;
             }
             else{
