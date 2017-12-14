@@ -291,41 +291,46 @@ void Library::generateMemberList(){
     if(!libMembersIN){
         std::cerr << "The file could not be opened!" << std::endl;
     }
-//    else{
-//        std::string name;
-//        std::string ID;
-//        std::string phoneSTR;
-//        std::string email;
-//        std::string preference;
-//        while (libMembersIN) {
-//            getline(libMembersIN, name);
-//            getline(libMembersIN, ID);
-//            getline(libMembersIN, phoneSTR);
-//            getline(libMembersIN, email);
-//            getline(libMembersIN,preference);
-//            if(libMembersIN) {    //makes sure that it doesn't duplicate the last line, and works on empty text files
-//                if (!name.empty() && name[name.size() - 1] == '\r') {
-//                    name.erase(name.size() - 1);
-//                }
-//                if (!ID.empty() && ID[ID.size() - 1] == '\r') {
-//                    ID.erase(ID.size() - 1);
-//                }
-//                int phone = std::stoi(phoneSTR);
-//                int numBooks = std::stoi(email);
-//                Member* newMember = new Member(name,phone,email,ID,preference);
-//                bool inList = false;
-//                for (int i = 0; i < members->itemCount(); i++) {
-//                    if (members->getValueAt(i)->getName() == newMember->getName()) {
-//                        inList = true;
-//                        std::cout << "Member already exists!" << std::endl;
-//                    }
-//                }
-//                if (!inList) {
-//                    members->insertAtEnd(newMember);
-//                }
-//            }
-//        }
-//    }
+    else{
+        std::cout << "BARK BARK" << std::endl;
+        std::string name;
+        std::string ID;
+        std::string phoneSTR;
+        std::string email;
+        std::string preference;
+        while (libMembersIN) {
+            std::cout << "BARK BARK" << std::endl;
+            getline(libMembersIN, name);
+            getline(libMembersIN, phoneSTR);
+            getline(libMembersIN, email);
+            getline(libMembersIN, ID);
+            getline(libMembersIN,preference);
+            if(libMembersIN) {    //makes sure that it doesn't duplicate the last line, and works on empty text files
+                std::cout << "BARK BARK" << std::endl;
+                if (!name.empty() && name[name.size() - 1] == '\r') {
+                    name.erase(name.size() - 1);
+                }
+                if (!ID.empty() && ID[ID.size() - 1] == '\r') {
+                    ID.erase(ID.size() - 1);
+                }
+                std::cout << "BARK BARK1" << std::endl;
+                long long phone = std::stol(phoneSTR);
+                std::cout << "BARK BARK2" << std::endl;
+                Member* newMember = new Member(name,phone,email,ID,preference);
+                std::cout << "BARK BARK MEMBER" << std::endl;
+                bool inList = false;
+                for (int i = 0; i < members->itemCount(); i++) {
+                    if (members->getValueAt(i)->getName() == newMember->getName()) {
+                        inList = true;
+                        std::cout << "Member already exists!" << std::endl;
+                    }
+                }
+                if (!inList) {
+                    members->insertAtEnd(newMember);
+                }
+            }
+        }
+    }
 }
 
 void Library::saveBooksToFile(){
