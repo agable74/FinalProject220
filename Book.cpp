@@ -11,7 +11,7 @@ Book::Book(std::string titleIn, std::string authorIn, int isbnIn, int haveTotalI
     haveTotal = haveTotalIn;
     haveShelf = haveTotalIn;
     wantValue = 0;
-    waitList = new LinkedList();
+    waitList = new ArrayList();
 }
 
 Book::Book (const Book &bookToCopy) {

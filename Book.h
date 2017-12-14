@@ -5,7 +5,7 @@
 #ifndef FINALPROJECT_BOOK_H
 #define FINALPROJECT_BOOK_H
 
-#include "LinkedList.h"
+#include "ArrayList.h"
 #include "Member.h"
 #include <string>
 #include <iostream>
