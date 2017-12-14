@@ -224,6 +224,7 @@ T LinkedList<T>::removeValueAt(int index){
      * @param index index to replace
      * @param newItem item to replace old item
      */
+    template <class T>
     void replaceValueAt(int index, T newItem){
         //need to implement
     }

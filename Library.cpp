@@ -276,7 +276,7 @@ void sort(List<Book*>* arrayToSort, int size, int& numLinesRun){
                 numLinesRun += 5;
                 minVal = arrayToSort->getValueAt(i);
                 int minIndex = i;
-                Book* tempSwap = arrayToSort->getValueAt(j)
+                Book* tempSwap = arrayToSort->getValueAt(j);
 //                arrayToSort.;
 //                arrayToSort->insertAt(tempSwap,minIndex);
 //                arrayToSort.insertAt()
