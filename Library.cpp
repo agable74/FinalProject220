@@ -189,11 +189,11 @@ Library& Library::operator=(const Library& libraryToCopy){
  */
 Library::~Library(){
     shelfBooks->clearList();
-    //delete[] shelfBooks;
+    delete shelfBooks;
     allBooks->clearData();
-    //delete[] allBooks;
+    delete allBooks;
     members->clearData();
-    //delete[] members;
+    delete members;
 }
 
 /**
