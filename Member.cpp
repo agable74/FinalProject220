@@ -138,6 +138,14 @@ Member::Member(std::string nameIn, long long phoneNumberIn, std::string emailIn,
         contactPref = setContactPref(contactPrefIn);
 }
 
+Member::Member(const Member& memberToCopy) {
+    name = memberToCopy.name;
+    phoneNumber = memberToCopy.phoneNumber;
+    email = memberToCopy.email;
+    id = memberToCopy.id;
+    contactPref = memberToCopy.contactPref;
+}
+
 std::string Member::getName() {
     return name;
 }
@@ -160,7 +168,7 @@ std::string Member::setContactPref(std::string cPref) {
     std::string contPref;
     if (cPref != "") {
         choice += toupper(cPref[0]);
-        if (choice == "C")
+        if (choice == "C" || choice == "P")
             contPref = "Phone call";
         else if (choice == "T")
             contPref = "Text message";
