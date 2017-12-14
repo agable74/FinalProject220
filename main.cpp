@@ -26,7 +26,7 @@ int main() {
 //              //<< " " << author << " " << isbnSTR << " " << numBooksSTR << std::endl;
 //    inf.close();
 
-    Library testLib = Library("AllBooks.txt","TestMembers.txt","TestDeliveryIN.txt");
+    Library testLib = Library("AllBooksWork.txt","TestMembers.txt","TestDeliveryIN.txt");
     testLib.printAllOwnedBooks();
     Book testBook = Book("Lord of the Flies","William Golding",055235,6);
     testLib.addBook(testBook);
@@ -43,7 +43,7 @@ int main() {
     testLib.saveBooksToFile();
     //testLib.masterRun();
     testLib.printAllOwnedBooks();
-//    testLib.sortBookList();
+    testLib.sortBookList();
     testLib.printAllOwnedBooks();
 
     //need to add a default constructor in book to store the shelf count

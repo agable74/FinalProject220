@@ -253,11 +253,7 @@ void Library::generateShelfBookList(){
 // * Sorts the allBooks and shelfBooks lists alphabetically
 // * @post allBooks and shelfBooks are sorted alphabetically by title
 // */
-//void Library::sortBookList(){
-//    int numLines = 0;
-//    List<Book*>* sortedList = mergeSort(allBooks,allBooks->itemCount(),numLines);
-//    allBooks = sortedList;
-//}
+
 
 
 //Uses Insertion Sort
@@ -277,16 +273,18 @@ void sort(List<Book*>* arrayToSort, int size, int& numLinesRun){
                 minVal = arrayToSort->getValueAt(i);
                 int minIndex = i;
                 Book* tempSwap = arrayToSort->getValueAt(j);
-//                arrayToSort.;
-//                arrayToSort->insertAt(tempSwap,minIndex);
-//                arrayToSort.insertAt()
-//                arrayToSort[j] = minVal;
+                arrayToSort->replaceValueAt(minIndex,tempSwap);
+                arrayToSort->replaceValueAt(j,minVal);
             }
         }
 
     }
 }
 
+void Library::sortBookList(){
+    int numLines = 0;
+    sort(allBooks,allBooks->itemCount(),numLines);
+}
 
 /**
  * Generates the list of library members from the file
