@@ -96,6 +96,8 @@ public:
      */
     std::string toString();
 
+    void removeBookTitle();
+
     void addWaiter(Member* waiter);
 
     const int waitListLength();

@@ -26,9 +26,12 @@ Book::Book (const Book &bookToCopy) {
     haveShelf = bookToCopy.haveShelf;
     wantValue = bookToCopy.wantValue;
     waitList = new ArrayList<Member*>;
-    for (int i = 0; i < bookToCopy.waitList->itemCount(); ++i) {
-        waitList->insertAtEnd(bookToCopy.waitList->getValueAt(i));
-    }
+    if (bookToCopy.waitList) {
+        for (int i = 0; i < bookToCopy.waitList->itemCount(); ++i) {
+            waitList->insertAtEnd(bookToCopy.waitList->getValueAt(i));
+        }
+    } else
+        waitList = nullptr;
 }
 
 Book::~Book() {
@@ -59,15 +62,30 @@ int Book::getHaveTotal() {
 
 void Book::modHaveTotal(int change) {
     int tempHaveTotal = haveTotal;
-    haveTotal += change;
-    haveShelf += change;
-    std::cout << "\nBook count successfully updated.\n[Changed from " << tempHaveTotal;
-    std::cout << " copies to " << haveTotal << "]\n";
+    if (haveTotal + change < 0 || haveShelf + change < 0) {
+        if (abs(change) == 1) {
+            std::cout << "\nCannot remove " + std::to_string(abs(change)) + " copy of '";
+            std::cout << title + "'.\n";
+        }
+        else {
+            std::cout << "\nCannot remove " + std::to_string(abs(change)) + " copies of '";
+            std::cout << title + "'.\n";
+        }
+    }
+    else {
+        haveTotal += change;
+        haveShelf += change;
+        std::cout << "\nBook count successfully updated.\n[Changed from " << tempHaveTotal;
+        std::cout << " copies to " << haveTotal << "]\n";
+    }
 }
 
 void Book::checkBookOut() {
-    haveShelf--;
-    std::cout << "\nBook successfully checked out.\n";
+    if (haveShelf > 0) {
+        haveShelf--;
+        std::cout << "\nCopy of " + title + " successfully checked out.\n";
+    } else
+        std::cout << "\nNo copies of " + title + " are available for checkout.\n";
 }
 
 void Book::checkBookIn() {
@@ -76,7 +94,7 @@ void Book::checkBookIn() {
 }
 
 void Book::removeBook() {
-    if (haveTotal > 0) {
+    if (haveTotal > 0 && haveShelf > 0) {
         haveTotal--;
         haveShelf--;
         std::cout << "\nBook successfully removed from system.\n";
