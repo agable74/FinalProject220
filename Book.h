@@ -20,7 +20,7 @@ private:
     int haveTotal;
     int haveShelf;
     int wantValue;
-    LinkedList waitList;
+    List<Member*>* waitList;
 
 
 public:
@@ -103,6 +103,8 @@ public:
     int getNumberOfWaiters();
 
     Member* removeWaiter();
+
+    Member* removeWaiter(const std::string &waiterName);
 };
 
 #endif //FINALPROJECT_BOOK_H
