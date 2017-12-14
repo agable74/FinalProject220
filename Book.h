@@ -7,8 +7,6 @@
 
 #include "ArrayList.h"
 #include "Member.h"
-#include <string>
-#include <iostream>
 
 class Book {
 
@@ -32,7 +30,7 @@ public:
      * @param isbnIn : book's ISBN
      * @param haveTotalIn : number of books by this title owned by this library
      */
-    Book(std::string titleIn="", std::string authorIn="", int isbnIn=-1, int haveTotalIn=-1);
+    Book(std::string titleIn="", std::string authorIn="", int isbnIn=-1, int haveTotalIn=-1, int haveShelfIn=-1);
 
     /**
      * copy contructor
@@ -100,11 +98,11 @@ public:
 
     void addWaiter(Member* waiter);
 
-    int getNumberOfWaiters();
+    const int waitListLength();
 
-    Member* removeWaiter();
+    std::string removeWaiter(Member* toRemove= nullptr);
 
-    Member* removeWaiter(const std::string &waiterName);
+    std::string waitListToString();
 };
 
 #endif //FINALPROJECT_BOOK_H

@@ -124,12 +124,18 @@ Member::Member() {
     contactPref = setContactPref();
 }
 
-Member::Member(std::string nameIn, long long phoneNumberIn, std::string emailIn, std::string idIn="", std::string contactPrefIn="") {
+Member::Member(std::string nameIn, long long phoneNumberIn, std::string emailIn, std::string idIn, std::string contactPrefIn) {
     name = nameIn;
     phoneNumber = phoneNumberIn;
     email = emailIn;
-    id = generateId();
-    contactPref = setContactPref();
+    if (idIn == "")
+        id = generateId();
+    else
+        id = idIn;
+    if (contactPrefIn == "")
+        contactPref = setContactPref();
+    else
+        contactPref = setContactPref(contactPrefIn);
 }
 
 std::string Member::getName() {
@@ -148,28 +154,40 @@ std::string Member::getEmail() {
     return email;
 }
 
-std::string Member::setContactPref() {
-    std::string choice;
-    std::cout << "Select a preference [Call, Text, or Email]: ";
-    std::cin >> choice;
-    std::string choiceIn = "";
-    choiceIn += choice[0];
+std::string Member::setContactPref(std::string cPref) {
+    std::string choice = "";
+    std::string choiceIn;
     std::string contPref;
-    if (choiceIn == "c" || choiceIn == "t" || choiceIn == "e") {
-        if (choiceIn == "c") {
-            std::cout << "Contact by phone registered.\n\n";
+    if (cPref != "") {
+        choice += toupper(cPref[0]);
+        if (choice == "C")
             contPref = "Phone call";
-        } else if (choiceIn == "t") {
-            std::cout << "Contact by text registered.\n\n";
+        else if (choice == "T")
             contPref = "Text message";
-        } else if (choiceIn == "e") {
-            std::cout << "Contact by email registered.\n\n";
+        else if (choice == "E")
             contPref = "Email";
-        }
+        else
+            setContactPref("");
     }
     else {
-        std::cout << "\nInput not accepted. Please try again.\n";
-        setContactPref();
+        std::cout << "Select a preference [Call, Text, or Email]: ";
+        std::cin >> choiceIn;
+        choice += tolower(choiceIn[0]);
+        if (choice == "c" || choice == "t" || choice == "e") {
+            if (choice == "c") {
+                std::cout << "Contact by phone registered.\n\n";
+                contPref = "Phone call";
+            } else if (choice == "t") {
+                std::cout << "Contact by text registered.\n\n";
+                contPref = "Text message";
+            } else if (choice == "e") {
+                std::cout << "Contact by email registered.\n\n";
+                contPref = "Email";
+            }
+        } else {
+            std::cout << "\nInput not accepted. Please try again.\n";
+            setContactPref();
+        }
     }
     return contPref;
 }

@@ -3,15 +3,19 @@
 //
 
 #include "Book.h"
+#include <iostream>
 
-Book::Book(std::string titleIn, std::string authorIn, int isbnIn, int haveTotalIn) {
+Book::Book(std::string titleIn, std::string authorIn, int isbnIn, int haveTotalIn, int haveShelfIn) {
     title = titleIn;
     author = authorIn;
     isbn = isbnIn;
     haveTotal = haveTotalIn;
-    haveShelf = haveTotalIn;
+    if (haveShelfIn == -1)
+        haveShelf = haveTotalIn;
+    else
+        haveShelf = haveShelfIn;
     wantValue = 0;
-    waitList = new ArrayList();
+    waitList = new ArrayList<Member*>;
 }
 
 Book::Book (const Book &bookToCopy) {
@@ -21,9 +25,16 @@ Book::Book (const Book &bookToCopy) {
     haveTotal = bookToCopy.haveTotal;
     haveShelf = bookToCopy.haveShelf;
     wantValue = bookToCopy.wantValue;
+    waitList = new ArrayList<Member*>;
+    for (int i = 0; i < bookToCopy.waitList->itemCount(); ++i) {
+        waitList->insertAtEnd(bookToCopy.waitList->getValueAt(i));
+    }
 }
 
 Book::~Book() {
+    for (int i = 0; i < waitListLength(); ++i) {
+        delete waitList->getValueAt(i);
+    }
 }
 
 std::string Book::getTitle() {
@@ -83,20 +94,49 @@ std::string Book::toString() {
 }
 
 void Book::addWaiter(Member* waiter) {
-    waitList->insertAtEnd(waiter);
+    int doAdd = 1;
+    for (int i = 0; i < waitListLength(); ++i) {
+        if (waitList->getValueAt(i)->getId() == waiter->getId()) {
+            std::cout << "\n" + waiter->getName() + " is already on the waiting list for '" + getTitle() + "'.\n";
+            doAdd = 0;
+        }
+    }
+    if (doAdd)
+        waitList->insertAtEnd(waiter);
 }
 
-int Book::getNumberOfWaiters() {
+const int Book::waitListLength() {
     return waitList->itemCount();
 }
 
-Member* Book::removeWaiter() {
-    return waitList->removeValueAt(0);
+std::string Book::removeWaiter(Member* toRemove) {
+    std::string result;
+    if (waitList->isEmpty())
+        return "\nNo members are waiting for '" + title + "'.\n";
+    if (toRemove == nullptr)
+        result = waitList->removeValueAt(0)->getName();
+    else {
+        int doRemove = 0;
+        for (int i = 0; i < waitList->itemCount(); ++i) {
+            if (waitList->getValueAt(i)->getName() == toRemove->getName()) {
+                result = waitList->removeValueAt(i)->getName();
+                doRemove = 1;
+            }
+        }
+        if (doRemove)
+            return ("\n" + result + " is no longer waiting for '" + title + "'.\n");
+        else
+            return "\n" + toRemove->getName() + " is not on the waitlist for '" + title + "'.\n";
+    }
 }
 
-Member* Book::removeWaiter(const std::string &waiterName) {
-    for (int i = 0; i < waitList->itemCount(); ++i) {
-        if (waitList->getValueAt(i)->getName() == waiterName)
-            waitList->removeValueAt(i);
+std::string Book::waitListToString() {
+    std::string result = "\nMembers waiting on '" + title + "':\n";
+    if (waitList->isEmpty())
+        result += "none\n";
+    else {
+        for (int i = 0; i < waitListLength(); ++i)
+            result += waitList->getValueAt(i)->getName() + " - " + waitList->getValueAt(i)->getId() + "\n";
     }
+    return result;
 }
