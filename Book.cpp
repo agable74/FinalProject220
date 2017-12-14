@@ -11,6 +11,7 @@ Book::Book(std::string titleIn, std::string authorIn, int isbnIn, int haveTotalI
     haveTotal = haveTotalIn;
     haveShelf = haveTotalIn;
     wantValue = 0;
+    waitList = new LinkedList();
 }
 
 Book::Book (const Book &bookToCopy) {
@@ -82,13 +83,20 @@ std::string Book::toString() {
 }
 
 void Book::addWaiter(Member* waiter) {
-    waitList.insertAtEnd(waiter);
+    waitList->insertAtEnd(waiter);
 }
 
 int Book::getNumberOfWaiters() {
-    return waitList.itemCount();
+    return waitList->itemCount();
 }
 
 Member* Book::removeWaiter() {
-    return waitList.removeValueAt(0);
+    return waitList->removeValueAt(0);
+}
+
+Member* Book::removeWaiter(const std::string &waiterName) {
+    for (int i = 0; i < waitList->itemCount(); ++i) {
+        if (waitList->getValueAt(i)->getName() == waiterName)
+            waitList->removeValueAt(i);
+    }
 }
