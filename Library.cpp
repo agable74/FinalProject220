@@ -8,14 +8,11 @@
  * Constructor
  */
 Library::Library(const std::string& allBooksTxtIN,const std::string& memberListTxtIN,const std::string& deliveryTxtIN){
-    //pointer to list of library members
-    //memberList;
     //fstream parts
     libMembersIN.open(memberListTxtIN);
     //libMembersOUT = std::ofstream(memberListTxt);
     //fstream parts
     allBooksIN.open(allBooksTxtIN);
-   // allBooksOUT.open(allBooksTxtOUT);
     //pointer to list of books checked out
     allBooks = new ArrayList<Book*>;
     shelfBooks = new ArrayList<Book*>;
@@ -23,9 +20,9 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& memberListT
     generateAllBookList();
     //generate shelf from allBooks
     generateShelfBookList();
-    //list of people waiting for book
     members = new ArrayList<Member*>;
     generateMemberList();
+    requestBooks = new ArrayList<Book*>;
     runUIBool = true;
     runMasterBool = true;
     bookListTxt = allBooksTxtIN;
@@ -253,11 +250,7 @@ void Library::generateShelfBookList(){
 // * Sorts the allBooks and shelfBooks lists alphabetically
 // * @post allBooks and shelfBooks are sorted alphabetically by title
 // */
-//void Library::sortBookList(){
-//    int numLines = 0;
-//    List<Book*>* sortedList = mergeSort(allBooks,allBooks->itemCount(),numLines);
-//    allBooks = sortedList;
-//}
+
 
 
 //Uses Insertion Sort
@@ -277,16 +270,18 @@ void sort(List<Book*>* arrayToSort, int size, int& numLinesRun){
                 minVal = arrayToSort->getValueAt(i);
                 int minIndex = i;
                 Book* tempSwap = arrayToSort->getValueAt(j);
-//                arrayToSort.;
-//                arrayToSort->insertAt(tempSwap,minIndex);
-//                arrayToSort.insertAt()
-//                arrayToSort[j] = minVal;
+                arrayToSort->replaceValueAt(minIndex,tempSwap);
+                arrayToSort->replaceValueAt(j,minVal);
             }
         }
 
     }
 }
 
+void Library::sortBookList(){
+    int numLines = 0;
+    sort(allBooks,allBooks->itemCount(),numLines);
+}
 
 /**
  * Generates the list of library members from the file
@@ -296,9 +291,41 @@ void Library::generateMemberList(){
     if(!libMembersIN){
         std::cerr << "The file could not be opened!" << std::endl;
     }
-    else{
-
-    }
+//    else{
+//        std::string name;
+//        std::string ID;
+//        std::string phoneSTR;
+//        std::string email;
+//        std::string preference;
+//        while (libMembersIN) {
+//            getline(libMembersIN, name);
+//            getline(libMembersIN, ID);
+//            getline(libMembersIN, phoneSTR);
+//            getline(libMembersIN, email);
+//            getline(libMembersIN,preference);
+//            if(libMembersIN) {    //makes sure that it doesn't duplicate the last line, and works on empty text files
+//                if (!name.empty() && name[name.size() - 1] == '\r') {
+//                    name.erase(name.size() - 1);
+//                }
+//                if (!ID.empty() && ID[ID.size() - 1] == '\r') {
+//                    ID.erase(ID.size() - 1);
+//                }
+//                int phone = std::stoi(phoneSTR);
+//                int numBooks = std::stoi(email);
+//                Member* newMember = new Member(name,phone,email,ID,preference);
+//                bool inList = false;
+//                for (int i = 0; i < members->itemCount(); i++) {
+//                    if (members->getValueAt(i)->getName() == newMember->getName()) {
+//                        inList = true;
+//                        std::cout << "Member already exists!" << std::endl;
+//                    }
+//                }
+//                if (!inList) {
+//                    members->insertAtEnd(newMember);
+//                }
+//            }
+//        }
+//    }
 }
 
 void Library::saveBooksToFile(){
@@ -324,6 +351,17 @@ void Library::saveMembersToFile(){
         libMembersOUT << members->getValueAt(i)->getContactPref() << '\n';
     }
     libMembersOUT.close();
+}
+
+void Library::saveDeliveryRequestToFile(){
+    requestBooksOUT.open(deliveryTxt);
+    for(int i = 0; i < requestBooks->itemCount(); i++){
+        requestBooksOUT << requestBooks->getValueAt(i)->getTitle() << '\n';
+        requestBooksOUT << requestBooks->getValueAt(i)->getAuthor() << '\n';
+        requestBooksOUT << requestBooks->getValueAt(i)->getIsbn() << '\n';
+        requestBooksOUT << requestBooks->getValueAt(i)->getHaveTotal() << '\n';
+    }
+    requestBooksOUT.close();
 }
 
 /**
@@ -391,6 +429,8 @@ Library& Library::operator=(const Library& libraryToCopy){
  * Destructor
  */
 Library::~Library(){
+    requestBooks->clearData();
+    delete requestBooks;
     shelfBooks->clearList();
     delete shelfBooks;
     allBooks->clearData();
@@ -418,6 +458,7 @@ void Library::addMember(Member& memberToAdd){
  */
 void Library::quit(){
     runUIBool = false;
+    saveDeliveryRequestToFile();
     saveBooksToFile();
     saveMembersToFile();
     libMembersOUT.close();
@@ -447,6 +488,7 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
         int isbn = checkIfNum(isbnStr);
         Book* newBook = new Book(titleToAdd,author,isbn,numToAdd);
         allBooks->insertAtEnd(newBook);
+        sortBookList();
     }
 }
 
@@ -460,6 +502,7 @@ void Library::addBook(Book& bookToAdd){
     }
     if(!inList) {
         allBooks->insertAtEnd(&bookToAdd);
+        sortBookList();
     }
 }
 
@@ -472,7 +515,11 @@ void Library::returnBook(std::string titleToReturn){
     for(int i = 0; i < allBooks->itemCount(); i++){
         if(allBooks->getValueAt(i)->getTitle() == titleToReturn){
             inList = true;
-            allBooks->getValueAt(i)->checkBookIn();
+            if(allBooks->getValueAt(i)->getHaveTotal() > allBooks->getValueAt(i)->getHaveShelf()) {
+                allBooks->getValueAt(i)->checkBookIn();
+            }else{
+                std::cout << "We already have all copies of that book accounted for. This book does not belong to this library." << std::endl;
+            }
         }
     }
     if(!inList){
@@ -485,23 +532,33 @@ void Library::returnBook(std::string titleToReturn){
  * @param desiredBook
  */
 void Library::requestLoan(std::string desiredBookTitle){
-//    bool inList = false;
-//    for(int i = 0; i < allBooks.itemCount(); i++){
-//        if(allBooks.getValueAt(i)->getTitle() == desiredBookTitle){
-//            inList = true;
-//            allBooks.getValueAt(i)->modHaveTotal(numToAdd);
-//        }
-//    }
-//    if(!inList){
-//        std::cout << "Who is the author of this book?" << std::endl;
-//        std::string author;
-//        std::cin >> author;
-//        std::cout << "What is the ISBN number of this book?" << std::endl;
-//        int isbn;
-//        std::cin >> isbn;
-//        Book* newBook = new Book(titleToAdd,author,isbn,numToAdd);
-//        allBooks.insertAtEnd(newBook);
-//    }
+    bool inList = false;
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        if(allBooks->getValueAt(i)->getTitle() == desiredBookTitle){
+            inList = true;
+            if(allBooks->getValueAt(i)->getHaveShelf() > 0) {
+                std::cout << "We have this book in our library." << std::endl;
+            }
+            else{
+                Book* requestBook = new Book(*allBooks->getValueAt(i));
+                requestBook->modHaveTotal(-requestBook->getHaveTotal()+1); //makes it so it only does one
+                requestBooks->insertAtEnd(requestBook);
+                //add to waitlist
+                std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
+            }
+        }
+    }
+    if(!inList){
+        std::string author;
+        std::cout << "Who is the author of this book?" << std::endl;
+        std::getline(std::cin,author);
+        std::string isbnStr;
+        std::cout << "What is the ISBN number of this book?" << std::endl;
+        std::getline(std::cin,isbnStr);
+        int isbn = checkIfNum(isbnStr);
+        Book* requestBook = new Book(desiredBookTitle,author,isbn,1);
+        requestBooks->insertAtEnd(requestBook);
+    }
 }
 
 /**
@@ -513,11 +570,15 @@ void Library::removeBook(std::string bookToRemove, int numRemove){
     for(int i = 0; i < allBooks->itemCount(); i++){
         if(allBooks->getValueAt(i)->getTitle() == bookToRemove){
             inList = true;
-            allBooks->getValueAt(i)->modHaveTotal(-numRemove);
+            if(allBooks->getValueAt(i)->getHaveTotal() >= numRemove) {
+                allBooks->getValueAt(i)->modHaveTotal(-numRemove);
+            }else{
+                std::cout << "You cannot remove more books than exist at the library! There are currently " << allBooks->getValueAt(i)->getHaveTotal() << " copies owned by this library." << std::endl;
+            }
         }
     }
     if(!inList){
-        std::cout << "That book does not belong to this library." << std::endl;
+        std::cout << "The library does not own that book to remove it." << std::endl;
     }
 }
 
@@ -527,12 +588,13 @@ void Library::removeBook(std::string bookToRemove, int numRemove){
 void Library::libraryHelp(){
     std::cout << "I - Inquire about a book" << std::endl;
     std::cout << "L - List all available books" << std::endl;
-    std::cout << "A - Add a book to the library" << std::endl;
     std::cout << "N - Add a new member to the library" << std::endl;
     std::cout << "R - Return a book to the library" << std::endl;
     std::cout << "W - Withdraw a book from the library" << std::endl;
     std::cout << "D - Delivery of books from requests" << std::endl;
     std::cout << "O - Order books through interlibrary loans" << std::endl;
+    std::cout << "A - Add a book to the library" << std::endl;
+    std::cout << "E - Remove a book which has been damaged or lost" << std::endl;
     std::cout << "Q - Quit" << std::endl;
 }
 
@@ -551,7 +613,7 @@ void Library::inquireAboutBook(std::string bookToInquire){
         }
     }
     if(!inList){
-        std::cout << "That book does not belong to this library." << std::endl;
+        std::cout << "The library does not own such a book. Consider requesting it through an interlibrary loan." << std::endl;
     }
 }
 
@@ -603,7 +665,11 @@ void Library::bookDelivery(const std::string& deliveryFileName){
 }
 
 void Library::printAllOwnedBooks(){
+    sortBookList();
+    std::cout << "List of all books:" << std::endl;
     std::cout << allBooks->toString() << std::endl;
+    std::cout << std::endl;
+    std::cout << "End of list" << std::endl;
 }
 
 void Library::checkOutBook(std::string bookToCheckOut){
@@ -619,7 +685,7 @@ void Library::checkOutBook(std::string bookToCheckOut){
         }
     }
     if(!inList){
-        std::cout << "That book does not belong to this library." << std::endl;
+        std::cout << "The library does not own that book. Consider writing the title exactly as listed or request an interlibrary loan." << std::endl;
     }
 }
 
@@ -637,7 +703,7 @@ bool Library::runUI(){
         std::cout << "Type H for a list of functions or type the function which you wish to use: ";
         std::getline (std::cin,userInput);
         std::cout << std::endl;
-        while(userInput!="h"&&userInput!="H"&&userInput!="I"&&userInput!="i"&&userInput!="a"&&userInput!="A"&&userInput!="L"&&userInput!="l"&&userInput!="N"&&userInput!="n"&&userInput!="R"&&userInput!="r"&&userInput!="W"&&userInput!="w"&&userInput!="D"&&userInput!="d"&&userInput!="o"&&userInput!="O"&&userInput!="help"&&userInput!="Help"&&userInput!="Q"&&userInput!="q"&&userInput!="quit"&&userInput!="Quit"){
+        while(userInput!="h"&&userInput!="H"&&userInput!="I"&&userInput!="i"&&userInput!="a"&&userInput!="A"&&userInput!="L"&&userInput!="l"&&userInput!="N"&&userInput!="n"&&userInput!="R"&&userInput!="r"&&userInput!="W"&&userInput!="w"&&userInput!="D"&&userInput!="d"&&userInput!="o"&&userInput!="O"&&userInput!="help"&&userInput!="Help"&&userInput!="Q"&&userInput!="q"&&userInput!="quit"&&userInput!="Quit"&&userInput!="e"&&userInput!="E"){
             std::cout << "Invalid input. Please enter the letter corresponding to the command you wish to perform: ";
             std::getline (std::cin,userInput);
         }
@@ -651,7 +717,7 @@ bool Library::runUI(){
             bool yes = checkYesOrNo(userResponse);
             if(yes) {
                 std::string bookTitle;
-                "Please enter the title of the book which interests you:";
+                std::cout << "Please enter the title of the book which interests you:";
                 std::getline(std::cin, bookTitle);
                 inquireAboutBook(bookTitle);
                 std::cout << "Returning to the main menu" << std::endl;
@@ -734,6 +800,55 @@ bool Library::runUI(){
             if(yes){
                 //intake delivery from txt file
                 bookDelivery(deliveryTxt);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+        else if(userInput == "o" || userInput == "O"){
+            std::cout << "You have selected to order an interlibrary loan. Are you certain? ";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                std::string bookTitle;
+                std::cout << "Please enter the title of the book you desire: ";
+                std::getline(std::cin,bookTitle);
+                requestLoan(bookTitle);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+        else if(userInput == "l" || userInput == "L"){
+            std::cout << "You have selected to list all library books. Are you certain? ";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                printAllOwnedBooks();
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+        else if(userInput == "e" || userInput == "E"){
+            std::cout << "You have selected to remove a book. Are you certain? ";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                std::string bookTitle;
+                std::string numStr;
+                std::cout << "Please enter the title of the book you wish to remove: ";
+                std::getline(std::cin,bookTitle);
+                std::cout << "Please enter the amount you wish to remove: ";
+                std::getline(std::cin,numStr);
+                int numToRemove = checkIfNum(numStr);
+                removeBook(bookTitle, numToRemove);
                 std::cout << "Returning to the main menu" << std::endl;
             }
             else{
