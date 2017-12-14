@@ -41,6 +41,7 @@ int main() {
     testLib.bookDelivery("TestDeliveryIN.txt");
     testLib.inquireAboutBook("Doggo's Are Good");
     testLib.saveBooksToFile();
+    testLib.masterRun();
 
     //need to add a default constructor in book to store the shelf count
     return 0;

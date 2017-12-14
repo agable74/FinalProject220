@@ -29,7 +29,8 @@ private:
     List<Book*>* shelfBooks;
     //list of people waiting for book
     List<Member*>* members;
-    bool run;
+    bool runUIBool;
+    bool runMasterBool;
     std::string bookListTxt;
     std::string memberListTxt;
 
@@ -153,7 +154,9 @@ public:
 
     void checkOutBook(std::string bookToCheckOut);
 
-    void runUI();
+    void masterRun();
+
+    bool runUI();
 
 
 };

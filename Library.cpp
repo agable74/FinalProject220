@@ -26,9 +26,44 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& memberListT
     //list of people waiting for book
     members = new ArrayList<Member*>;
     generateMemberList();
-    run = true;
+    runUIBool = true;
+    runMasterBool = true;
     bookListTxt = allBooksTxtIN;
     memberListTxt = memberListTxtIN;
+}
+
+int checkIfNum(std::string& stringToCheck){
+    bool isValidNum = true;
+    for(int i = 0; i < stringToCheck.length(); i++){
+        if(!isdigit(stringToCheck[i])){
+            isValidNum = false;
+        }
+    }
+    while(!isValidNum){
+        isValidNum = true;
+        std::cout << "Error in your number. Please enter a valid number: ";
+        std::getline(std::cin,stringToCheck);
+        for(int i = 0; i < stringToCheck.length(); i++){
+            if(!isdigit(stringToCheck[i])){
+                isValidNum = false;
+            }
+        }
+    }
+    int validNum = std::stoi(stringToCheck);
+    return validNum;
+}
+
+bool checkYesOrNo(std::string& stringToCheck){
+    while(stringToCheck!="y"&&stringToCheck!="Y"&&stringToCheck!="Yes"&&stringToCheck!="yes"&&stringToCheck!="n"&&stringToCheck!="N"&&stringToCheck!="No"&&stringToCheck!="no"){
+        std::cout << "Invalid input, please enter 'yes' or 'no': ";
+        std::getline(std::cin,stringToCheck);
+    }
+    if(stringToCheck == "y" || stringToCheck == "Y" || stringToCheck == "yes" || stringToCheck == "Yes"){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 /**
@@ -152,7 +187,7 @@ Library::Library(const Library& libraryToCopy){
         addMember(*copyMember);
     }
 
-    run = true;
+    runUIBool = true;
     bookListTxt = libraryToCopy.bookListTxt;
     memberListTxt = libraryToCopy.memberListTxt;
 }
@@ -214,7 +249,9 @@ void Library::addMember(Member& memberToAdd){
  * Save the inventory and wait lists in a file and terminate execution. Clean up too!
  */
 void Library::quit(){
-    run = false;
+    runUIBool = false;
+    saveBooksToFile();
+    saveMembersToFile();
     libMembersOUT.close();
     allBooksOUT.close();
 }
@@ -233,12 +270,13 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
         }
     }
     if(!inList){
-        std::cout << "Who is the author of this book?" << std::endl;
         std::string author;
-        std::cin >> author;
+        std::cout << "Who is the author of this book?" << std::endl;
+        std::getline(std::cin,author);
+        std::string isbnStr;
         std::cout << "What is the ISBN number of this book?" << std::endl;
-        int isbn;
-        std::cin >> isbn;
+        std::getline(std::cin,isbnStr);
+        int isbn = checkIfNum(isbnStr);
         Book* newBook = new Book(titleToAdd,author,isbn,numToAdd);
         allBooks->insertAtEnd(newBook);
     }
@@ -319,7 +357,15 @@ void Library::removeBook(std::string bookToRemove, int numRemove){
  * Prints a summary of all available commands
  */
 void Library::libraryHelp(){
-    std::cout << "pst" << std::endl;
+    std::cout << "I - Inquire about a book" << std::endl;
+    std::cout << "L - List all available books" << std::endl;
+    std::cout << "A - Add a book to the library" << std::endl;
+    std::cout << "N - Add a new member to the library" << std::endl;
+    std::cout << "R - Return a book to the library" << std::endl;
+    std::cout << "W - Withdraw a book from the library" << std::endl;
+    std::cout << "D - Delivery of books from requests" << std::endl;
+    std::cout << "O - Order books through interlibrary loans" << std::endl;
+    std::cout << "Q - Quit" << std::endl;
 }
 
 
@@ -405,8 +451,113 @@ void Library::checkOutBook(std::string bookToCheckOut){
     }
 }
 
-void Library::runUI(){
-    while(run){
+void Library::masterRun(){
+    while(runMasterBool){
+        runUI();
+    }
+}
 
+bool Library::runUI(){
+    std::cout << "Welcome to the library!" << std::endl;
+    std::string userInput;
+    while(runUIBool){
+        std::cout << "Type H for a list of functions or type the function which you wish to use: ";
+        std::getline (std::cin,userInput);
+        std::cout << std::endl;
+        while(userInput!="h"&&userInput!="H"&&userInput!="I"&&userInput!="i"&&userInput!="a"&&userInput!="A"&&userInput!="L"&&userInput!="l"&&userInput!="N"&&userInput!="n"&&userInput!="R"&&userInput!="r"&&userInput!="W"&&userInput!="w"&&userInput!="D"&&userInput!="d"&&userInput!="o"&&userInput!="O"&&userInput!="help"&&userInput!="Help"&&userInput!="Q"&&userInput!="q"&&userInput!="quit"&&userInput!="Quit"){
+            std::cout << "Invalid input. Please enter the letter corresponding to the command you wish to perform: ";
+            std::getline (std::cin,userInput);
+        }
+        if(userInput=="h"||userInput=="H"){
+            libraryHelp();
+        }
+        else if(userInput == "I" || userInput == "i"){
+            std::cout << "You have chosen to inquire about a book. Are you certain?"
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes) {
+                std::string bookTitle;
+                "Please enter the title of the book which interests you:";
+                std::getline(std::cin, bookTitle);
+                inquireAboutBook(bookTitle);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{std::cout << "Returning to the main menu" << std::endl;}
+        }
+        else if(userInput == "a" || userInput == "A"){
+            std::cout << "You have chosen to add a book. Are you certain?";
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes) {
+                std::string bookTitle;
+                std::string numToAddStr;
+                std::cout << "Please enter the title of the book which you wish to add:";
+                std::getline(std::cin, bookTitle);
+                std::cout << "Please enter the amount of this book you are adding:";
+                std::getline(std::cin, numToAddStr);
+                int numToAdd = checkIfNum(numToAddStr);
+                addBook(bookTitle, numToAdd);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+        else if(userInput == "q" || userInput == "Q" || userInput == "quit" || userInput == "Quit"){
+            std::string userResponse;
+            std::cout << "Are you sure you wish to quit? ";
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                quit();
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+        else if(userInput == "n" || userInput == "N"){
+            std::cout << "You wish to add a new member." << std::endl;
+            addMember();
+        }
+        else if(userInput == "r" || userInput == "R"){
+            std::cout << "You wish to return a book. Correct? " << std::endl;
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes){
+                std::cout << "Enter the title of the book you wish to return :";
+                std::string title;
+                std::getline(std::cin,title);
+                returnBook(title);
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+        }
+    }
+    while(!runUIBool){
+        std::cout << "Do you wish to terminate the program? ";
+        std::string userResponse;
+        std::getline(std::cin,userResponse);
+        bool yes = checkYesOrNo(userResponse);
+        if(!yes){
+            std::cout << "Do you wish to begin using the library again?";
+            std::getline(std::cin,userResponse);
+            yes = checkYesOrNo(userResponse);
+            if(yes){
+                runUIBool = true;
+            }
+            else{
+                std::cout << "You don't want to end the program, but you don't want to use it. Why? WHY???" << std::endl;
+            }
+        }
+        else{
+            std::cout << "Shutting down..." << std::endl;
+            runMasterBool = false;
+            return false;
+        }
     }
 }
