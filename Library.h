@@ -69,6 +69,12 @@ public:
     void saveBooksToFile();
 
     /**
+     * Gets the shelf value of a book
+     * @param desiredBook book to get value
+     * @return amount on shelf
+     */
+    int getShelfValue(std::string desiredBook);
+    /**
      * Saves the list of members to a file
      */
     void saveMembersToFile();
@@ -136,10 +142,15 @@ public:
 
     /**
      * Puts a request in for book to be delivered
-     * @param desiredBook
+     * @param desiredBookTitle book title
      */
     void requestLoan(std::string desiredBookTitle);
 
+    /**
+     * Puts in a request for a book to be delivered
+     * @param bookToRequest Book
+     */
+    void requestLoan(Book& bookToRequest);
     /**
      * Removes a book from the library due to loss/damage
      * @param bookToRemove

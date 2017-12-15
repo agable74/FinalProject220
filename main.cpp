@@ -20,28 +20,6 @@ void printAssertStringEqual(std::string expected, std::string actual){
         std::cout << "FAIL, expected: " << expected << "actual: " << actual << std::endl;
     }
 }
-
-void runLibrary(){
-    Library theLibrary = Library("AllBooksNew.txt","TestMembers.txt","TestDeliveryIN.txt");
-    theLibrary.masterRun();
-}
-
-void libraryTester(){
-    Library theTestLibrary = Library("BooksTester.txt","MembersTester.txt","DeliveryTester.txt");
-    Library theTestLibraryCopy = theTestLibrary;
-    theTestLibraryCopy.removeBook("Lord of the Flies",7);
-    theTestLibrary.inquireAboutBook("Lord of the Flies");
-    theTestLibraryCopy.inquireAboutBook("Lord of the Flies");
-    theTestLibraryCopy = theTestLibrary;
-    theTestLibrary.removeBook("Lord of the Flies",8);
-    theTestLibrary.inquireAboutBook("Lord of the Flies");
-    theTestLibraryCopy.inquireAboutBook("Lord of the Flies");
-    theTestLibrary.removeBook("Lord of the Flies",-1);
-    theTestLibrary.printAllOwnedBooks();
-    Member testMember = Member("Test McTesty",9529051349,"testDude@test.com");
-    //Book testBook = Book("Test Book","Test McTesty",)
-}
-
 void BookTester() {
     Book book1 = Book("A Tale of Two Cities", "Charles Dickens", 3904238, 4, 4);
     Book book2 = Book("Doggo's Are Good", "Alex Gable", 2222, 104, 104);
@@ -87,56 +65,47 @@ void BookTester() {
     printAssertStringEqual("\nMembers waiting on 'Pride and Prejudice':\nnone\n", book6.waitListToString());
 }
 
-int main() {
-//    //file IO
-//    std::ifstream inf;
-//    inf.open("TestIO.txt");
-//    std::string author;
-//    std::string title;
-//    std::string isbnSTR;
-//    std::string numBooksSTR;
-//    if(!inf){
-//        std::cout << "didn't open" << std::endl;
-//    }
-//    while(inf){
-//        getline(inf, title);
-//        getline(inf, author);
-//        getline(inf, isbnSTR);
-//        getline(inf, numBooksSTR);
-//        std::cout << title << std::endl;
-//        std::cout << author << std::endl;
-//    }
-//
-//              //<< " " << author << " " << isbnSTR << " " << numBooksSTR << std::endl;
-//    inf.close();
+void runLibrary(){
+    Library theLibrary = Library("AllBooksNew.txt","TestMembers.txt","TestDeliveryIN.txt");
+    theLibrary.masterRun();
+}
 
-//    Library testLib = Library("AllBooksWork.txt","TestMembers.txt","TestDeliveryIN.txt");
-//    testLib.printAllOwnedBooks();
-//    Book testBook = Book("Lord of the Flies","William Golding",055235,6);
-//    testLib.addBook(testBook);
-//    testLib.printAllOwnedBooks();
-//    testLib.checkOutBook("Lord of the Flies");
-//    testLib.printAllOwnedBooks();
-//    testLib.returnBook("Lord of the Flies");
-//    testLib.printAllOwnedBooks();
-//    testLib.inquireAboutBook("Lord of the Flies");
-//    testLib.removeBook("Lord of the Flies", 3);
-//    testLib.inquireAboutBook("Lord of the Flies");
-//    testLib.bookDelivery("TestDeliveryIN.txt");
-//    testLib.inquireAboutBook("Doggo's Are Good");
-//    testLib.saveBooksToFile();
-//   // testLib.saveMembersToFile();
-//    //testLib.masterRun();
-//    testLib.printAllOwnedBooks();
-//    testLib.sortBookList();
-//    testLib.printAllOwnedBooks();
-//    testLib.requestLoan("Pride and Prejudice");
-//    testLib.saveDeliveryRequestToFile();
-
-
-    runLibrary();
+void libraryTester(){
     BookTester();
-    //libraryTester();
+    Library theTestLibrary = Library("BooksTester.txt","MembersTester.txt","DeliveryTester.txt");
+
+    Library theTestLibraryCopy = theTestLibrary;
+    theTestLibraryCopy.removeBook("Lord of the Flies",7);
+    theTestLibrary.removeBook("A Tale of Two Cities",2);
+    std::cout << "Testing Library Copy constructor. Should print 3 passes." << std::endl;
+    printAssertEquals(7,theTestLibrary.getShelfValue("Lord of the Flies")-theTestLibraryCopy.getShelfValue("Lord of the Flies"));
+    printAssertEquals(2,theTestLibraryCopy.getShelfValue("A Tale of Two Cities")-theTestLibrary.getShelfValue("A Tale of Two Cities"));
+    printAssertEquals(theTestLibrary.getShelfValue("The Great Gatsby"),theTestLibraryCopy.getShelfValue("The Great Gatsby"));
+
+    theTestLibraryCopy = theTestLibrary;
+    theTestLibraryCopy.removeBook("Lord of the Flies",8);
+    theTestLibrary.removeBook("To Kill a Mockingbird",4);
+    std::cout << "Testing Library equals operator. Should print 3 passes." << std::endl;
+    printAssertEquals(theTestLibrary.getShelfValue("Pride and Prejudice"),theTestLibraryCopy.getShelfValue("Pride and Prejudice"));
+    printAssertEquals(8,theTestLibrary.getShelfValue("Lord of the Flies")-theTestLibraryCopy.getShelfValue("Lord of the Flies"));
+    printAssertEquals(4,theTestLibraryCopy.getShelfValue("To Kill a Mockingbird")-theTestLibrary.getShelfValue("To Kill a Mockingbird"));
+
+    Library testIOLibrary("BooksTester2.txt","MembersTester2.txt","DeliveryTester2.txt");
+    testIOLibrary.removeBook("Lord of the Flies",9);
+    Member testMember = Member("Test McTesty",6079231459,"test@test.com","TM12340","Phone call");
+    //testIOLibrary.addMember(testMember);
+    Book testBook = Book("Little Women","Louisa May Alcott",34520,1);
+    testIOLibrary.requestLoan(testBook);
+    testIOLibrary.checkOutBook("The Great Gatsby");
+    testIOLibrary.quit();
+}
+
+
+
+int main() {
+    //runLibrary();
+    //BookTester();
+    libraryTester();
     //need to add a default constructor in book to store the shelf count
     //need to add the waitlist part in requesting books
     return 0;

@@ -342,7 +342,18 @@ void Library::saveBooksToFile(){
     allBooksOUT.close();
 }
 
-
+int Library::getShelfValue(std::string desiredBook){
+    bool inList = false;
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        if(allBooks->getValueAt(i)->getTitle() == desiredBook){
+            inList = true;
+            return allBooks->getValueAt(i)->getHaveShelf();
+        }
+    }
+    if(!inList) {
+        std::cout << "The library does not own any copies of this book." << std::endl;
+    }
+}
 
 void Library::saveMembersToFile(){
     libMembersOUT.open(memberListTxt);
@@ -572,6 +583,32 @@ void Library::requestLoan(std::string desiredBookTitle){
         std::getline(std::cin,isbnStr);
         int isbn = checkIfNum(isbnStr);
         Book* requestBook = new Book(desiredBookTitle,author,isbn,1);
+        requestBooks->insertAtEnd(requestBook);
+    }
+}
+/**
+ * Puts a request in for book to be delivered
+ * @param desiredBook
+ */
+void Library::requestLoan(Book& bookToRequest){
+    bool inList = false;
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        if(allBooks->getValueAt(i)->getTitle() == bookToRequest.getTitle()){
+            inList = true;
+            if(allBooks->getValueAt(i)->getHaveShelf() > 0) {
+                std::cout << "We have this book in our library." << std::endl;
+            }
+            else{
+                Book* requestBook = new Book(*allBooks->getValueAt(i));
+                requestBook->modHaveTotal(-requestBook->getHaveTotal()+1); //makes it so it only does one
+                requestBooks->insertAtEnd(requestBook);
+                //add to waitlist
+                std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
+            }
+        }
+    }
+    if(!inList){
+        Book* requestBook = new Book(bookToRequest);
         requestBooks->insertAtEnd(requestBook);
     }
 }
