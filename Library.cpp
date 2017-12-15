@@ -292,32 +292,26 @@ void Library::generateMemberList(){
         std::cerr << "The file could not be opened!" << std::endl;
     }
     else{
-        std::cout << "BARK BARK" << std::endl;
         std::string name;
         std::string ID;
         std::string phoneSTR;
         std::string email;
         std::string preference;
         while (libMembersIN) {
-            std::cout << "BARK BARK" << std::endl;
             getline(libMembersIN, name);
             getline(libMembersIN, phoneSTR);
             getline(libMembersIN, email);
             getline(libMembersIN, ID);
             getline(libMembersIN,preference);
             if(libMembersIN) {    //makes sure that it doesn't duplicate the last line, and works on empty text files
-                std::cout << "BARK BARK" << std::endl;
                 if (!name.empty() && name[name.size() - 1] == '\r') {
                     name.erase(name.size() - 1);
                 }
                 if (!ID.empty() && ID[ID.size() - 1] == '\r') {
                     ID.erase(ID.size() - 1);
                 }
-                std::cout << "BARK BARK1" << std::endl;
                 long long phone = std::stol(phoneSTR);
-                std::cout << "BARK BARK2" << std::endl;
                 Member* newMember = new Member(name,phone,email,ID,preference);
-                std::cout << "BARK BARK MEMBER" << std::endl;
                 bool inList = false;
                 for (int i = 0; i < members->itemCount(); i++) {
                     if (members->getValueAt(i)->getName() == newMember->getName()) {
@@ -380,7 +374,7 @@ Library::Library(const Library& libraryToCopy){
 
     allBooks = new ArrayList<Book*>;
     for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
-        Book* copyBook = libraryToCopy.allBooks->getValueAt(i);
+        Book* copyBook = new Book(*libraryToCopy.allBooks->getValueAt(i));
         addBook(*copyBook);
     }
 
@@ -392,9 +386,15 @@ Library::Library(const Library& libraryToCopy){
     generateShelfBookList();
     //list of people waiting for book
 
+    requestBooks = new ArrayList<Book*>;
+    for(int i = 0; i < libraryToCopy.requestBooks->itemCount(); i++){
+        Book* copyBook = new Book(*libraryToCopy.requestBooks->getValueAt(i));
+        requestBooks->insertAtEnd(copyBook);
+    }
+
     members = new ArrayList<Member*>;
     for(int i = 0; i < libraryToCopy.members->itemCount(); i++){
-        Member* copyMember = libraryToCopy.members->getValueAt(i);
+        Member* copyMember = new Member(*libraryToCopy.members->getValueAt(i));
         addMember(*copyMember);
     }
 
@@ -411,19 +411,25 @@ Library::Library(const Library& libraryToCopy){
 Library& Library::operator=(const Library& libraryToCopy){
     if(this!=&libraryToCopy){
         shelfBooks->clearList();
+        requestBooks->clearData();
         allBooks->clearData();
         members->clearData();
 
 
         for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
-            Book* copyBook = libraryToCopy.allBooks->getValueAt(i);
+            Book* copyBook = new Book(*libraryToCopy.allBooks->getValueAt(i));
             addBook(*copyBook);
+        }
+        requestBooks = new ArrayList<Book*>;
+        for(int i = 0; i < libraryToCopy.requestBooks->itemCount(); i++){
+            Book* copyBook = new Book(*libraryToCopy.requestBooks->getValueAt(i));
+            requestBooks->insertAtEnd(copyBook);
         }
 
         generateShelfBookList();
 
         for(int i = 0; i < libraryToCopy.members->itemCount(); i++){
-            Member* copyMember = libraryToCopy.members->getValueAt(i);
+            Member* copyMember = new Member(*libraryToCopy.members->getValueAt(i));
             addMember(*copyMember);
         }
     }
@@ -572,6 +578,7 @@ void Library::requestLoan(std::string desiredBookTitle){
  */
 void Library::removeBook(std::string bookToRemove, int numRemove){
     bool inList = false;
+    if(numRemove > 0){
     for(int i = 0; i < allBooks->itemCount(); i++){
         if(allBooks->getValueAt(i)->getTitle() == bookToRemove){
             inList = true;
@@ -584,6 +591,13 @@ void Library::removeBook(std::string bookToRemove, int numRemove){
     }
     if(!inList){
         std::cout << "The library does not own that book to remove it." << std::endl;
+    }
+    }
+    else if(numRemove == 0){
+        std::cout << "You shouldn't be trying to remove 0 copies." << std::endl;
+    }
+    else{
+        std::cout << "You shouldn't be trying to remove a negative number of copies." << std::endl;
     }
 }
 

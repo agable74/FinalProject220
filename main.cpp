@@ -3,9 +3,32 @@
 #include <sstream>
 #include "Library.h"
 
+void printAssertEquals(int expected, int actual){
+    if (expected == actual){
+        std::cout << "pass" << std::endl;
+    }
+    else {
+        std::cout << "FAIL, expected: " << expected << "\tactual: " << actual << std::endl;
+    }
+}
+
 void runLibrary(){
     Library theLibrary = Library("AllBooksWork.txt","TestMembers.txt","TestDeliveryIN.txt");
     theLibrary.masterRun();
+}
+
+void libraryTester(){
+    Library theTestLibrary = Library("BooksTester.txt","MembersTester.txt","DeliveryTester.txt");
+    Library theTestLibraryCopy = theTestLibrary;
+    theTestLibraryCopy.removeBook("Lord of the Flies",7);
+    theTestLibrary.inquireAboutBook("Lord of the Flies");
+    theTestLibraryCopy.inquireAboutBook("Lord of the Flies");
+    theTestLibraryCopy = theTestLibrary;
+    theTestLibrary.removeBook("Lord of the Flies",8);
+    theTestLibrary.inquireAboutBook("Lord of the Flies");
+    theTestLibraryCopy.inquireAboutBook("Lord of the Flies");
+    theTestLibrary.removeBook("Lord of the Flies",-1);
+
 }
 
 int main() {
@@ -55,7 +78,8 @@ int main() {
 //    testLib.saveDeliveryRequestToFile();
 
 
-    runLibrary();
+    //runLibrary();
+    libraryTester();
     //need to add a default constructor in book to store the shelf count
     //need to add the waitlist part in requesting books
     return 0;
