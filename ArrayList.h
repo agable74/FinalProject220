@@ -6,6 +6,7 @@
 #define FINALPROJECT_ARRAYLIST_H
 
 #include "List.h"
+#include <stdexcept>
 
 template <class T>
 class ArrayList : public List<T> {

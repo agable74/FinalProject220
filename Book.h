@@ -96,13 +96,13 @@ public:
      */
     std::string toString();
 
-    void removeBookTitle();
-
     void addWaiter(Member* waiter);
 
     const int waitListLength();
 
-    std::string removeWaiter(Member* toRemove= nullptr);
+    std::string removeWaiter();
+
+    std::string removeWaiter(Member* toRemove);
 
     std::string waitListToString();
 };

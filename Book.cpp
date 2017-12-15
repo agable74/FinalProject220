@@ -98,7 +98,7 @@ void Book::removeBook() {
     if (haveTotal > 0 && haveShelf > 0) {
         haveTotal--;
         haveShelf--;
-        std::cout << "\nBook successfully removed from system.\n";
+        std::cout << "\nA copy of '" + title + "' was successfully removed from system.\n";
     }
     else
         std::cout << "\nCan't remove a book we don't have!\n";
@@ -128,12 +128,18 @@ const int Book::waitListLength() {
     return waitList->itemCount();
 }
 
+std::string Book::removeWaiter() {
+    if (!waitList->isEmpty()) {
+        return waitList->removeValueAt(0)->getName();
+    }
+}
+
 std::string Book::removeWaiter(Member* toRemove) {
     std::string result;
     if (waitList->isEmpty())
         return "\nNo members are waiting for '" + title + "'.\n";
-    if (toRemove == nullptr)
-        result = waitList->removeValueAt(0)->getName();
+    if (!toRemove)
+        result = "\nWaiter trying to be removed is bad pointer.\n";
     else {
         int doRemove = 0;
         for (int i = 0; i < waitList->itemCount(); ++i) {
