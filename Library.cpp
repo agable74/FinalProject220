@@ -103,11 +103,13 @@ void Library::generateAllBookList(){
         std::string author;
         std::string isbnSTR;
         std::string numBooksSTR;
+        std::string shelfBooksSTR;
         while (allBooksIN) {
             getline(allBooksIN, title);
             getline(allBooksIN, author);
             getline(allBooksIN, isbnSTR);
             getline(allBooksIN, numBooksSTR);
+            getline(allBooksIN, shelfBooksSTR);
             if(allBooksIN) {    //makes sure that it doesn't duplicate the last line, and works on empty text files
                 if (!title.empty() && title[title.size() - 1] == '\r') {
                     title.erase(title.size() - 1);
@@ -117,7 +119,8 @@ void Library::generateAllBookList(){
                 }
                 int isbn = std::stoi(isbnSTR);
                 int numBooks = std::stoi(numBooksSTR);
-                Book *newBook = new Book(title, author, isbn, numBooks);
+                int shelfBooks = std::stoi(shelfBooksSTR);
+                Book *newBook = new Book(title, author, isbn, numBooks,shelfBooks);
                 bool inList = false;
                 for (int i = 0; i < allBooks->itemCount(); i++) {
                     if (allBooks->getValueAt(i)->getTitle() == newBook->getTitle()) {
@@ -334,6 +337,7 @@ void Library::saveBooksToFile(){
         allBooksOUT << allBooks->getValueAt(i)->getAuthor() << '\n';
         allBooksOUT << allBooks->getValueAt(i)->getIsbn() << '\n';
         allBooksOUT << allBooks->getValueAt(i)->getHaveTotal() << '\n';
+        allBooksOUT << allBooks->getValueAt(i)->getHaveShelf() << '\n';
     }
     allBooksOUT.close();
 }

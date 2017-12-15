@@ -13,7 +13,7 @@ void printAssertEquals(int expected, int actual){
 }
 
 void runLibrary(){
-    Library theLibrary = Library("AllBooksWork.txt","TestMembers.txt","TestDeliveryIN.txt");
+    Library theLibrary = Library("AllBooksNew.txt","TestMembers.txt","TestDeliveryIN.txt");
     theLibrary.masterRun();
 }
 
@@ -28,8 +28,9 @@ void libraryTester(){
     theTestLibrary.inquireAboutBook("Lord of the Flies");
     theTestLibraryCopy.inquireAboutBook("Lord of the Flies");
     theTestLibrary.removeBook("Lord of the Flies",-1);
+    theTestLibrary.printAllOwnedBooks();
     Member testMember = Member("Test McTesty",9529051349,"testDude@test.com");
-    Book testBook = Book("Test Book","Test McTesty",)
+    //Book testBook = Book("Test Book","Test McTesty",)
 
 }
 
@@ -80,8 +81,8 @@ int main() {
 //    testLib.saveDeliveryRequestToFile();
 
 
-    //runLibrary();
-    libraryTester();
+    runLibrary();
+    //libraryTester();
     //need to add a default constructor in book to store the shelf count
     //need to add the waitlist part in requesting books
     return 0;
