@@ -92,8 +92,6 @@ void libraryTester(){
 
     Library testIOLibrary("BooksTester2.txt","MembersTester2.txt","DeliveryTester2.txt");
     testIOLibrary.removeBook("Lord of the Flies",9);
-    Member testMember = Member("Test McTesty",6079231459,"test@test.com","TM12340","Phone call");
-    //testIOLibrary.addMember(testMember);
     Book testBook = Book("Little Women","Louisa May Alcott",34520,1);
     testIOLibrary.requestLoan(testBook);
     testIOLibrary.checkOutBook("The Great Gatsby");
@@ -103,10 +101,12 @@ void libraryTester(){
 
 
 int main() {
-    //runLibrary();
-    //BookTester();
-    libraryTester();
-    //need to add a default constructor in book to store the shelf count
+    runLibrary();
+    //libraryTester();
+
+
+
     //need to add the waitlist part in requesting books
+    //need to add member functionality to withdrawing and checking out books
     return 0;
 }
