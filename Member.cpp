@@ -6,62 +6,61 @@
 #include <iostream>
 
 std::string addLastName() {
-    std::string nameLastIn;
-    std::cout << "Member's last name?: ";
-    std::cin >> nameLastIn;
-    std::string nameUpper = "";
-    nameUpper += toupper(nameLastIn[0]);
-    int i = 1;
-    while (nameLastIn[i]) {
-        nameUpper += nameLastIn[i];
-        i++;
-    }
-    std::string yesNo;
-    std::cout << "Is " << nameUpper << " correct? ";
-    std::cin >> yesNo;
-    if (yesNo[0] != 'y' && yesNo[0] != 'n') {
-        std::cout << "Try again.\n";
-        addLastName();
-    }
-    else {
-        if (yesNo[0] == 'y') {
+    bool badName = true;
+    std::string nameUpper;
+    while (badName) {
+        std::string nameLastIn;
+        std::cout << "Member's last name?: ";
+        std::cin >> nameLastIn;
+        nameUpper = "";
+        nameUpper += toupper(nameLastIn[0]);
+        int i = 1;
+        while (nameLastIn[i]) {
+            nameUpper += nameLastIn[i];
+            i++;
+        }
+        std::string yesNo;
+        std::cout << "Is " << nameUpper << " correct? ";
+        std::cin >> yesNo;
+        if (yesNo[0] != 'y' && yesNo[0] != 'n') {
+            std::cout << "Try again.\n";
+        } else if (yesNo[0] == 'y') {
             std::cout << "Last name confirmed.\n";
+            badName = false;
         } else {
             std::cout << "Okay, re-enter member's last name.\n";
-            nameUpper = addLastName();
         }
-        return nameUpper;
     }
+    return nameUpper;
 }
 
 std::string addFirstName() {
-    std::string nameFirstIn;
-    std::cout << "Member's first name?: ";
-    std::cin >> nameFirstIn;
-    std::string nameUpper = "";
-    nameUpper += toupper(nameFirstIn[0]);
-    int i = 1;
-    while (nameFirstIn[i]) {
-        nameUpper += nameFirstIn[i];
-        i++;
-    }
-    std::string yesNo;
-    std::cout << "Is " << nameUpper << " correct? ";
-    std::cin >> yesNo;
-    if (yesNo[0] != 'y' && yesNo[0] != 'n') {
-        std::cout << "Try again.\n";
-        addFirstName();
-    }
-    else {
-        if (yesNo[0] == 'y') {
+    bool badName = true;
+    std::string nameUpper;
+    while (badName) {
+        std::string nameFirstIn;
+        std::cout << "Member's first name?: ";
+        std::cin >> nameFirstIn;
+        nameUpper = "";
+        nameUpper += toupper(nameFirstIn[0]);
+        int i = 1;
+        while (nameFirstIn[i]) {
+            nameUpper += nameFirstIn[i];
+            i++;
+        }
+        std::string yesNo;
+        std::cout << "Is " << nameUpper << " correct? ";
+        std::cin >> yesNo;
+        if (yesNo[0] != 'y' && yesNo[0] != 'n') {
+            std::cout << "Try again.\n";
+        } else if (yesNo[0] == 'y') {
             std::cout << "First name confirmed.\n\n";
+            badName = false;
         } else {
-            std::cout << "Okay, re-enter member's first name.\n";
-            addFirstName();
+            std::cout << "Okay, re-enter member's First name.\n";
         }
     }
-    std::string lastName = addLastName();
-    std::string nameIn = nameUpper + " " + lastName;
+    std::string nameIn = nameUpper + " " + addLastName();
     std::cout << "Member name is " << nameIn << ".\n\n";
     return nameIn;
 }
