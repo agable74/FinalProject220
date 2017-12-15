@@ -28,6 +28,8 @@ void libraryTester(){
     theTestLibrary.inquireAboutBook("Lord of the Flies");
     theTestLibraryCopy.inquireAboutBook("Lord of the Flies");
     theTestLibrary.removeBook("Lord of the Flies",-1);
+    Member testMember = Member("Test McTesty",9529051349,"testDude@test.com");
+    Book testBook = Book("Test Book","Test McTesty",)
 
 }
 
