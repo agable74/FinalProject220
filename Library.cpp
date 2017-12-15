@@ -513,8 +513,7 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
         std::getline(std::cin,isbnStr);
         int isbn = checkIfNum(isbnStr);
         Book* newBook = new Book(titleToAdd,author,isbn,numToAdd);
-        allBooks->insertAtEnd(newBook);
-        sortBookList();
+        allBooks->insertAtEnd(newBook)
     }
 }
 
@@ -528,7 +527,6 @@ void Library::addBook(Book& bookToAdd){
     }
     if(!inList) {
         allBooks->insertAtEnd(&bookToAdd);
-        sortBookList();
     }
 }
 
