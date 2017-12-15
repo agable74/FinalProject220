@@ -18,6 +18,7 @@ private:
     std::string contactPref;
     std::string generateId();
 
+
 public:
 
     /**
