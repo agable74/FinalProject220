@@ -28,17 +28,16 @@ std::string addLastName() {
             std::cout << "Last name confirmed.\n";
         } else {
             std::cout << "Okay, re-enter member's last name.\n";
-            addLastName();
+            nameUpper = addLastName();
         }
+        return nameUpper;
     }
-    return nameUpper;
 }
 
 std::string addFirstName() {
     std::string nameFirstIn;
     std::cout << "Member's first name?: ";
     std::cin >> nameFirstIn;
-    // convert input to cap'd version: abc -> Abc
     std::string nameUpper = "";
     nameUpper += toupper(nameFirstIn[0]);
     int i = 1;
@@ -61,7 +60,8 @@ std::string addFirstName() {
             addFirstName();
         }
     }
-    std::string nameIn = nameUpper + " " + addLastName();
+    std::string lastName = addLastName();
+    std::string nameIn = nameUpper + " " + lastName;
     std::cout << "Member name is " << nameIn << ".\n\n";
     return nameIn;
 }

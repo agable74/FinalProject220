@@ -28,7 +28,8 @@ Book::Book (const Book &bookToCopy) {
     waitList = new ArrayList<Member*>;
     if (bookToCopy.waitList) {
         for (int i = 0; i < bookToCopy.waitList->itemCount(); ++i) {
-            waitList->insertAtEnd(bookToCopy.waitList->getValueAt(i));
+            Member* copyMember = new Member(*bookToCopy.waitList->getValueAt(i));
+            waitList->insertAtEnd(copyMember);
         }
     } else
         waitList = nullptr;
