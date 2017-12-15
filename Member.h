@@ -37,6 +37,8 @@ public:
     /**
      * Assignment Operator
      */
+
+    ~Member();
     Member&operator=(const Member& memberToCopy);
 
     std::string getName();

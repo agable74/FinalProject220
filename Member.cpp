@@ -145,6 +145,8 @@ Member::Member(const Member& memberToCopy) {
     contactPref = memberToCopy.contactPref;
 }
 
+Member::~Member() {}
+
 std::string Member::getName() {
     return name;
 }
