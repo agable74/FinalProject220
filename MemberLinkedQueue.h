@@ -6,7 +6,7 @@
 #define FINALPROJECT_LINKEDQUEUE_H
 #include <string>
 #include <stdexcept>
-#include "LinkedNode.h
+#include "LinkedNode.h"
 #include "Member.h"
 
 /**
