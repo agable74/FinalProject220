@@ -136,16 +136,17 @@ void Library::generateAllBookList(){
     }
 }
 
-    /**
-    * Generates the list of books on the shelf from allBooks list
-    * @return list of shelf books
-    */
+/**
+* Generates the list of books on the shelf from allBooks list
+* @return list of shelf books
+*/
 void Library::generateShelfBookList(){
+    shelfBooks->clearList();
     for(int i=0; i<allBooks->itemCount();i++){
         if(allBooks->getValueAt(i)->getHaveTotal()>0){
             shelfBooks->insertAtEnd(allBooks->getValueAt(i));
-            }
         }
+    }
 }
 
 
@@ -556,7 +557,7 @@ void Library::returnBook(std::string titleToReturn){
  * Puts a request in for book to be delivered
  * @param desiredBook
  */
-void Library::requestLoan(std::string desiredBookTitle){
+void Library::requestLoan(std::string& desiredBookTitle, std::string& memberName){
     bool inList = false;
     for(int i = 0; i < allBooks->itemCount(); i++){
         if(allBooks->getValueAt(i)->getTitle() == desiredBookTitle){
@@ -565,10 +566,23 @@ void Library::requestLoan(std::string desiredBookTitle){
                 std::cout << "We have this book in our library." << std::endl;
             }
             else{
-                Book* requestBook = new Book(*allBooks->getValueAt(i));
-                requestBook->modHaveTotal(-requestBook->getHaveTotal()+1); //makes it so it only does one
-                requestBooks->insertAtEnd(requestBook);
-                //add to waitlist
+                bool isMember = false;
+                Member* requestMember;
+                Book* requestBook = allBooks->getValueAt(i);
+                for(int i = 0; i < members->itemCount(); i++){
+                    if(memberName == members->getValueAt(i)->getName()){
+                        requestMember = members->getValueAt(i);
+                        isMember = true;
+                    }
+                }
+                if(!isMember){
+                    std::cout << "You don't appear to be in our database. Please sign up for a membership." << std::endl;
+                }
+                 //makes it so it only does one
+                else {
+                    requestBook->addWaiter(requestMember);//add to waitlist
+                    requestBooks->insertAtEnd(requestBook);
+                }
                 std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
             }
         }
@@ -581,12 +595,28 @@ void Library::requestLoan(std::string desiredBookTitle){
         std::cout << "What is the ISBN number of this book?" << std::endl;
         std::getline(std::cin,isbnStr);
         int isbn = checkIfNum(isbnStr);
-        Book* requestBook = new Book(desiredBookTitle,author,isbn,1);
-        requestBooks->insertAtEnd(requestBook);
+        Book* requestBook = new Book(desiredBookTitle,author,isbn,0);
+        bool isMember = false;
+        Member* requestMember;
+        for(int i = 0; i < members->itemCount(); i++){
+            if(memberName == members->getValueAt(i)->getName()){
+                requestMember = members->getValueAt(i);
+                isMember = true;
+            }
+        }
+        if(!isMember){
+            std::cout << "You don't appear to be in our database. Please sign up for a membership." << std::endl;
+        }
+        else{
+            requestBook->addWaiter(requestMember); //add to waitlist
+            requestBooks->insertAtEnd(requestBook);
+            allBooks->insertAtEnd(requestBook);
+        }
     }
 }
 /**
  * Puts a request in for book to be delivered
+ * Used only for testing
  * @param desiredBook
  */
 void Library::requestLoan(Book& bookToRequest){
@@ -601,7 +631,6 @@ void Library::requestLoan(Book& bookToRequest){
                 Book* requestBook = new Book(*allBooks->getValueAt(i));
                 requestBook->modHaveTotal(-requestBook->getHaveTotal()+1); //makes it so it only does one
                 requestBooks->insertAtEnd(requestBook);
-                //add to waitlist
                 std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
             }
         }
@@ -872,9 +901,12 @@ bool Library::runUI(){
             bool yes = checkYesOrNo(userResponse);
             if(yes){
                 std::string bookTitle;
+                std::string memberName;
                 std::cout << "Please enter the title of the book you desire: ";
                 std::getline(std::cin,bookTitle);
-                requestLoan(bookTitle);
+                std::cout << "Please enter your name is it is registered in the database: ";
+                std::getline(std::cin,memberName);
+                requestLoan(bookTitle,memberName);
                 std::cout << "Returning to the main menu" << std::endl;
             }
             else{

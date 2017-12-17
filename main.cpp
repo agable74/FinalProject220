@@ -104,25 +104,6 @@ int main() {
     //runLibrary();
     //libraryTester();
 
-    //test mergeSort
-    Book book1 = Book("A Tale of Two Cities", "Charles Dickens", 3904238, 4, 4);
-    Book book2 = Book("Doggo's Are Good", "Alex Gable", 2222, 104, 104);
-    Book book3 = Book("Great Expectations", "Charles Dickens", 91230102, 1, 1);
-    Book book4 = Book("Lord of the Flies", "William Golding", 23197, 98, 98);
-    Book book5 = Book("Moby-Dick", "Herman Melville", 219031924, 1, 1);
-    Book book6 = Book("Pride and Prejudice", "Jane Austen", 119, 1, 1);
-    Library lib1 = Library("BooksMergeTest.txt","MembersMergeTest.txt","DeliveryMergeTest.txt");
-
-//    lib1.addBook(book1);
-//    lib1.addBook(book6);
-//    lib1.addBook(book3);
-//    lib1.addBook(book2);
-//    lib1.addBook(book4);
-//    lib1.addBook(book5);
-   // lib1.saveBooksToFile();
-    lib1.printAllOwnedBooks();
-    lib1.saveBooksToFile();
-
 
 
     //need to add the waitlist part in requesting books

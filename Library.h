@@ -144,7 +144,7 @@ public:
      * Puts a request in for book to be delivered
      * @param desiredBookTitle book title
      */
-    void requestLoan(std::string desiredBookTitle);
+    void requestLoan(std::string& desiredBookTitle, std::string& memberName);
 
     /**
      * Puts in a request for a book to be delivered
