@@ -14,7 +14,7 @@ MemberLinkedQueue::MemberLinkedQueue(){
 MemberLinkedQueue::MemberLinkedQueue(const MemberLinkedQueue& queueToCopy){
     front = nullptr;
     end = nullptr;
-    LinkedNode* newFront = queueToCopy.front;
+    LinkedNode<Member*>* newFront = queueToCopy.front;
     while(newFront != queueToCopy.end){
         Member* itemToCopy = new Member(*newFront->getItem());
         enqueue(itemToCopy);
@@ -31,19 +31,34 @@ MemberLinkedQueue::MemberLinkedQueue(const MemberLinkedQueue& queueToCopy){
 //Destructor
 MemberLinkedQueue::~MemberLinkedQueue(){
     while(front != nullptr){
-        dequeue();  //doesn't own its memory so I can't dequeue it
+        dequeue();  //the dequeue doesn't delete what's at the end of the pointers. these queues don't own the memory so that's good
     }
 }
 
 MemberLinkedQueue& MemberLinkedQueue::operator=(const MemberLinkedQueue& memberQueueToCopy){
     if(this!=&memberQueueToCopy){
-
+        while(front != nullptr){
+            dequeue();
+        }
+        front = nullptr;
+        end = nullptr;
+        LinkedNode<Member*>* newFront = memberQueueToCopy.front;
+        while(newFront != memberQueueToCopy.end){
+            Member* itemToCopy = new Member(*newFront->getItem());
+            enqueue(itemToCopy);
+            newFront = newFront->getNext();
+        }
+        if(newFront != nullptr) {
+            Member* itemToCopy = new Member(*newFront->getItem());
+            enqueue(itemToCopy);
+        }
+        newFront = nullptr;
     }
 }
 
 //adds an item to the end of the queue
 void MemberLinkedQueue::enqueue(Member* item){
-    LinkedNode* newNode = new LinkedNode(item);
+    LinkedNode<Member*>* newNode = new LinkedNode<Member*>(item);
     //if front is nullptr, end should be nullptr too
     if (front == nullptr){
         front = newNode;
@@ -71,7 +86,7 @@ Member* MemberLinkedQueue::dequeue(){
         return queueItem;
     }
     // the queue has many items
-    LinkedNode* tempFront = front;
+    LinkedNode<Member*>* tempFront = front;
     Member* queueItem = front->getItem();
     front = front->getNext();
     delete tempFront;
