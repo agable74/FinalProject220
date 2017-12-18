@@ -5,7 +5,8 @@
 #ifndef FINALPROJECT_BOOK_H
 #define FINALPROJECT_BOOK_H
 
-#include "ArrayList.h"
+#include "MemberLinkedQueue.h"
+#include "LinkedList.h"
 #include "Member.h"
 
 class Book {
@@ -18,7 +19,7 @@ private:
     int haveTotal;
     int haveShelf;
     int wantValue;
-    List<Member*>* waitList;
+    MemberLinkedQueue* waitList;
 
 
 public:
@@ -100,7 +101,7 @@ public:
 
     const int waitListLength();
 
-    std::string removeWaiter();
+    Member* removeWaiter();
 
     std::string removeWaiter(Member* toRemove);
 
