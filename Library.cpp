@@ -89,7 +89,7 @@ bool checkYesOrNo(std::string& stringToCheck){
     }
 }
 
-/**
+    /**
      * Generates the list of books from the file
      * @param fileToGenerate
      * @return list of books
@@ -126,11 +126,13 @@ void Library::generateAllBookList(){
                     if (allBooks->getValueAt(i)->getTitle() == newBook->getTitle()) {
                         inList = true;
                         allBooks->getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
-                        delete newBook;
                     }
                 }
                 if (!inList) {
                     allBooks->insertAtEnd(newBook);
+                }
+                else{
+                    delete newBook;
                 }
             }
         }
@@ -379,6 +381,7 @@ void Library::saveDeliveryRequestToFile(){
         requestBooksOUT << requestBooks->getValueAt(i)->getAuthor() << '\n';
         requestBooksOUT << requestBooks->getValueAt(i)->getIsbn() << '\n';
         requestBooksOUT << requestBooks->getValueAt(i)->waitListLength() << '\n';
+        requestBooksOUT << requestBooks->getValueAt(i)->waitListToString() << '\n';
     }
     requestBooksOUT.close();
 }
@@ -758,11 +761,13 @@ void Library::bookDelivery(const std::string& deliveryFileName){
         std::string author;
         std::string isbnSTR;
         std::string numBooksSTR;
+        std::string waitList;
         while (deliveryIN) {
             getline(deliveryIN, title);
             getline(deliveryIN, author);
             getline(deliveryIN, isbnSTR);
             getline(deliveryIN, numBooksSTR);
+            getline(deliveryIN,waitList);
             if(deliveryIN){ //makes sure that it doesn't duplicate the last line, and works on empty text files
                 if (!title.empty() && title[title.size() - 1] == '\r') {
                     title.erase(title.size() - 1);
@@ -773,16 +778,34 @@ void Library::bookDelivery(const std::string& deliveryFileName){
                 int isbn = std::stoi(isbnSTR);
                 int numBooks = std::stoi(numBooksSTR);
                 Book *newBook = new Book(title, author, isbn, numBooks);
+
+                //read in waitlist
+                std::stringstream waitListStream(waitList);
+                std::string waiter;
+                if(waitListStream){
+                    getline(waitListStream,waiter,',');
+                    while(waitListStream){
+                        for(int i = 0; i < memberList->itemCount(); i++){
+                            if(waiter == memberList->getValueAt(i)->getName()){
+                                newBook->addWaiter(memberList->getValueAt(i));
+                            }
+                        }
+                        getline(waitListStream,waiter);
+                    }
+                }
+
                 bool inList = false;
                 for (int i = 0; i < allBooks->itemCount(); i++) {
                     if (allBooks->getValueAt(i)->getTitle() == newBook->getTitle()) {
                         inList = true;
                         allBooks->getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
-                        delete newBook;
                     }
                 }
                 if (!inList) {
                     allBooks->insertAtEnd(newBook);
+                }
+                else{
+                    delete newBook;
                 }
             }
         }
