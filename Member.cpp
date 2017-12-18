@@ -91,30 +91,6 @@ long addPhoneNumber() {
     std::cout << "Member phone number?: ";
     std::cin >> tempPhone;
     return checkIfLong(tempPhone);
-    /*
-    if (toascii(tempPhone[0]) < 48 || toascii(tempPhone[0]) > 57) {
-        std::cout << "Invalid input. Please try again.\n\n";
-        addPhoneNumber();
-    }
-    else {
-        long long phoneNumberIn = std::stol(tempPhone);
-        std::string yesNo;
-        std::cout << "Is " << tempPhone << " correct? ";
-        std::cin >> yesNo;
-        if (yesNo[0] != 'y' && yesNo[0] != 'n') {
-            std::cout << "Try again.\n";
-            addPhoneNumber();
-        } else {
-            if (yesNo[0] == 'y') {
-                std::cout << "Phone number confirmed.\n\n";
-                return phoneNumberIn;
-            } else {
-                std::cout << "\nOkay, re-enter member phone number.\n";
-                addPhoneNumber();
-            }
-        }
-    }
-     */
 }
 
 std::string addEmail() {
@@ -171,13 +147,11 @@ Member::Member(const Member& memberToCopy) {
 
 Member& Member::operator=(const Member& memberToCopy) {
     if (this != &memberToCopy) {
-        delete this;
-        Member* newMember = new Member(memberToCopy);
-        newMember->name = memberToCopy.name;
-        newMember->phoneNumber = memberToCopy.phoneNumber;
-        newMember->email = memberToCopy.email;
-        newMember->id = memberToCopy.id;
-        newMember->contactPref = memberToCopy.contactPref;
+        name = memberToCopy.name;
+        phoneNumber = memberToCopy.phoneNumber;
+        email = memberToCopy.email;
+        id = memberToCopy.id;
+        contactPref = memberToCopy.contactPref;
     }
     return *this;
 }

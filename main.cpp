@@ -28,7 +28,7 @@ void MemberTester() {
     printAssertStringEqual(mem1.getName(), mem2.getName());
     printAssertStringEqual(mem1.getId(), mem2.getId());
     std::cout << "Testing Member Assignment Operator [should print 2 passes]\n";
-    Member mem3 = Member("Lois Loan", 6072741333, "lLoan@dddailyppplanet.com", "LL5006886", "Text message");
+    Member mem3 = Member("Lois Loan", 6072741333, "lLoan@dailyplanet.net", "LL5006886", "Text message");
     mem2 = mem3;
     printAssertStringEqual(mem3.getName(), mem2.getName());
     printAssertStringEqual(mem2.getEmail(), mem3.getEmail());
@@ -46,13 +46,11 @@ void MemberTester() {
     printAssertStringEqual("Text message", mem1.setContactPref("txt"));
     printAssertStringEqual("Email", mem1.setContactPref("E"));
 
-    Book book1 = Book("th th", "m Rosen", 556655, 4, 3);
-    Book book2 = Book("m m ", "t trout", 55555555, 4, 2);
-    book2 = book1;
-    printAssertStringEqual(book2.getTitle(), book1.getTitle());
-    Book book3 = Book("gogo", "l mason", 48848, 3, 3);
-    book2 = book3;
-    printAssertStringEqual(book2.getTitle(), book3.getTitle());
+    std::cout << "\nTesting Member toString [should print 1 pass]\n";
+    // "Lois Loan", 6072741333, "lLoan@dddailyppplanet.com", "LL5006886", "Text message"
+    printAssertStringEqual("\nPatron name: Lois Loan\nPhone number: 607-274-1333\nMember ID: LL5006886"
+                                   "\nEmail: lLoan@dailyplanet.net\nContact by: Text message\n", mem3.toString());
+
 }
 
 void BookTester() {
@@ -98,6 +96,14 @@ void BookTester() {
     printAssertStringEqual("\nMembers waiting on 'Pride and Prejudice':\nJoe Schmoe - JS2341657\n", book6.waitListToString());
     book6.removeWaiter();
     printAssertStringEqual("\nMembers waiting on 'Pride and Prejudice':\nnone\n", book6.waitListToString());
+
+    Book bookF = Book("Flowery Things", "Rose P. et al", 556655, 4, 3);
+    Book bookP = Book("Muddy Paths", "Lan Zlide", 55555555, 4, 2);
+    book2 = book1;
+    printAssertStringEqual(book2.getTitle(), book1.getTitle());
+    Book bookG = Book("gogo", "l mason", 48848, 3, 3);
+    book2 = book3;
+    printAssertStringEqual(book2.getTitle(), book3.getTitle());
 }
 
 void runLibrary(){
