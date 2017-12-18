@@ -20,6 +20,7 @@ Book::Book(std::string titleIn, std::string authorIn, int isbnIn, int haveTotalI
 }
 
 Book::Book(const Book &bookToCopy) {
+    delete waitList;
     title = bookToCopy.title;
     author = bookToCopy.author;
     isbn = bookToCopy.isbn;
@@ -35,7 +36,7 @@ Book::Book(const Book &bookToCopy) {
 
 Book& Book::operator=(const Book &bookToCopy) {
     if (this != &bookToCopy) {
-        Book* newBook = new Book();
+        delete waitList;
         title = bookToCopy.title;
         author = bookToCopy.author;
         isbn = bookToCopy.isbn;
@@ -143,7 +144,7 @@ std::string Book::waitListToString() {
     if (waitList->isEmpty())
         result += "none\n";
     else {
-        MemberLinkedQueue* tempWaitList(waitList);
+        MemberLinkedQueue* tempWaitList = waitList;
         while (numWaiters > 0) {
             Member* waiter = tempWaitList->dequeue();
             std::string waiterName = waiter->getName();
