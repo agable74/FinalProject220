@@ -96,6 +96,12 @@ public:
     void generateMemberList();
 
     /**
+    * Sorts the book list alphabetically
+    * Uses mergeSort
+    */
+    void sortBookList();
+
+    /**
      * Saves the list allBooks to a file determined by allBooksOUT
      */
     void saveBooksToFile();
@@ -109,6 +115,21 @@ public:
      * Saves the list requestBooks to a file determined by requestBooksOUT
      */
     void saveDeliveryRequestToFile();
+
+    /**
+     * Save the inventory and wait lists in a file and terminate execution of UI.
+     * @post saves allBooks to file
+     * @post saves memberList to file
+     * @post saves requestBooks to file
+     * @post sets runUI to false
+     */
+    void quit();
+
+    /**
+     * Prints a summary of all available commands
+     * @post All available commands printed to screen
+     */
+    void libraryHelp();
 
     /**
      * Gets the shelf value of a book
@@ -130,21 +151,6 @@ public:
      * @post Member added to memberList
      */
     void addMember(Member* memberToAdd);
-
-    /**
-     * Save the inventory and wait lists in a file and terminate execution of UI.
-     * @post saves allBooks to file
-     * @post saves memberList to file
-     * @post saves requestBooks to file
-     * @post sets runUI to false
-     */
-    void quit();
-
-    /**
-     * Sorts the book list alphabetically
-     * Uses mergeSort
-     */
-    void sortBookList();
 
     /**
      * adds a book to allBooks
@@ -192,12 +198,6 @@ public:
      * @post if successful, haveTotal and haveShelf are reduced by numRemove on the book
      */
     void removeBook(std::string bookToRemove, int numRemove);
-
-    /**
-     * Prints a summary of all available commands
-     * @post All available commands printed to screen
-     */
-    void libraryHelp();
 
     /**
      * Print all information for the book

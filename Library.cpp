@@ -39,6 +39,15 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& memberListT
     memberListTxt = memberListTxtIN;
     deliveryTxt = deliveryTxtIN;
 }
+
+/**
+ * Compares the titles of the two books
+ * @param book1 pointer to first Book
+ * @param book2 pointer to second Book
+ * @return 1 if title of 1 is further in alphabet
+ * @return 2 if title of 2 is further in alphabet
+ * @return 3 if same title
+ */
 int compareBookTitles(Book* book1, Book* book2){
     std::string bookTitle1 = book1->getTitle();
     std::string bookTitle2 = book2->getTitle();
@@ -52,19 +61,11 @@ int compareBookTitles(Book* book1, Book* book2){
     return 3;
 }
 
-Book* compareBookTitlesBook(Book* book1, Book* book2){
-    std::string bookTitle1 = book1->getTitle();
-    std::string bookTitle2 = book2->getTitle();
-    for(int i = 0; i < bookTitle1.length(); i++){
-        if(bookTitle1[i] > bookTitle2[i]){
-            return book1;
-        }else if(bookTitle1[i] < bookTitle2[i]){
-            return book2;
-        }
-    }
-    return book1;
-}
-
+/**
+ * Checks if a string is an integer, loops until given valid integer string
+ * @param stringToCheck string to check
+ * @return integer conversion of input
+ */
 int checkIfNum(std::string& stringToCheck){
     bool isValidNum = true;
     for(int i = 0; i < stringToCheck.length(); i++){
@@ -86,6 +87,11 @@ int checkIfNum(std::string& stringToCheck){
     return validNum;
 }
 
+/**
+ * Checks if a string is some form of yes or no. Loops until valid input is provided
+ * @param stringToCheck string to check
+ * @return true if yes, false if no
+ */
 bool checkYesOrNo(std::string& stringToCheck){
     while(stringToCheck!="y"&&stringToCheck!="Y"&&stringToCheck!="Yes"&&stringToCheck!="yes"&&stringToCheck!="n"&&stringToCheck!="N"&&stringToCheck!="No"&&stringToCheck!="no"){
         std::cout << "Invalid input, please enter 'yes' or 'no': ";
@@ -99,11 +105,94 @@ bool checkYesOrNo(std::string& stringToCheck){
     }
 }
 
-    /**
-     * Generates the list of books from the file
-     * @param fileToGenerate
-     * @return list of books
-     */
+/**
+ * Copy Constructor
+ * @param libraryListToCopy
+ */
+Library::Library(const Library& libraryToCopy){
+    libMembersIN;
+    libMembersOUT;
+    //pointer to list of books owned by library
+
+    allBooks = new ArrayList<Book*>;
+    for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
+        Book* copyBook = new Book(*libraryToCopy.allBooks->getValueAt(i));
+        allBooks->insertAtEnd(copyBook);
+    }
+
+    //fstream parts
+    allBooksIN;
+    allBooksOUT;
+    //pointer to list of books in library
+    shelfBooks = new ArrayList<Book*>;
+    generateShelfBookList();
+    //list of people waiting for book
+
+    requestBooks = new ArrayList<Book*>;
+    for(int i = 0; i < libraryToCopy.requestBooks->itemCount(); i++){
+        Book* copyBook = new Book(*libraryToCopy.requestBooks->getValueAt(i));
+        requestBooks->insertAtEnd(copyBook);
+    }
+
+    memberList = new ArrayList<Member*>;
+    for(int i = 0; i < libraryToCopy.memberList->itemCount(); i++){
+        Member* copyMember = new Member(*libraryToCopy.memberList->getValueAt(i));
+        addMember(copyMember);
+    }
+
+    runUIBool = true;
+    bookListTxt = libraryToCopy.bookListTxt;
+    memberListTxt = libraryToCopy.memberListTxt;
+}
+
+/**
+ * Assignment Operator
+ * @param libraryListToCopy
+ */
+Library& Library::operator=(const Library& libraryToCopy){
+    if(this!=&libraryToCopy){
+        shelfBooks->clearList();
+        requestBooks->clearList();
+        allBooks->clearData();
+        memberList->clearData();
+
+
+
+        for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
+            Book* copyBook = new Book(*libraryToCopy.allBooks->getValueAt(i));
+            allBooks->insertAtEnd(copyBook);
+        }
+        requestBooks = new ArrayList<Book*>;
+        for(int i = 0; i < libraryToCopy.requestBooks->itemCount(); i++){
+            Book* copyBook = new Book(*libraryToCopy.requestBooks->getValueAt(i));
+            requestBooks->insertAtEnd(copyBook);
+        }
+
+        generateShelfBookList();
+
+        for(int i = 0; i < libraryToCopy.memberList->itemCount(); i++){
+            Member* copyMember = new Member(*libraryToCopy.memberList->getValueAt(i));
+            addMember(copyMember);
+        }
+    }
+    return *this;
+}
+
+/**
+ * Destructor
+ */
+Library::~Library(){
+    requestBooks->clearList();
+    delete requestBooks;
+    shelfBooks->clearList();
+    delete shelfBooks;
+    allBooks->clearData();
+    delete allBooks;
+    memberList->clearData();
+    delete memberList;
+}
+
+
 void Library::generateAllBookList(){
     if(!allBooksIN){
         std::cerr << "The file could not be opened!" << std::endl;
@@ -149,12 +238,10 @@ void Library::generateAllBookList(){
     }
 }
 
-/**
-* Generates the list of books on the shelf from allBooks list
-* @return list of shelf books
-*/
 void Library::generateShelfBookList(){
-    shelfBooks->clearList();
+    if(!shelfBooks->isEmpty()) {
+        shelfBooks->clearList();
+    }
     for(int i=0; i<allBooks->itemCount();i++){
         if(allBooks->getValueAt(i)->getHaveTotal()>0){
             shelfBooks->insertAtEnd(allBooks->getValueAt(i));
@@ -162,8 +249,58 @@ void Library::generateShelfBookList(){
     }
 }
 
+/**
+ * Generates the list of library members from the file
+ * @post memberList generated from text file
+ */
+void Library::generateMemberList(){
+    if(!libMembersIN){
+        std::cerr << "The file could not be opened!" << std::endl;
+    }
+    else{
+        std::string name;
+        std::string ID;
+        std::string phoneSTR;
+        std::string email;
+        std::string preference;
+        while (libMembersIN) {
+            getline(libMembersIN, name);
+            getline(libMembersIN, phoneSTR);
+            getline(libMembersIN, email);
+            getline(libMembersIN, ID);
+            getline(libMembersIN,preference);
+            if(libMembersIN) {    //makes sure that it doesn't duplicate the last line, and works on empty text files
+                if (!name.empty() && name[name.size() - 1] == '\r') {
+                    name.erase(name.size() - 1);
+                }
+                if (!ID.empty() && ID[ID.size() - 1] == '\r') {
+                    ID.erase(ID.size() - 1);
+                }
+                long long phone = std::stol(phoneSTR);
+                Member* newMember = new Member(name,phone,email,ID,preference);
+                bool inList = false;
+                for (int i = 0; i < memberList->itemCount(); i++) {
+                    if (memberList->getValueAt(i)->getName() == newMember->getName()) {
+                        inList = true;
+                        std::cout << "Member already exists!" << std::endl;
+                    }
+                }
+                if (!inList) {
+                    memberList->insertAtEnd(newMember);
+                }
+            }
+        }
+    }
+}
+//HERE\\
 
-
+/**
+ * Copies the array of Book pointers
+ * @param arrayToCopy original array of Book pointers
+ * @param size size of the array
+ * @param numLinesRun for time efficiency
+ * @return copy of array of Book pointers
+ */
 Book** copyArray(Book** arrayToCopy, const int size, int& numLinesRun){
     Book* *newArrayCopy = new Book*[size];
     numLinesRun += 5;
@@ -174,6 +311,15 @@ Book** copyArray(Book** arrayToCopy, const int size, int& numLinesRun){
     return newArrayCopy;
 }
 
+/**
+ * Merges two arrays of Book pointers together in order by title alphabetically
+ * @param a1 array1 of Book pointers
+ * @param size1 size of array1
+ * @param a2 array2 of Book pointers
+ * @param size2 size of array2
+ * @param numLinesRun for timing efficiency
+ * @return array of Book pointers sorted alphabetically
+ */
 Book** merge(Book**a1, int size1, Book** a2, int size2, int& numLinesRun){
     //checks for two arrays of size 0
     numLinesRun += 6;
@@ -220,6 +366,13 @@ Book** merge(Book**a1, int size1, Book** a2, int size2, int& numLinesRun){
     return arrayToReturn;
 }
 
+/**
+ * Breaks down and sorts an array of Book pointers
+ * @param arrayToSort array of Book pointers to sort
+ * @param size size of array
+ * @param numLinesRun for timing efficiency
+ * @return fully sorted array of Book pointers, alphabetically in order by title
+ */
 Book** mergeSort(Book** arrayToSort, int size, int& numLinesRun) {
     numLinesRun += 5;
     //checks for empty array
@@ -259,92 +412,26 @@ Book** mergeSort(Book** arrayToSort, int size, int& numLinesRun) {
     }
 }
 
-
-//Uses Insertion Sort
-void sort(List<Book*>* arrayToSort, int size, int& numLinesRun){
-    numLinesRun += 4;
-    for(int j = 0; j < size; j++){
-        //loops through the positions
-        numLinesRun += 2;
-        Book* minVal = arrayToSort->getValueAt(j);
-        for(int i = j; i < size; i++){
-            //starts at i=j so that it doesn't go back into the already-sorted section
-            //only looks through unsorted section
-            numLinesRun += 1;
-            if(compareBookTitles(arrayToSort->getValueAt(i),minVal)==2){
-                //swaps the lowest value with the value at the j position
-                numLinesRun += 5;
-                minVal = arrayToSort->getValueAt(i);
-                int minIndex = i;
-                Book* tempSwap = arrayToSort->getValueAt(j);
-                arrayToSort->replaceValueAt(minIndex,tempSwap);
-                arrayToSort->replaceValueAt(j,minVal);
-            }
-        }
-
-    }
-}
 /**
- * Sorts the allBooks and shelfBooks lists alphabetically
- * @post allBooks and shelfBooks are sorted alphabetically by title
+ * Sorts the allBooks list alphabetically
+ * @post allBooks is alphabetically by title
  */
 void Library::sortBookList(){
     int numLines = 0;
-    //sort(allBooks,allBooks->itemCount(),numLines);
+    //create an array of Book pointers from the allBooks list
     Book** allBooksTempArray = new Book*[allBooks->itemCount()];
     for(int i = 0; i < allBooks->itemCount(); i++) {
         allBooksTempArray[i] = allBooks->getValueAt(i);
     }
+    //sort the array of Book pointers
     Book** allBooksArray = mergeSort(allBooksTempArray,allBooks->itemCount(),numLines);
+    //replace the values in the list with those of the array
     for(int i = 0; i < allBooks->itemCount(); i++){
         allBooks->replaceValueAt(i,allBooksArray[i]);
     }
+    //cleanup
     delete[] allBooksTempArray;
     delete[] allBooksArray;
-}
-
-/**
- * Generates the list of library members from the file
- * @post memberList generated from text file
- */
-void Library::generateMemberList(){
-    if(!libMembersIN){
-        std::cerr << "The file could not be opened!" << std::endl;
-    }
-    else{
-        std::string name;
-        std::string ID;
-        std::string phoneSTR;
-        std::string email;
-        std::string preference;
-        while (libMembersIN) {
-            getline(libMembersIN, name);
-            getline(libMembersIN, phoneSTR);
-            getline(libMembersIN, email);
-            getline(libMembersIN, ID);
-            getline(libMembersIN,preference);
-            if(libMembersIN) {    //makes sure that it doesn't duplicate the last line, and works on empty text files
-                if (!name.empty() && name[name.size() - 1] == '\r') {
-                    name.erase(name.size() - 1);
-                }
-                if (!ID.empty() && ID[ID.size() - 1] == '\r') {
-                    ID.erase(ID.size() - 1);
-                }
-                long long phone = std::stol(phoneSTR);
-                Member* newMember = new Member(name,phone,email,ID,preference);
-                bool inList = false;
-                for (int i = 0; i < memberList->itemCount(); i++) {
-                    if (memberList->getValueAt(i)->getName() == newMember->getName()) {
-                        inList = true;
-                        std::cout << "Member already exists!" << std::endl;
-                    }
-                }
-                if (!inList) {
-                    memberList->insertAtEnd(newMember);
-                }
-            }
-        }
-    }
 }
 
 void Library::saveBooksToFile(){
@@ -357,19 +444,6 @@ void Library::saveBooksToFile(){
         allBooksOUT << allBooks->getValueAt(i)->getHaveShelf() << '\n';
     }
     allBooksOUT.close();
-}
-
-int Library::getShelfValue(std::string desiredBook){
-    bool inList = false;
-    for(int i = 0; i < allBooks->itemCount(); i++){
-        if(allBooks->getValueAt(i)->getTitle() == desiredBook){
-            inList = true;
-            return allBooks->getValueAt(i)->getHaveShelf();
-        }
-    }
-    if(!inList) {
-        std::cout << "The library does not own any copies of this book." << std::endl;
-    }
 }
 
 void Library::saveMembersToFile(){
@@ -397,107 +471,6 @@ void Library::saveDeliveryRequestToFile(){
 }
 
 /**
- * Copy Constructor
- * @param libraryListToCopy
- */
-Library::Library(const Library& libraryToCopy){
-    libMembersIN;
-    libMembersOUT;
-    //pointer to list of books owned by library
-
-    allBooks = new ArrayList<Book*>;
-    for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
-        Book* copyBook = new Book(*libraryToCopy.allBooks->getValueAt(i));
-        addBook(*copyBook);
-    }
-
-    //fstream parts
-    allBooksIN;
-    allBooksOUT;
-    //pointer to list of books in library
-    shelfBooks = new ArrayList<Book*>;
-    generateShelfBookList();
-    //list of people waiting for book
-
-    requestBooks = new ArrayList<Book*>;
-    for(int i = 0; i < libraryToCopy.requestBooks->itemCount(); i++){
-        Book* copyBook = new Book(*libraryToCopy.requestBooks->getValueAt(i));
-        requestBooks->insertAtEnd(copyBook);
-    }
-
-    memberList = new ArrayList<Member*>;
-    for(int i = 0; i < libraryToCopy.memberList->itemCount(); i++){
-        Member* copyMember = new Member(*libraryToCopy.memberList->getValueAt(i));
-        addMember(copyMember);
-    }
-
-    runUIBool = true;
-    bookListTxt = libraryToCopy.bookListTxt;
-    memberListTxt = libraryToCopy.memberListTxt;
-}
-
-
-/**
- * Assignment Operator
- * @param libraryListToCopy
- */
-Library& Library::operator=(const Library& libraryToCopy){
-    if(this!=&libraryToCopy){
-        shelfBooks->clearList();
-        requestBooks->clearList();
-        allBooks->clearData();
-        memberList->clearData();
-
-
-        for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
-            Book* copyBook = new Book(*libraryToCopy.allBooks->getValueAt(i));
-            addBook(*copyBook);
-        }
-        requestBooks = new ArrayList<Book*>;
-        for(int i = 0; i < libraryToCopy.requestBooks->itemCount(); i++){
-            Book* copyBook = new Book(*libraryToCopy.requestBooks->getValueAt(i));
-            requestBooks->insertAtEnd(copyBook);
-        }
-
-        generateShelfBookList();
-
-        for(int i = 0; i < libraryToCopy.memberList->itemCount(); i++){
-            Member* copyMember = new Member(*libraryToCopy.memberList->getValueAt(i));
-            addMember(copyMember);
-        }
-    }
-    return *this;
-}
-
-/**
- * Destructor
- */
-Library::~Library(){
-    requestBooks->clearList();
-    delete requestBooks;
-    shelfBooks->clearList();
-    delete shelfBooks;
-    allBooks->clearData();
-    delete allBooks;
-    memberList->clearData();
-    delete memberList;
-}
-
-/**
- * Creates a new library member (Person) given prompts about information
- * Adds to the memberList
- * @return true if successful, false if unsuccessful
- */
-void Library::addMember(){
-    Member* newMember = new Member();
-    memberList->insertAtEnd(newMember);
-}
-
-void Library::addMember(Member* memberToAdd){
-    memberList->insertAtEnd(memberToAdd);
-}
-
-/**
  * Save the inventory and wait lists in a file and terminate execution. Clean up too!
  */
 void Library::quit(){
@@ -507,6 +480,44 @@ void Library::quit(){
     saveMembersToFile();
     libMembersOUT.close();
     allBooksOUT.close();
+}
+
+/**
+ * Prints a summary of all available commands
+ */
+void Library::libraryHelp(){
+    std::cout << "I - Inquire about a book" << std::endl;
+    std::cout << "L - List all available books" << std::endl;
+    std::cout << "N - Add a new member to the library" << std::endl;
+    std::cout << "R - Return a book to the library" << std::endl;
+    std::cout << "W - Withdraw a book from the library" << std::endl;
+    std::cout << "D - Delivery of books from requests" << std::endl;
+    std::cout << "O - Order books through interlibrary loans" << std::endl;
+    std::cout << "A - Add a book to the library" << std::endl;
+    std::cout << "E - Remove a book which has been damaged or lost" << std::endl;
+    std::cout << "Q - Quit" << std::endl;
+}
+
+int Library::getShelfValue(std::string desiredBook){
+    bool inList = false;
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        if(allBooks->getValueAt(i)->getTitle() == desiredBook){
+            inList = true;
+            return allBooks->getValueAt(i)->getHaveShelf();
+        }
+    }
+    if(!inList) {
+        std::cout << "The library does not own any copies of this book." << std::endl;
+    }
+}
+
+void Library::addMember(){
+    Member* newMember = new Member();
+    memberList->insertAtEnd(newMember);
+}
+
+void Library::addMember(Member* memberToAdd){
+    memberList->insertAtEnd(memberToAdd);
 }
 
 /**
@@ -532,6 +543,7 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
         int isbn = checkIfNum(isbnStr);
         Book* newBook = new Book(titleToAdd,author,isbn,numToAdd);
         allBooks->insertAtEnd(newBook);
+        generateShelfBookList();
     }
 }
 
@@ -545,6 +557,7 @@ void Library::addBook(Book& bookToAdd){
     }
     if(!inList) {
         allBooks->insertAtEnd(&bookToAdd);
+        generateShelfBookList();
     }
 }
 
@@ -558,7 +571,14 @@ void Library::returnBook(std::string titleToReturn){
         if(allBooks->getValueAt(i)->getTitle() == titleToReturn){
             inList = true;
             if(allBooks->getValueAt(i)->getHaveTotal() > allBooks->getValueAt(i)->getHaveShelf()) {
+                bool zeroShelf = false;
+                if(allBooks->getValueAt(i)->getHaveShelf() == 0){
+                    zeroShelf = true;
+                }
                 allBooks->getValueAt(i)->checkBookIn();
+                if(zeroShelf){  //if there were no books on the shelf, but now there are, then generate shelf list again
+                    generateShelfBookList();
+                }
             }else{
                 std::cout << "We already have all copies of that book accounted for. This book does not belong to this library." << std::endl;
             }
@@ -682,7 +702,7 @@ void Library::requestLoan(Book* bookToRequest, Member* memberRequesting){
             delete requestBook;
         }
         else{
-            //requestBook->addWaiter(requestMember); //add to waitlist
+            requestBook->addWaiter(requestMember); //add to waitlist
             requestBooks->insertAtEnd(requestBook);
             allBooks->insertAtEnd(requestBook);
             std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
@@ -702,6 +722,7 @@ void Library::removeBook(std::string bookToRemove, int numRemove){
             inList = true;
             if(allBooks->getValueAt(i)->getHaveTotal() >= numRemove) {
                 allBooks->getValueAt(i)->modHaveTotal(-numRemove);
+                generateShelfBookList();
             }else{
                 std::cout << "You cannot remove more books than exist at the library! There are currently " << allBooks->getValueAt(i)->getHaveTotal() << " copies owned by this library." << std::endl;
             }
@@ -717,22 +738,6 @@ void Library::removeBook(std::string bookToRemove, int numRemove){
     else{
         std::cout << "You shouldn't be trying to remove a negative number of copies." << std::endl;
     }
-}
-
-/**
- * Prints a summary of all available commands
- */
-void Library::libraryHelp(){
-    std::cout << "I - Inquire about a book" << std::endl;
-    std::cout << "L - List all available books" << std::endl;
-    std::cout << "N - Add a new member to the library" << std::endl;
-    std::cout << "R - Return a book to the library" << std::endl;
-    std::cout << "W - Withdraw a book from the library" << std::endl;
-    std::cout << "D - Delivery of books from requests" << std::endl;
-    std::cout << "O - Order books through interlibrary loans" << std::endl;
-    std::cout << "A - Add a book to the library" << std::endl;
-    std::cout << "E - Remove a book which has been damaged or lost" << std::endl;
-    std::cout << "Q - Quit" << std::endl;
 }
 
 
@@ -753,7 +758,6 @@ void Library::inquireAboutBook(std::string bookToInquire){
         std::cout << "The library does not own such a book. Consider requesting it through an interlibrary loan." << std::endl;
     }
 }
-
 
 /**
  * Performs a delivery, increasing haveTotal and haveShelf for already owned books
@@ -831,18 +835,26 @@ void Library::printAllOwnedBooks(){
 }
 
 void Library::checkOutBook(std::string bookToCheckOut){
-    bool inList = false;
-    for(int i = 0; i < allBooks->itemCount(); i++){
-        if(allBooks->getValueAt(i)->getTitle() == bookToCheckOut){
-            inList = true;
-            if(allBooks->getValueAt(i)->getHaveShelf() > 0) {
-                allBooks->getValueAt(i)->checkBookOut();
-            }else{
-                std::cout << "There are currently no copies of that book on the shelves. Try again at a later date." << std::endl;
+    bool inShelfList = false;
+    bool inAllList = false;
+    for(int i = 0; i < shelfBooks->itemCount(); i++){
+        if(shelfBooks->getValueAt(i)->getTitle() == bookToCheckOut){
+            inShelfList = true;
+            if(shelfBooks->getValueAt(i)->getHaveShelf() > 0) {
+                shelfBooks->getValueAt(i)->checkBookOut();
+                generateShelfBookList();
             }
         }
     }
-    if(!inList){
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        if(allBooks->getValueAt(i)->getTitle() == bookToCheckOut){
+            inAllList = true;
+        }
+    }
+    if(inAllList && !inShelfList){
+        std::cout << "There are currently no copies of that book on the shelves. Try again at a later date or request an interlibrary loan." << std::endl;
+    }
+    else if(!inAllList){
         std::cout << "The library does not own that book. Consider writing the title exactly as listed or request an interlibrary loan." << std::endl;
     }
 }
