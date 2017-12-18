@@ -44,6 +44,8 @@ public:
      * destructor
      */
     ~Book();
+
+    Book& operator=(const Book& bookToCopy);
     /**
      * getter for book's title
      * @return book's title

@@ -34,11 +34,12 @@ public:
      * @param memberToCopy
      */
     Member(const Member& memberToCopy);
+
+    ~Member();
+
     /**
      * Assignment Operator
      */
-
-    ~Member();
     Member&operator=(const Member& memberToCopy);
 
     std::string getName();

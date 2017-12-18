@@ -19,7 +19,7 @@ Book::Book(std::string titleIn, std::string authorIn, int isbnIn, int haveTotalI
     numWaiters = 0;
 }
 
-Book::Book (const Book &bookToCopy) {
+Book::Book(const Book &bookToCopy) {
     title = bookToCopy.title;
     author = bookToCopy.author;
     isbn = bookToCopy.isbn;
@@ -31,6 +31,23 @@ Book::Book (const Book &bookToCopy) {
     }
     else
         waitList = nullptr;
+}
+
+Book& Book::operator=(const Book &bookToCopy) {
+    if (this != &bookToCopy) {
+        delete this;
+        Book* newBook = new Book(bookToCopy);
+        title = bookToCopy.title;
+        author = bookToCopy.author;
+        isbn = bookToCopy.isbn;
+        haveShelf = bookToCopy.haveShelf;
+        haveTotal = bookToCopy.haveTotal;
+        if (bookToCopy.waitList) {
+            waitList = new MemberLinkedQueue(*bookToCopy.waitList);
+        } else
+            waitList = nullptr;
+    }
+    return *this;
 }
 
 Book::~Book() {}

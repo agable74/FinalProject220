@@ -169,6 +169,19 @@ Member::Member(const Member& memberToCopy) {
     contactPref = memberToCopy.contactPref;
 }
 
+Member& Member::operator=(const Member& memberToCopy) {
+    if (this != &memberToCopy) {
+        delete this;
+        Member* newMember = new Member(memberToCopy);
+        newMember->name = memberToCopy.name;
+        newMember->phoneNumber = memberToCopy.phoneNumber;
+        newMember->email = memberToCopy.email;
+        newMember->id = memberToCopy.id;
+        newMember->contactPref = memberToCopy.contactPref;
+    }
+    return *this;
+}
+
 Member::~Member() {}
 
 std::string Member::getName() {
