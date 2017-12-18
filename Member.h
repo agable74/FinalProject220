@@ -28,7 +28,7 @@ public:
     /**
      * Constructor
      */
-    Member(std::string nameIn, long long phoneNumberIn, std::string emailIn, std::string idIn="", std::string contactPrefIn="");
+    Member(std::string nameIn, long phoneNumberIn, std::string emailIn, std::string idIn="", std::string contactPrefIn="");
     /**
      * Copy Constructor
      * @param memberToCopy
@@ -43,7 +43,7 @@ public:
 
     std::string getName();
     std::string getId();
-    long long getPhoneNumber();
+    long getPhoneNumber();
     std::string getEmail();
     std::string setContactPref(std::string cPref="");
     std::string getContactPref();

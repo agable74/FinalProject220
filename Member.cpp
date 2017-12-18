@@ -65,10 +65,33 @@ std::string addFirstName() {
     return nameIn;
 }
 
-long long addPhoneNumber() {
+long checkIfLong(std::string& stringToCheck){
+    bool isValidNum = true;
+    for(int i = 0; i < stringToCheck.length(); i++){
+        if(!isdigit(stringToCheck[i])){
+            isValidNum = false;
+        }
+    }
+    while(!isValidNum){
+        isValidNum = true;
+        std::cout << "Error in your number. Please enter a valid number: ";
+        std::cin >> stringToCheck;
+        for(int i = 0; i < stringToCheck.length(); i++){
+            if(!isdigit(stringToCheck[i])){
+                isValidNum = false;
+            }
+        }
+    }
+    long validNum = std::stol(stringToCheck);
+    return validNum;
+}
+
+long addPhoneNumber() {
     std::string tempPhone = "";
     std::cout << "Member phone number?: ";
     std::cin >> tempPhone;
+    return checkIfLong(tempPhone);
+    /*
     if (toascii(tempPhone[0]) < 48 || toascii(tempPhone[0]) > 57) {
         std::cout << "Invalid input. Please try again.\n\n";
         addPhoneNumber();
@@ -91,6 +114,7 @@ long long addPhoneNumber() {
             }
         }
     }
+     */
 }
 
 std::string addEmail() {
@@ -123,7 +147,7 @@ Member::Member() {
     contactPref = setContactPref();
 }
 
-Member::Member(std::string nameIn, long long phoneNumberIn, std::string emailIn, std::string idIn, std::string contactPrefIn) {
+Member::Member(std::string nameIn, long phoneNumberIn, std::string emailIn, std::string idIn, std::string contactPrefIn) {
     name = nameIn;
     phoneNumber = phoneNumberIn;
     email = emailIn;
@@ -155,7 +179,7 @@ std::string Member::getId() {
     return id;
 }
 
-long long Member::getPhoneNumber() {
+long Member::getPhoneNumber() {
     return phoneNumber;
 }
 
