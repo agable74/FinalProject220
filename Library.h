@@ -15,25 +15,35 @@
 
 class Library{
 private:
-    //pointer to list of library members
-    //ArrayList<Member*> memberList;
-    //fstream parts
-    std::ifstream libMembersIN;
-    std::ofstream libMembersOUT;
     //pointer to list of books owned by library
     List<Book*>* allBooks;
     //fstream parts
     std::ifstream allBooksIN;
     std::ofstream allBooksOUT;
-    //pointer to list of books in library
-    std::ifstream requestBooksIN;
-    std::ofstream requestBooksOUT;
+
+    //pointer to list of books on shelf in library
     List<Book*>* shelfBooks;
-    //list of people waiting for book
-    List<Member*>* members;
+
+    //pointer to list of members
+    List<Member*>* memberList;
+    //fstream parts
+    std::ifstream libMembersIN;
+    std::ofstream libMembersOUT;
+
+    //list of books requested
     List<Book*>* requestBooks;
-    bool runUIBool;
+    //fstream parts
+    //keeping ifstream as a local variable in the delivery method
+    std::ofstream requestBooksOUT;
+
+    //for running the program
+    //runMaster determines when the program ends
     bool runMasterBool;
+    //runUI determines when the library UI closes, can be restarted without restarting program
+    bool runUIBool;
+
+
+    //for use in methods
     std::string bookListTxt;
     std::string memberListTxt;
     std::string deliveryTxt;
@@ -41,55 +51,17 @@ private:
 public:
     /**
      * Constructor
+     * @param allBooksTxtIN text file of list of all books owned by library
+     * @param memberListTxtIN text file of list of all members to the library
+     * @param deliveryTxtIN text file of deliveries
      */
     Library(const std::string& allBooksTxtIN, const std::string& memberListTxtIN,const std::string& deliveryTxtIN);
 
     /**
-     * Generates the list of books from the file
-     * @param fileToGenerate
-     * @return list of books
-     */
-    void generateAllBookList();
-
-    /**
-     * Generates the list of books on the shelf from allBooks list
-     * @return list of shelf books
-     */
-    void generateShelfBookList();
-
-    /**
-     * Generates the list of library members from the file
-     * @post sets the list of library members
-     */
-    void generateMemberList();
-
-    /**
-     * Saves the list of books to a file
-     */
-    void saveBooksToFile();
-
-    /**
-     * Gets the shelf value of a book
-     * @param desiredBook book to get value
-     * @return amount on shelf
-     */
-    int getShelfValue(std::string desiredBook);
-    /**
-     * Saves the list of members to a file
-     */
-    void saveMembersToFile();
-
-    /**
-     * Saves the request list of books to a file
-     */
-    void saveDeliveryRequestToFile();
-
-    /**
-     * Copy Constructor
-     * @param libraryListToCopy
-     */
+    * Copy Constructor
+    * @param libraryListToCopy
+    */
     Library(const Library& libraryToCopy);
-
 
     /**
      * Assignment Operator
@@ -103,57 +75,119 @@ public:
     ~Library();
 
     /**
-     * Creates a new library member (Person) given prompts about information
+     * Generates the List allBooks from the text file
+     * @post allBooks is filled with pointers to books
+     */
+    void generateAllBookList();
+
+    /**
+     * Generates the list of books on the shelf from allBooks list
+     * @post shelfBooks populated with pointers to the books owned by allBooks
+     * for any book with a nonzero book amount on shelf
+     */
+    void generateShelfBookList();
+
+    /**
+     * Generates the list of library members from the file
+     * @post members is populated with pointers to members
+     */
+    void generateMemberList();
+
+    /**
+     * Saves the list allBooks to a file determined by allBooksOUT
+     */
+    void saveBooksToFile();
+
+    /**
+     * Saves the list memberList to a file determined by libMembersOUT
+     */
+    void saveMembersToFile();
+
+    /**
+     * Saves the list requestBooks to a file determined by requestBooksOUT
+     */
+    void saveDeliveryRequestToFile();
+
+    /**
+     * Gets the shelf value of a book
+     * @param desiredBook title of book to get value
+     * @return amount on shelf
+     */
+    int getShelfValue(std::string desiredBook);
+
+    /**
+     * Creates a new library member (Member) given prompts about information
      * Adds to the memberList
-     * @post member added to memberList
+     * @post Member added to memberList
      */
     void addMember();
 
     /**
      * Adds already-created member to member list
      * @param memberToAdd
+     * @post Member added to memberList
      */
     void addMember(Member* memberToAdd);
 
     /**
-     * Save the inventory and wait lists in a file and terminate execution.
+     * Save the inventory and wait lists in a file and terminate execution of UI.
+     * @post saves allBooks to file
+     * @post saves memberList to file
+     * @post saves requestBooks to file
+     * @post sets runUI to false
      */
     void quit();
 
     /**
      * Sorts the book list alphabetically
+     * Uses mergeSort
      */
     void sortBookList();
 
     /**
      * adds a book to allBooks
-     * @param titleToAdd
-     * @param numToAdd
+     * @param titleToAdd title of book
+     * @param numToAdd number to add
+     * @post Book is added to allBooks
      */
     void addBook(std::string titleToAdd, int numToAdd);
 
+    /**
+     * adds an already-constructed book to allBooks
+     * @param bookToAdd pointer to book to add
+     * @post Book is added to allBooks
+     */
     void addBook(Book& bookToAdd);
 
     /**
-     * Moves a book from the outBooks list to the inBooks list
-     * @param bookToReturn
+     * increments the amount of the book on the shelf by 1
+     * @param titleToReturn title of the book to return
+     * @post the shelfAmount of the book is increased by 1 iff the library owns the book
      */
     void returnBook(std::string titleToReturn);
 
     /**
      * Puts a request in for book to be delivered
      * @param desiredBookTitle book title
+     * @param memberName name of the member requesting
+     * @post if successful, Member is put on waitlist of the desired Book
+     * @post if successful, Book is added to requestBooks list
      */
     void requestLoan(std::string& desiredBookTitle, std::string& memberName);
 
     /**
      * Puts in a request for a book to be delivered
-     * @param bookToRequest Book
+     * @param bookToRequest pointer to Book requesting
+     * @param memberRequesting pointer to Member requesting
+     * @post if successful, Member is put on waitlist of the desired Book
+     * @post if successful, Book is added to requestBooks list
      */
     void requestLoan(Book* bookToRequest, Member* memberRequesting);
     /**
      * Removes a book from the library due to loss/damage
-     * @param bookToRemove
+     * @param bookToRemove title of the book to remove
+     * @param numRemove amount to remove
+     * @post if successful, haveTotal and haveShelf are reduced by numRemove on the book
      */
     void removeBook(std::string bookToRemove, int numRemove);
 
@@ -164,17 +198,23 @@ public:
 
     /**
      * Print all information for the book
-     * @param bookToInquire
+     * @param bookToInquire title of book to inquire about
      */
     void inquireAboutBook(std::string bookToInquire);
 
     /**
      * Performs a delivery, increasing haveTotal and haveShelf for already owned books
      * adds books to library which aren't already there
-     * @param deliveryFileName
+     * @param deliveryFileName txt file of delivery
+     * @post allBooks is altered to reflect book delivery
+     * @post the delivery file is cleared???
      */
     void bookDelivery(const std::string& deliveryFileName);
 
+    /**
+     * Print all owned books
+     * @post list of allBooks is printed to screen
+     */
     void printAllOwnedBooks();
 
     void checkOutBook(std::string bookToCheckOut);
