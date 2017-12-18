@@ -52,15 +52,6 @@ void MemberTester() {
     printAssertStringEqual("\nPatron name: Lois Loan\nPhone number: 607-274-1333\nMember ID: LL5006886"
                                    "\nEmail: lLoan@dailyplanet.net\nContact by: Text message\n", mem3.toString());
 
-    std::cout << "\nTesting Member Equals Operator [should print 2 passes]\n";
-    Book book1 = Book("th th", "m Rosen", 556655, 4, 3);
-    Book book2 = Book("m m ", "t trout", 55555555, 4, 2);
-    book2 = book1;
-    printAssertStringEqual(book2.getTitle(), book1.getTitle());
-    Book book3 = Book("gogo", "l mason", 48848, 3, 3);
-    book2 = book3;
-    printAssertStringEqual(book2.getTitle(), book3.getTitle());
-    >>>>>>> 77082da70606ada4320a6f77f9a51c3075501186
 }
 
 void BookTester() {
@@ -79,12 +70,23 @@ void BookTester() {
     printAssertEquals(104, book2.getHaveTotal());
     printAssertEquals(104, book2.getHaveShelf());
 
-    std::cout << "\nTesting CopyConstructor [should print 4 passes]\n";
-    Book book1_1 = Book(book1);
+    std::cout << "\nTesting Book Copy Constructor [should print 4 passes]\n";
+    Book book1_1 = book1;
     printAssertStringEqual(book1.getTitle(), book1_1.getTitle());
     printAssertStringEqual(book1.toString(), book1_1.toString());
     printAssertEquals(book1.getHaveTotal(), book1_1.getHaveTotal());
     printAssertEquals(book1.getIsbn(), book1_1.getIsbn());
+    std::cout << "\nTesting Book Assignment Operator [should print 5 passes]\n";
+    Book rose = Book("Flowery Things", "Rose P. et al", 556655, 5, 3);
+    Book mud = Book("Muddy Paths", "Lan Zlide", 555555, 4, 2);
+    Book thai = Book("One Night in Bangkok", "Lei Turon", 488484, 1, 1);
+    printAssertStringEqual("One Night in Bangkok", thai.getTitle());
+    thai = mud;
+    printAssertStringEqual(mud.getAuthor(),  thai.getAuthor());
+    printAssertEquals(mud.getHaveTotal()-mud.getHaveShelf(), thai.getHaveTotal()-thai.getHaveShelf());
+    mud = rose = thai;
+    printAssertStringEqual("Lan Zlide", thai.getAuthor());
+    printAssertEquals(555555, rose.getIsbn());
 
     std::cout << "\nTesting checkBookOut [should print 2 messages and passes]";
     book3.checkBookOut();
@@ -101,19 +103,11 @@ void BookTester() {
     printAssertEquals(0, book5.getHaveTotal());
 
     std::cout << "\nTesting waitListToString [should print 2 passes]\n";
-    printAssertStringEqual("\nMembers waiting on 'Pride and Prejudice':\nnone\n", book6.waitListToString());
+    printAssertStringEqual("none\n", book6.waitListToString());
     book6.addWaiter(&mem1);
-    printAssertStringEqual("\nMembers waiting on 'Pride and Prejudice':\nJoe Schmoe - JS2341657\n", book6.waitListToString());
+    printAssertStringEqual("Joe Schmoe, ", book6.waitListToString());
     book6.removeWaiter();
     printAssertStringEqual("\nMembers waiting on 'Pride and Prejudice':\nnone\n", book6.waitListToString());
-
-    Book bookF = Book("Flowery Things", "Rose P. et al", 556655, 4, 3);
-    Book bookP = Book("Muddy Paths", "Lan Zlide", 55555555, 4, 2);
-    book2 = book1;
-    printAssertStringEqual(book2.getTitle(), book1.getTitle());
-    Book bookG = Book("gogo", "l mason", 48848, 3, 3);
-    book2 = book3;
-    printAssertStringEqual(book2.getTitle(), book3.getTitle());
 }
 
 void runLibrary(){
@@ -156,24 +150,25 @@ void libraryTester(){
 int main() {
     //runLibrary();
     //libraryTester();
+    BookTester();
 
 
-    Member* testMember = new Member("Test McTesty",123456789,"test@test.com","TM1235","Phone call");
-    Member* testMember2 = new Member("Ken Pickens", 1052741034, "kp@gmail.com", "KP1234567", "Phone call");
-    MemberLinkedQueue testQ;
-    testQ.enqueue(testMember);
-    testQ.enqueue(testMember2);
-    std::cout << testQ.isEmpty() << std::endl;
-
-    MemberLinkedQueue testQCopy = testQ;
-    testQCopy.dequeue();
-    testQCopy.dequeue();
-    std::cout << testQCopy.isEmpty() << std::endl;
-    std::cout << testQ.isEmpty() << std::endl;
-
-    testQCopy = testQ;
-    std::cout << testQCopy.isEmpty() << std::endl;
-    std::cout << testQ.isEmpty() << std::endl;
+//    Member* testMember = new Member("Test McTesty",123456789,"test@test.com","TM1235","Phone call");
+//    Member* testMember2 = new Member("Ken Pickens", 1052741034, "kp@gmail.com", "KP1234567", "Phone call");
+//    MemberLinkedQueue testQ;
+//    testQ.enqueue(testMember);
+//    testQ.enqueue(testMember2);
+//    std::cout << testQ.isEmpty() << std::endl;
+//
+//    MemberLinkedQueue testQCopy = testQ;
+//    testQCopy.dequeue();
+//    testQCopy.dequeue();
+//    std::cout << testQCopy.isEmpty() << std::endl;
+//    std::cout << testQ.isEmpty() << std::endl;
+//
+//    testQCopy = testQ;
+//    std::cout << testQCopy.isEmpty() << std::endl;
+//    std::cout << testQ.isEmpty() << std::endl;
 
 //    Book* testBook = new Book("Little Women","Louisa May Alcott",34520,1);
 //    testBook->checkBookOut();
