@@ -12,6 +12,7 @@
 #include <fstream>
 #include "LinkedList.h"
 #include "ArrayList.h"
+#include <sstream>
 
 class Library{
 private:
@@ -34,6 +35,7 @@ private:
     List<Book*>* requestBooks;
     //fstream parts
     //keeping ifstream as a local variable in the delivery method
+    //using sstream as a local variable in the delivery method
     std::ofstream requestBooksOUT;
 
     //for running the program
@@ -193,6 +195,7 @@ public:
 
     /**
      * Prints a summary of all available commands
+     * @post All available commands printed to screen
      */
     void libraryHelp();
 
@@ -213,14 +216,28 @@ public:
 
     /**
      * Print all owned books
+     * @post allBooks is sorted alphabetically by title
      * @post list of allBooks is printed to screen
      */
     void printAllOwnedBooks();
 
+    /**
+     * Checks out a book
+     * @param bookToCheckOut
+     * @post Book's shelfTotal is reduced by 1
+     */
     void checkOutBook(std::string bookToCheckOut);
 
+    /**
+     * Runs the UI
+     * Keeps the program running after the UI ends
+     */
     void masterRun();
 
+    /**
+     * Starts up the UI of the library
+     * @return false when program ends
+     */
     bool runUI();
 
 
