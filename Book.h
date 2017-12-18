@@ -13,13 +13,21 @@ class Book {
 
 private:
 
+    // title of book
     std::string title;
+    // author of book
     std::string author;
+    // isbn of book
     int isbn;
+    // number of copies of this book owned by the library
     int haveTotal;
+    // number of copies of this book on library's shelf available for checkout
     int haveShelf;
+    // number of copies desired for ordering (due to none on shelf)
     int wantValue;
+    // linked queue of Members waiting for this book (due to none on shelf)
     MemberLinkedQueue* waitList;
+    // number of members waiting on this book
     int numWaiters;
 
 
@@ -27,69 +35,48 @@ public:
 
     /**
      * constructor
-     * @param titleIn : book's title
-     * @param authorIn : book's author
-     * @param isbnIn : book's ISBN
-     * @param haveTotalIn : number of books by this title owned by this library
+     * @param titleIn : Book's title
+     * @param authorIn : Book's author
+     * @param isbnIn : Book's ISBN
+     * @param haveTotalIn : number of copies of this Book owned by this library
      */
     Book(std::string titleIn="", std::string authorIn="", int isbnIn=-1, int haveTotalIn=-1, int haveShelfIn=-1);
 
-    /**
-     * copy contructor
-     * @param bookToCopy
-     */
+    // copy constructor
     Book (const Book &bookToCopy);
-
-    /**
-     * destructor
-     */
+    // destructor
     ~Book();
-
+    // equals operator
     Book& operator=(const Book& bookToCopy);
-    /**
-     * getter for book's title
-     * @return book's title
-     */
+    // returns title of Book
     std::string getTitle();
-    /**
-     * getter for book's author
-     * @return book's author
-     */
+    // returns author of Book
     std::string getAuthor();
-    /**
-     * getter for book's ISBN
-     * @return book's ISBN
-     */
+    // returns ISBN of Book
     int getIsbn();
-    /**
-     * getter for number of books of its title on shelf
-     * @return number of available books
-     */
+    // returns number of copies of Book available for checkout
     int getHaveShelf();
-    /**
-     * getter for number of books of its title library has
-     * @return number of total books of this title of this library
-     */
+    // returns number of copies of Book owned by library
     int getHaveTotal();
     /**
      * change number of books of this title to reflect current number
      * @param change : number of title books being added / subtracted
-     * @post book's haveTotal and shelfTotal updated by amount _change_
+     * @post Book's haveTotal and shelfTotal are in/decreased by change
      */
     void modHaveTotal(int change);
     /**
-     * decrease available number of books on shelf by 1
-     * @post book's haveShelf count is decreased by 1
+     * removes a copy of Book from shelf for checkout
+     * @post Book's haveShelf count is decreased by 1
      */
     void checkBookOut();
     /**
-     * increase available number of books on shelf by 1
-     * @post book's haveShelf count is increased by 1
+     * returns a copy of Book back to shelf by checkin
+     * @post Book's haveShelf count is increased by 1
      */
     void checkBookIn();
     /**
-     * decrease available number of books in library by 1 (due to being lost, damaged, etc.)
-     * @post book's haveTotal count is decreased by 1
+     * remove a copy of Book due to circumstances (lost, damaged, etc)
+     * @post Book's haveTotal count is decreased by 1
      */
     void removeBook();
     /**
@@ -99,13 +86,21 @@ public:
      * each on own separate line
      */
     std::string toString();
-
+    /**
+     * adds a Member to waiting list for Book
+     * @param waiter - Member ptr representing member on waitlist
+     * @post Book's numWaiters increased by 1, Member node added to queue
+     */
     void addWaiter(Member* waiter);
-
+    // returns number of members waiting on this book
     int waitListLength();
-
+    /**
+     * removes a member from Book's waitList due to ordered book's arrival
+     * @return ptr to waitList's removed Member
+     * @post waitList's first Member is removed, numWaiters decreased by 1
+     */
     Member* removeWaiter();
-
+    // returns names of members in waitList in comma-separated format
     std::string waitListToString();
 };
 
