@@ -8,23 +8,33 @@
  * Constructor
  */
 Library::Library(const std::string& allBooksTxtIN,const std::string& memberListTxtIN,const std::string& deliveryTxtIN){
-    //fstream parts
-    libMembersIN.open(memberListTxtIN);
-    //libMembersOUT = std::ofstream(memberListTxt);
+    //allBooks List
+    allBooks = new ArrayList<Book*>;
     //fstream parts
     allBooksIN.open(allBooksTxtIN);
-    //pointer to list of books checked out
-    allBooks = new ArrayList<Book*>;
-    shelfBooks = new ArrayList<Book*>;
     //generate the list from text file
     generateAllBookList();
-    //generate shelf from allBooks
+
+    //shelfBooks List
+    shelfBooks = new ArrayList<Book*>;
+    //generate shelfBooks from allBooks
     generateShelfBookList();
+
+    //memberList List
     memberList = new ArrayList<Member*>;
+    //fstream parts
+    libMembersIN.open(memberListTxtIN);
+    //generate memberList from text file
     generateMemberList();
+
+    //requestBooks List
     requestBooks = new ArrayList<Book*>;
+
+    //for running the program
     runUIBool = true;
     runMasterBool = true;
+
+    //for use in methods
     bookListTxt = allBooksTxtIN;
     memberListTxt = memberListTxtIN;
     deliveryTxt = deliveryTxtIN;
