@@ -126,6 +126,7 @@ void Library::generateAllBookList(){
                     if (allBooks->getValueAt(i)->getTitle() == newBook->getTitle()) {
                         inList = true;
                         allBooks->getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
+                        delete newBook;
                     }
                 }
                 if (!inList) {
@@ -286,6 +287,8 @@ void Library::sortBookList(){
     for(int i = 0; i < allBooks->itemCount(); i++){
         allBooks->replaceValueAt(i,allBooksArray[i]);
     }
+    delete[] allBooksTempArray;
+    delete[] allBooksArray;
 }
 
 /**
@@ -375,7 +378,7 @@ void Library::saveDeliveryRequestToFile(){
         requestBooksOUT << requestBooks->getValueAt(i)->getTitle() << '\n';
         requestBooksOUT << requestBooks->getValueAt(i)->getAuthor() << '\n';
         requestBooksOUT << requestBooks->getValueAt(i)->getIsbn() << '\n';
-        requestBooksOUT << requestBooks->getValueAt(i)->getHaveTotal() << '\n';
+        requestBooksOUT << requestBooks->getValueAt(i)->waitListLength() << '\n';
     }
     requestBooksOUT.close();
 }
@@ -412,7 +415,7 @@ Library::Library(const Library& libraryToCopy){
     members = new ArrayList<Member*>;
     for(int i = 0; i < libraryToCopy.members->itemCount(); i++){
         Member* copyMember = new Member(*libraryToCopy.members->getValueAt(i));
-        addMember(*copyMember);
+        addMember(copyMember);
     }
 
     runUIBool = true;
@@ -428,7 +431,7 @@ Library::Library(const Library& libraryToCopy){
 Library& Library::operator=(const Library& libraryToCopy){
     if(this!=&libraryToCopy){
         shelfBooks->clearList();
-        requestBooks->clearData();
+        requestBooks->clearList();
         allBooks->clearData();
         members->clearData();
 
@@ -447,7 +450,7 @@ Library& Library::operator=(const Library& libraryToCopy){
 
         for(int i = 0; i < libraryToCopy.members->itemCount(); i++){
             Member* copyMember = new Member(*libraryToCopy.members->getValueAt(i));
-            addMember(*copyMember);
+            addMember(copyMember);
         }
     }
     return *this;
@@ -457,7 +460,7 @@ Library& Library::operator=(const Library& libraryToCopy){
  * Destructor
  */
 Library::~Library(){
-    requestBooks->clearData();
+    requestBooks->clearList();
     delete requestBooks;
     shelfBooks->clearList();
     delete shelfBooks;
@@ -477,8 +480,8 @@ void Library::addMember(){
     members->insertAtEnd(newMember);
 }
 
-void Library::addMember(Member& memberToAdd){
-    members->insertAtEnd(&memberToAdd);
+void Library::addMember(Member* memberToAdd){
+    members->insertAtEnd(memberToAdd);
 }
 
 /**
@@ -606,11 +609,13 @@ void Library::requestLoan(std::string& desiredBookTitle, std::string& memberName
         }
         if(!isMember){
             std::cout << "You don't appear to be in our database. Please sign up for a membership." << std::endl;
+            delete requestBook;
         }
         else{
             requestBook->addWaiter(requestMember); //add to waitlist
             requestBooks->insertAtEnd(requestBook);
             allBooks->insertAtEnd(requestBook);
+            std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
         }
     }
 }
@@ -619,25 +624,56 @@ void Library::requestLoan(std::string& desiredBookTitle, std::string& memberName
  * Used only for testing
  * @param desiredBook
  */
-void Library::requestLoan(Book& bookToRequest){
+void Library::requestLoan(Book* bookToRequest, Member* memberRequesting){
     bool inList = false;
     for(int i = 0; i < allBooks->itemCount(); i++){
-        if(allBooks->getValueAt(i)->getTitle() == bookToRequest.getTitle()){
+        if(allBooks->getValueAt(i)->getTitle() == bookToRequest->getTitle()){
             inList = true;
             if(allBooks->getValueAt(i)->getHaveShelf() > 0) {
                 std::cout << "We have this book in our library." << std::endl;
             }
             else{
-                Book* requestBook = new Book(*allBooks->getValueAt(i));
-                requestBook->modHaveTotal(-requestBook->getHaveTotal()+1); //makes it so it only does one
-                requestBooks->insertAtEnd(requestBook);
+                bool isMember = false;
+                Member* requestMember;
+                Book* requestBook = allBooks->getValueAt(i);
+                for(int i = 0; i < members->itemCount(); i++){
+                    if(memberRequesting->getName() == members->getValueAt(i)->getName()){
+                        requestMember = members->getValueAt(i);
+                        isMember = true;
+                    }
+                }
+                if(!isMember){
+                    std::cout << "You don't appear to be in our database. Please sign up for a membership." << std::endl;
+                }
+                    //makes it so it only does one
+                else {
+                    requestBook->addWaiter(requestMember);//add to waitlist
+                    requestBooks->insertAtEnd(requestBook);
+                }
                 std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
             }
         }
     }
     if(!inList){
-        Book* requestBook = new Book(bookToRequest);
-        requestBooks->insertAtEnd(requestBook);
+        Book* requestBook = new Book(*bookToRequest);
+        bool isMember = false;
+        Member* requestMember = memberRequesting;
+        for(int i = 0; i < members->itemCount(); i++){
+            if(memberRequesting->getName() == members->getValueAt(i)->getName()){
+                requestMember = members->getValueAt(i);
+                isMember = true;
+            }
+        }
+        if(!isMember){
+            std::cout << "You don't appear to be in our database. Please sign up for a membership." << std::endl;
+            delete requestBook;
+        }
+        else{
+            //requestBook->addWaiter(requestMember); //add to waitlist
+            requestBooks->insertAtEnd(requestBook);
+            allBooks->insertAtEnd(requestBook);
+            std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
+        }
     }
 }
 
@@ -742,6 +778,7 @@ void Library::bookDelivery(const std::string& deliveryFileName){
                     if (allBooks->getValueAt(i)->getTitle() == newBook->getTitle()) {
                         inList = true;
                         allBooks->getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
+                        delete newBook;
                     }
                 }
                 if (!inList) {

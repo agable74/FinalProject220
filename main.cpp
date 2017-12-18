@@ -92,17 +92,19 @@ void libraryTester(){
 
     Library testIOLibrary("BooksTester2.txt","MembersTester2.txt","DeliveryTester2.txt");
     testIOLibrary.removeBook("Lord of the Flies",9);
-    Book testBook = Book("Little Women","Louisa May Alcott",34520,1);
-    testIOLibrary.requestLoan(testBook);
-    testIOLibrary.checkOutBook("The Great Gatsby");
-    testIOLibrary.quit();
+    Book* testBook = new Book("Little Women","Louisa May Alcott",34520,1);
+    Member* testMember = new Member("Test McTesty",123456789,"test@test.com","TM1235","Phone call");
+    testIOLibrary.addMember(testMember);
+    testIOLibrary.requestLoan(testBook,testMember); //NEED TO FIX ADD WAITER
+//    testIOLibrary.checkOutBook("The Great Gatsby");
+//    testIOLibrary.quit();
 }
 
 
 
 int main() {
     //runLibrary();
-    //libraryTester();
+    libraryTester();
 
 
 
