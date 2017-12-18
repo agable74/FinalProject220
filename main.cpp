@@ -20,6 +20,41 @@ void printAssertStringEqual(std::string expected, std::string actual){
         std::cout << "FAIL, expected: " << expected << "actual: " << actual << std::endl;
     }
 }
+
+void MemberTester() {
+    std::cout << "Testing Member Copy Constructor [should print 2 passes]\n";
+    Member mem1 = Member("Ken Pickens", 1052741034, "kp@gmail.com", "KP1234567", "Phone call");
+    Member mem2 = Member(mem1);
+    printAssertStringEqual(mem1.getName(), mem2.getName());
+    printAssertStringEqual(mem1.getId(), mem2.getId());
+    std::cout << "Testing Member Assignment Operator [should print 2 passes]\n";
+    Member mem3 = Member("Lois Loan", 6072741333, "lLoan@dddailyppplanet.com", "LL5006886", "Text message");
+    mem2 = mem3;
+    printAssertStringEqual(mem3.getName(), mem2.getName());
+    printAssertStringEqual(mem2.getEmail(), mem3.getEmail());
+
+    std::cout << "\nTesting Member getters [should print 5 passes]\n";
+    printAssertStringEqual("Ken Pickens", mem1.getName());
+    printAssertEquals(1052741034, mem1.getPhoneNumber());
+    printAssertStringEqual("kp@gmail.com", mem1.getEmail());
+    printAssertStringEqual("KP1234567", mem1.getId());
+    printAssertStringEqual("Phone call", mem1.getContactPref());
+
+    std::cout << "\nTesting Member setContactPref [should print 4 passes]\n";
+    printAssertStringEqual("Phone call", mem1.setContactPref("call"));
+    printAssertStringEqual("Phone call", mem1.setContactPref("ph"));
+    printAssertStringEqual("Text message", mem1.setContactPref("txt"));
+    printAssertStringEqual("Email", mem1.setContactPref("E"));
+
+    Book book1 = Book("th th", "m Rosen", 556655, 4, 3);
+    Book book2 = Book("m m ", "t trout", 55555555, 4, 2);
+    book2 = book1;
+    printAssertStringEqual(book2.getTitle(), book1.getTitle());
+    Book book3 = Book("gogo", "l mason", 48848, 3, 3);
+    book2 = book3;
+    printAssertStringEqual(book2.getTitle(), book3.getTitle());
+}
+
 void BookTester() {
     Book book1 = Book("A Tale of Two Cities", "Charles Dickens", 3904238, 4, 4);
     Book book2 = Book("Doggo's Are Good", "Alex Gable", 2222, 104, 104);
@@ -103,8 +138,9 @@ void libraryTester(){
 
 
 int main() {
+    MemberTester();
     //runLibrary();
-    libraryTester();
+    //libraryTester();
 
 
 
