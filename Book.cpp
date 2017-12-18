@@ -15,7 +15,7 @@ Book::Book(std::string titleIn, std::string authorIn, int isbnIn, int haveTotalI
     else
         haveShelf = haveShelfIn;
     wantValue = 0;
-    waitList = new ArrayList<Member*>;
+    waitList = new MemberLinkedQueue;
 }
 
 Book::Book (const Book &bookToCopy) {
@@ -25,21 +25,18 @@ Book::Book (const Book &bookToCopy) {
     haveTotal = bookToCopy.haveTotal;
     haveShelf = bookToCopy.haveShelf;
     wantValue = bookToCopy.wantValue;
-    waitList = new ArrayList<Member*>;
+    waitList = new MemberLinkedQueue;
     if (bookToCopy.waitList) {
-        for (int i = 0; i < bookToCopy.waitList->itemCount(); ++i) {
-            Member* copyMember = new Member(*bookToCopy.waitList->getValueAt(i));
-            waitList->insertAtEnd(copyMember);
+        while (bookToCopy.waitList->dequeue() != nullptr){
+            Member current = *bookToCopy.waitList->dequeue();
+            Member* copyMember = new Member(current);
+            waitList->enqueue(copyMember);
         }
     } else
         waitList = nullptr;
 }
 
-Book::~Book() {
-    for (int i = 0; i < waitListLength(); ++i) {
-        delete waitList->getValueAt(i);
-    }
-}
+Book::~Book() {}
 
 std::string Book::getTitle() {
     return title;
@@ -113,37 +110,37 @@ std::string Book::toString() {
 }
 
 void Book::addWaiter(Member* waiter) {
+    /*
     int doAdd = 1;
     for (int i = 0; i < waitListLength(); ++i) {
+        Member* current = waitList;
         if (waitList->getValueAt(i)->getId() == waiter->getId()) {
             std::cout << "\n" + waiter->getName() + " is already on the waiting list for '" + getTitle() + "'.\n";
             doAdd = 0;
         }
     }
     if (doAdd)
-        waitList->insertAtEnd(waiter);
+     */
+    waitList->enqueue(waiter);
 }
 
-const int Book::waitListLength() {
-    return waitList->itemCount();
-}
-
-std::string Book::removeWaiter() {
-    if (!waitList->isEmpty()) {
-        return waitList->removeValueAt(0)->getName();
+Member* Book::removeWaiter() {
+    if (!(waitList->isEmpty())) {
+        return waitList->dequeue();
     }
 }
 
+/*
 std::string Book::removeWaiter(Member* toRemove) {
     std::string result;
     if (waitList->isEmpty())
         return "\nNo members are waiting for '" + title + "'.\n";
     if (!toRemove)
-        result = "\nWaiter trying to be removed is bad pointer.\n";
+        return "\nWaiter trying to be removed is bad pointer.\n";
     else {
         int doRemove = 0;
         for (int i = 0; i < waitList->itemCount(); ++i) {
-            if (waitList->getValueAt(i)->getName() == toRemove->getName()) {
+            if (waitList->getValueAt(i)->getId() == toRemove->getId()) {
                 result = waitList->removeValueAt(i)->getName();
                 doRemove = 1;
             }
@@ -154,14 +151,28 @@ std::string Book::removeWaiter(Member* toRemove) {
             return "\n" + toRemove->getName() + " is not on the waitlist for '" + title + "'.\n";
     }
 }
+ */
+
+const int Book::waitListLength() {
+    MemberLinkedQueue temp = *waitList;
+    int length = 0;
+    while (temp.dequeue() != nullptr) {
+        temp.dequeue();
+        length++;
+    }
+    return length;
+}
 
 std::string Book::waitListToString() {
     std::string result = "\nMembers waiting on '" + title + "':\n";
     if (waitList->isEmpty())
         result += "none\n";
     else {
-        for (int i = 0; i < waitListLength(); ++i)
-            result += waitList->getValueAt(i)->getName() + " - " + waitList->getValueAt(i)->getId() + "\n";
+        MemberLinkedQueue* tempWaitList = waitList;
+        while (tempWaitList->dequeue() != nullptr) {
+            Member* waiter = tempWaitList->dequeue();
+            result += waiter->getName() + " - " + waiter->getId() + "\n";
+        }
     }
     return result;
 }
