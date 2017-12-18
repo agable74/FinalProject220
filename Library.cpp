@@ -117,7 +117,7 @@ Library::Library(const Library& libraryToCopy){
     allBooks = new ArrayList<Book*>;
     for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
         Book* copyBook = new Book(*libraryToCopy.allBooks->getValueAt(i));
-        addBook(*copyBook);
+        allBooks->insertAtEnd(copyBook);
     }
 
     //fstream parts
@@ -157,9 +157,10 @@ Library& Library::operator=(const Library& libraryToCopy){
         memberList->clearData();
 
 
+
         for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
             Book* copyBook = new Book(*libraryToCopy.allBooks->getValueAt(i));
-            addBook(*copyBook);
+            allBooks->insertAtEnd(copyBook);
         }
         requestBooks = new ArrayList<Book*>;
         for(int i = 0; i < libraryToCopy.requestBooks->itemCount(); i++){
@@ -238,7 +239,9 @@ void Library::generateAllBookList(){
 }
 
 void Library::generateShelfBookList(){
-    shelfBooks->clearList();
+    if(!shelfBooks->isEmpty()) {
+        shelfBooks->clearList();
+    }
     for(int i=0; i<allBooks->itemCount();i++){
         if(allBooks->getValueAt(i)->getHaveTotal()>0){
             shelfBooks->insertAtEnd(allBooks->getValueAt(i));

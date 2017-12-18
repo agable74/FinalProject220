@@ -171,13 +171,11 @@ Member::Member(const Member& memberToCopy) {
 
 Member& Member::operator=(const Member& memberToCopy) {
     if (this != &memberToCopy) {
-        delete this;
-        Member* newMember = new Member(memberToCopy);
-        newMember->name = memberToCopy.name;
-        newMember->phoneNumber = memberToCopy.phoneNumber;
-        newMember->email = memberToCopy.email;
-        newMember->id = memberToCopy.id;
-        newMember->contactPref = memberToCopy.contactPref;
+        name = memberToCopy.name;
+        phoneNumber = memberToCopy.phoneNumber;
+        email = memberToCopy.email;
+        id = memberToCopy.id;
+        contactPref = memberToCopy.contactPref;
     }
     return *this;
 }

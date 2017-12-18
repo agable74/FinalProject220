@@ -27,6 +27,7 @@ void MemberTester() {
     Member mem2 = Member(mem1);
     printAssertStringEqual(mem1.getName(), mem2.getName());
     printAssertStringEqual(mem1.getId(), mem2.getId());
+
     std::cout << "Testing Member Assignment Operator [should print 2 passes]\n";
     Member mem3 = Member("Lois Loan", 6072741333, "lLoan@dddailyppplanet.com", "LL5006886", "Text message");
     mem2 = mem3;
@@ -46,6 +47,7 @@ void MemberTester() {
     printAssertStringEqual("Text message", mem1.setContactPref("txt"));
     printAssertStringEqual("Email", mem1.setContactPref("E"));
 
+    std::cout << "\nTesting Member Equals Operator [should print 2 passes]\n";
     Book book1 = Book("th th", "m Rosen", 556655, 4, 3);
     Book book2 = Book("m m ", "t trout", 55555555, 4, 2);
     book2 = book1;
@@ -106,9 +108,9 @@ void runLibrary(){
 }
 
 void libraryTester(){
-    BookTester();
+    //BookTester();
+    //MemberTester();
     Library theTestLibrary = Library("BooksTester.txt","MembersTester.txt","DeliveryTester.txt");
-
     Library theTestLibraryCopy = theTestLibrary;
     theTestLibraryCopy.removeBook("Lord of the Flies",7);
     theTestLibrary.removeBook("A Tale of Two Cities",2);
@@ -138,11 +140,33 @@ void libraryTester(){
 
 
 int main() {
-    MemberTester();
     //runLibrary();
     //libraryTester();
 
 
+    Member* testMember = new Member("Test McTesty",123456789,"test@test.com","TM1235","Phone call");
+    Member* testMember2 = new Member("Ken Pickens", 1052741034, "kp@gmail.com", "KP1234567", "Phone call");
+    MemberLinkedQueue testQ;
+    testQ.enqueue(testMember);
+    testQ.enqueue(testMember2);
+    std::cout << testQ.isEmpty() << std::endl;
+
+    MemberLinkedQueue testQCopy = testQ;
+    testQCopy.dequeue();
+    testQCopy.dequeue();
+    std::cout << testQCopy.isEmpty() << std::endl;
+    std::cout << testQ.isEmpty() << std::endl;
+
+    testQCopy = testQ;
+    std::cout << testQCopy.isEmpty() << std::endl;
+    std::cout << testQ.isEmpty() << std::endl;
+
+//    Book* testBook = new Book("Little Women","Louisa May Alcott",34520,1);
+//    testBook->checkBookOut();
+//    testBook->addWaiter(testMember);
+//    std::string waiter = testBook->waitListToString();
+//
+//    std::cout << waiter << std::endl;
 
     //need to add the waitlist part in requesting books
     //need to add member functionality to withdrawing and returning books
