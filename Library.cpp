@@ -20,7 +20,7 @@ Library::Library(const std::string& allBooksTxtIN,const std::string& memberListT
     generateAllBookList();
     //generate shelf from allBooks
     generateShelfBookList();
-    members = new ArrayList<Member*>;
+    memberList = new ArrayList<Member*>;
     generateMemberList();
     requestBooks = new ArrayList<Book*>;
     runUIBool = true;
@@ -293,7 +293,7 @@ void Library::sortBookList(){
 
 /**
  * Generates the list of library members from the file
- * @post members list generated from text file
+ * @post memberList generated from text file
  */
 void Library::generateMemberList(){
     if(!libMembersIN){
@@ -321,14 +321,14 @@ void Library::generateMemberList(){
                 long long phone = std::stol(phoneSTR);
                 Member* newMember = new Member(name,phone,email,ID,preference);
                 bool inList = false;
-                for (int i = 0; i < members->itemCount(); i++) {
-                    if (members->getValueAt(i)->getName() == newMember->getName()) {
+                for (int i = 0; i < memberList->itemCount(); i++) {
+                    if (memberList->getValueAt(i)->getName() == newMember->getName()) {
                         inList = true;
                         std::cout << "Member already exists!" << std::endl;
                     }
                 }
                 if (!inList) {
-                    members->insertAtEnd(newMember);
+                    memberList->insertAtEnd(newMember);
                 }
             }
         }
@@ -362,12 +362,12 @@ int Library::getShelfValue(std::string desiredBook){
 
 void Library::saveMembersToFile(){
     libMembersOUT.open(memberListTxt);
-    for(int i = 0; i < members->itemCount(); i++){
-        libMembersOUT << members->getValueAt(i)->getName() << '\n';
-        libMembersOUT << members->getValueAt(i)->getPhoneNumber() << '\n';
-        libMembersOUT << members->getValueAt(i)->getEmail() << '\n';
-        libMembersOUT << members->getValueAt(i)->getId() << '\n';
-        libMembersOUT << members->getValueAt(i)->getContactPref() << '\n';
+    for(int i = 0; i < memberList->itemCount(); i++){
+        libMembersOUT << memberList->getValueAt(i)->getName() << '\n';
+        libMembersOUT << memberList->getValueAt(i)->getPhoneNumber() << '\n';
+        libMembersOUT << memberList->getValueAt(i)->getEmail() << '\n';
+        libMembersOUT << memberList->getValueAt(i)->getId() << '\n';
+        libMembersOUT << memberList->getValueAt(i)->getContactPref() << '\n';
     }
     libMembersOUT.close();
 }
@@ -412,9 +412,9 @@ Library::Library(const Library& libraryToCopy){
         requestBooks->insertAtEnd(copyBook);
     }
 
-    members = new ArrayList<Member*>;
-    for(int i = 0; i < libraryToCopy.members->itemCount(); i++){
-        Member* copyMember = new Member(*libraryToCopy.members->getValueAt(i));
+    memberList = new ArrayList<Member*>;
+    for(int i = 0; i < libraryToCopy.memberList->itemCount(); i++){
+        Member* copyMember = new Member(*libraryToCopy.memberList->getValueAt(i));
         addMember(copyMember);
     }
 
@@ -433,7 +433,7 @@ Library& Library::operator=(const Library& libraryToCopy){
         shelfBooks->clearList();
         requestBooks->clearList();
         allBooks->clearData();
-        members->clearData();
+        memberList->clearData();
 
 
         for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
@@ -448,8 +448,8 @@ Library& Library::operator=(const Library& libraryToCopy){
 
         generateShelfBookList();
 
-        for(int i = 0; i < libraryToCopy.members->itemCount(); i++){
-            Member* copyMember = new Member(*libraryToCopy.members->getValueAt(i));
+        for(int i = 0; i < libraryToCopy.memberList->itemCount(); i++){
+            Member* copyMember = new Member(*libraryToCopy.memberList->getValueAt(i));
             addMember(copyMember);
         }
     }
@@ -466,8 +466,8 @@ Library::~Library(){
     delete shelfBooks;
     allBooks->clearData();
     delete allBooks;
-    members->clearData();
-    delete members;
+    memberList->clearData();
+    delete memberList;
 }
 
 /**
@@ -477,11 +477,11 @@ Library::~Library(){
  */
 void Library::addMember(){
     Member* newMember = new Member();
-    members->insertAtEnd(newMember);
+    memberList->insertAtEnd(newMember);
 }
 
 void Library::addMember(Member* memberToAdd){
-    members->insertAtEnd(memberToAdd);
+    memberList->insertAtEnd(memberToAdd);
 }
 
 /**
@@ -572,9 +572,9 @@ void Library::requestLoan(std::string& desiredBookTitle, std::string& memberName
                 bool isMember = false;
                 Member* requestMember;
                 Book* requestBook = allBooks->getValueAt(i);
-                for(int i = 0; i < members->itemCount(); i++){
-                    if(memberName == members->getValueAt(i)->getName()){
-                        requestMember = members->getValueAt(i);
+                for(int i = 0; i < memberList->itemCount(); i++){
+                    if(memberName == memberList->getValueAt(i)->getName()){
+                        requestMember = memberList->getValueAt(i);
                         isMember = true;
                     }
                 }
@@ -601,9 +601,9 @@ void Library::requestLoan(std::string& desiredBookTitle, std::string& memberName
         Book* requestBook = new Book(desiredBookTitle,author,isbn,0);
         bool isMember = false;
         Member* requestMember;
-        for(int i = 0; i < members->itemCount(); i++){
-            if(memberName == members->getValueAt(i)->getName()){
-                requestMember = members->getValueAt(i);
+        for(int i = 0; i < memberList->itemCount(); i++){
+            if(memberName == memberList->getValueAt(i)->getName()){
+                requestMember = memberList->getValueAt(i);
                 isMember = true;
             }
         }
@@ -636,9 +636,9 @@ void Library::requestLoan(Book* bookToRequest, Member* memberRequesting){
                 bool isMember = false;
                 Member* requestMember;
                 Book* requestBook = allBooks->getValueAt(i);
-                for(int i = 0; i < members->itemCount(); i++){
-                    if(memberRequesting->getName() == members->getValueAt(i)->getName()){
-                        requestMember = members->getValueAt(i);
+                for(int i = 0; i < memberList->itemCount(); i++){
+                    if(memberRequesting->getName() == memberList->getValueAt(i)->getName()){
+                        requestMember = memberList->getValueAt(i);
                         isMember = true;
                     }
                 }
@@ -658,9 +658,9 @@ void Library::requestLoan(Book* bookToRequest, Member* memberRequesting){
         Book* requestBook = new Book(*bookToRequest);
         bool isMember = false;
         Member* requestMember = memberRequesting;
-        for(int i = 0; i < members->itemCount(); i++){
-            if(memberRequesting->getName() == members->getValueAt(i)->getName()){
-                requestMember = members->getValueAt(i);
+        for(int i = 0; i < memberList->itemCount(); i++){
+            if(memberRequesting->getName() == memberList->getValueAt(i)->getName()){
+                requestMember = memberList->getValueAt(i);
                 isMember = true;
             }
         }
