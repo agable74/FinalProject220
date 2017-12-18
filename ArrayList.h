@@ -118,6 +118,7 @@ public:
     int itemCount();
 
     /**
+     * @pre Only use for arraylists of pointers which own the memory
      * removes all valid items from the list (deep)
      * @post the list is completely clear of valid items
      * O(n)
@@ -125,15 +126,17 @@ public:
     void clearData();
 
     /**
+     * @pre Only use for arraylists of pointers which don't own the memory
      * removes all valid items from the list (shallow)
      * sets all pointers to nullptrs
      */
     void clearList();
 
     /**
+     * @pre ONLY USE FOR ARRAYLISTS OF POINTERS
      * gives a string representation of the current list
      * @returns a string representing the given list in the exact format shown below
-     * {1, 2, 3, 4, 5}
+     * 1 \n  2 \n 3 \n 4 \n 5
      * O(N)
      */
     std::string toString();

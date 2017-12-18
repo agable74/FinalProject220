@@ -188,7 +188,7 @@ int ArrayList<T>::itemCount(){
 }
 
 /**
- * removes all valid items from the list, -MODIFY FOR CLASSES-
+ * removes all valid items from the list,
  * @post the list is completely clear of valid items
  */
 template <class T>
@@ -199,6 +199,8 @@ void ArrayList<T>::clearData(){
     }
     currItemCount = 0;
 }
+
+
 template <class T>
 void ArrayList<T>::clearList(){
     for(int i = 0; i < currItemCount; i++){
@@ -208,6 +210,7 @@ void ArrayList<T>::clearList(){
 }
 
 /**
+ * ONLY WORKS FOR ARRAYLISTS OF POINTERS
  * gives a string representation of the current list
  * @returns a string representing the given list in the exact format shown below
  * {1, 2, 3, 4, 5}
@@ -226,41 +229,3 @@ std::string ArrayList<T>::toString(){
     }
     return arrayString;
 }
-
-
-//template <class T>
-//std::string ArrayList<T>::toString(const People* const arrayPtr, const int size, const std::string stringSoFar) {
-//    //base case
-//    if(size < 1){
-//        return stringSoFar;
-//    }else {
-//        std::string newString;
-//        //if last element in the array, then don't add an additional comma+space
-//        if (size == 1) {
-//            std::string addString = *arrayPtr->toString();
-//            newString = stringSoFar + addString;
-//        }
-//            //add a comma+space
-//        else {
-//            std::string addString = *arrayPtr->toString() + ", ";
-//            newString = stringSoFar + addString;
-//        }
-//        //recursive call
-//        std::string buildString = toString(arrayPtr + 1, size - 1, newString);
-//        return buildString;
-//    }
-//}
-////main toString function (stub)
-//template <class T>
-//std::string ArrayList<T>::toString(const People* const arrayPtr, const int size){
-//    //return empty set if size 0
-//    if(size < 1){
-//        return "{}";
-//    }
-//        //builds the string between the two curly braces
-//    else{
-//        return "{" + toString(arrayPtr,size,"") + "}";
-//    }
-//}
-//
-//

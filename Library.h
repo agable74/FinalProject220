@@ -113,7 +113,7 @@ public:
      * Adds already-created member to member list
      * @param memberToAdd
      */
-    void addMember(Member& memberToAdd);
+    void addMember(Member* memberToAdd);
 
     /**
      * Save the inventory and wait lists in a file and terminate execution.
@@ -144,13 +144,13 @@ public:
      * Puts a request in for book to be delivered
      * @param desiredBookTitle book title
      */
-    void requestLoan(std::string desiredBookTitle);
+    void requestLoan(std::string& desiredBookTitle, std::string& memberName);
 
     /**
      * Puts in a request for a book to be delivered
      * @param bookToRequest Book
      */
-    void requestLoan(Book& bookToRequest);
+    void requestLoan(Book* bookToRequest, Member* memberRequesting);
     /**
      * Removes a book from the library due to loss/damage
      * @param bookToRemove

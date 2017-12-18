@@ -126,6 +126,7 @@ void Library::generateAllBookList(){
                     if (allBooks->getValueAt(i)->getTitle() == newBook->getTitle()) {
                         inList = true;
                         allBooks->getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
+                        delete newBook;
                     }
                 }
                 if (!inList) {
@@ -136,124 +137,115 @@ void Library::generateAllBookList(){
     }
 }
 
-    /**
-    * Generates the list of books on the shelf from allBooks list
-    * @return list of shelf books
-    */
+/**
+* Generates the list of books on the shelf from allBooks list
+* @return list of shelf books
+*/
 void Library::generateShelfBookList(){
+    shelfBooks->clearList();
     for(int i=0; i<allBooks->itemCount();i++){
         if(allBooks->getValueAt(i)->getHaveTotal()>0){
             shelfBooks->insertAtEnd(allBooks->getValueAt(i));
-            }
         }
+    }
 }
 
 
-//
-//List<Book*>* copyArray(List<Book*>* arrayToCopy, const int size, int& numLinesRun){
-//    List<Book*>* newArrayCopy = new ArrayList<Book*>;
-//    numLinesRun += 5;
-//    for(int i = 0; i < size; i++){
-//        numLinesRun += 1;
-//        newArrayCopy->insertAt(arrayToCopy->getValueAt(i),i);
-//    }
-//    return newArrayCopy;
-//}
-//
-//List<Book*>* merge(List<Book*>* a1, int size1, List<Book*>* a2, int size2, int& numLinesRun){
-//    //checks for two arrays of size 0
-//    numLinesRun += 6;
-//    if(size1+size2 < 1){
-//        return nullptr;
-//    }
-//    //create a new array to hold the merge values
-//    List<Book*>* arrayToReturn = new ArrayList<Book*>(size1+size2);
-//    int pos1 = 0;
-//    int pos2 = 0;
-//    numLinesRun += 4;
-//    for (int i = 0; i < size1 + size2; i++) {
-//        numLinesRun += 4;
-//        //checks both are within the bounds of respective array
-//        if(pos2 < size2 && pos1 < size1) {
-//            int bookToAdd = compareBookTitles(a1->getValueAt(pos1),a2->getValueAt(pos2));
-//            //moves along the index of the array with lesser value
-//            if (bookToAdd == 2) {
-//                arrayToReturn->insertAt(a1->getValueAt(pos1),i);
-//                pos1++;
-//                numLinesRun+= 2;
-//            } else if (bookToAdd == 1) {
-//                arrayToReturn->insertAt(a2->getValueAt(pos2),i);
-//                pos2++;
-//                numLinesRun += 2;
-//            } //if values are equal, I choose to do the first array and continue through loop
-//            else if (bookToAdd == 3) {
-//                arrayToReturn->insertAt(a1->getValueAt(pos1),i);
-//                pos1++;
-//                numLinesRun += 2;
-//            }
-//            //if one array is out of bounds, finish with values of other array
-//        }else if(pos2 < size2 && pos1 >= size1){
-//            arrayToReturn->insertAt(a2->getValueAt(pos2),i);
-//            pos2++;
-//            numLinesRun += 2;
-//        }else if(pos1 < size1 && pos2 >= size2){
-//            arrayToReturn->insertAt(a1->getValueAt(pos1),i);
-//            pos1++;
-//            numLinesRun += 2;
-//        }else{
-//            return arrayToReturn;
-//        }
-//    }
-//    return arrayToReturn;
-//}
-//
-//List<Book*>* mergeSort(List<Book*>* arrayToSort, int size, int& numLinesRun){
-//    numLinesRun += 5;
-//
-//    //checks for empty array
-//    if(size < 1){
-//        return nullptr;
-//    }
-//        //if size == 1, then send back a copy of array
-//    else if(size == 1){
-//        List<Book*>* arrayCopy = copyArray(arrayToSort,size,numLinesRun);
-//        numLinesRun += 1;
-//        return arrayCopy;
-//    }
-//    else{
-//        std::cout << "bark" << std::endl;
-//        int midIndex = size / 2;
-//        List<Book*>* lowerArray = mergeSort(arrayToSort,size/2,numLinesRun);
-//        List<Book*>* upperArray;
-//        List<Book*>* mergedArray;
-//        numLinesRun += 5;
-//        //has to do it one way for even arrays
-//        if(size % 2 == 0){
-//            //breaks apart and merges in order smaller arrays
-//            upperArray = mergeSort(arrayToSort + midIndex, size/2, numLinesRun);
-//            mergedArray = merge(lowerArray,size/2,upperArray,size/2,numLinesRun);
-//            numLinesRun += 2;
-//        }//other way for odd arrays
-//        else {
-//            upperArray = mergeSort(arrayToSort + midIndex, size / 2 + 1, numLinesRun);
-//            mergedArray = merge(lowerArray,size/2,upperArray,size/2+1,numLinesRun);
-//            numLinesRun += 2;
-//        }
-//        //cleanup
-//        delete lowerArray;
-//        lowerArray = nullptr;
-//        delete upperArray;
-//        upperArray = nullptr;
-//        numLinesRun += 4;
-//        return mergedArray;
-//    }
-//}
-//
-///**
-// * Sorts the allBooks and shelfBooks lists alphabetically
-// * @post allBooks and shelfBooks are sorted alphabetically by title
-// */
 
+Book** copyArray(Book** arrayToCopy, const int size, int& numLinesRun){
+    Book* *newArrayCopy = new Book*[size];
+    numLinesRun += 5;
+    for(int i = 0; i < size; i++){
+        numLinesRun += 1;
+        newArrayCopy[i] = arrayToCopy[i];
+    }
+    return newArrayCopy;
+}
+
+Book** merge(Book**a1, int size1, Book** a2, int size2, int& numLinesRun){
+    //checks for two arrays of size 0
+    numLinesRun += 6;
+    if(size1+size2 < 1){
+        return nullptr;
+    }
+    //create a new array to hold the merge values
+    Book** arrayToReturn = new Book*[size1+size2];
+    int pos1 = 0;
+    int pos2 = 0;
+    numLinesRun += 4;
+    for (int i = 0; i < size1 + size2; i++) {
+        numLinesRun += 4;
+        //checks both are within the bounds of respective array
+        if(pos2 < size2 && pos1 < size1) {
+            //moves along the index of the array with lesser value
+            if(compareBookTitles(a1[pos1],a2[pos2]) == 2) {
+                arrayToReturn[i] = a1[pos1];
+                pos1++;
+                numLinesRun+= 2;
+            } else if(compareBookTitles(a1[pos1],a2[pos2]) == 1) {
+                arrayToReturn[i] = a2[pos2];
+                pos2++;
+                numLinesRun += 2;
+            } //if values are equal, I choose to do the first array and continue through loop
+            else if (compareBookTitles(a1[pos1],a2[pos2]) == 3) {
+                arrayToReturn[i] = a1[pos1];
+                pos1++;
+                numLinesRun += 2;
+            }
+            //if one array is out of bounds, finish with values of other array
+        }else if(pos2 < size2 && pos1 >= size1){
+            arrayToReturn[i] = a2[pos2];
+            pos2++;
+            numLinesRun += 2;
+        }else if(pos1 < size1 && pos2 >= size2){
+            arrayToReturn[i] = a1[pos1];
+            pos1++;
+            numLinesRun += 2;
+        }else{
+            return arrayToReturn;
+        }
+    }
+    return arrayToReturn;
+}
+
+Book** mergeSort(Book** arrayToSort, int size, int& numLinesRun) {
+    numLinesRun += 5;
+    //checks for empty array
+    if (size < 1) {
+        return nullptr;
+    }
+        //if size == 1, then send back a copy of array
+    else if (size == 1) {
+        Book **arrayCopy = copyArray(arrayToSort, size, numLinesRun);
+        numLinesRun += 1;
+        return arrayCopy;
+    } else {
+        int midIndex = size / 2;
+        Book* *lowerArray = mergeSort(arrayToSort, size / 2, numLinesRun);
+        Book* *upperArray;
+        Book* *mergedArray;
+        numLinesRun += 5;
+        //has to do it one way for even arrays
+        if (size % 2 == 0) {
+            //breaks apart and merges in order smaller arrays
+            upperArray = mergeSort(arrayToSort + midIndex, size / 2, numLinesRun);
+            mergedArray = merge(lowerArray, size / 2, upperArray, size / 2, numLinesRun);
+            numLinesRun += 2;
+        }//other way for odd arrays
+        else {
+            upperArray = mergeSort(arrayToSort + midIndex, size / 2 + 1, numLinesRun);
+            mergedArray = merge(lowerArray, size / 2, upperArray, size / 2 + 1, numLinesRun);
+            numLinesRun += 2;
+        }
+        //cleanup
+        delete[] lowerArray;
+        lowerArray = nullptr;
+        delete[] upperArray;
+        upperArray = nullptr;
+        numLinesRun += 4;
+        return mergedArray;
+    }
+}
 
 
 //Uses Insertion Sort
@@ -280,10 +272,23 @@ void sort(List<Book*>* arrayToSort, int size, int& numLinesRun){
 
     }
 }
-
+/**
+ * Sorts the allBooks and shelfBooks lists alphabetically
+ * @post allBooks and shelfBooks are sorted alphabetically by title
+ */
 void Library::sortBookList(){
     int numLines = 0;
-    sort(allBooks,allBooks->itemCount(),numLines);
+    //sort(allBooks,allBooks->itemCount(),numLines);
+    Book** allBooksTempArray = new Book*[allBooks->itemCount()];
+    for(int i = 0; i < allBooks->itemCount(); i++) {
+        allBooksTempArray[i] = allBooks->getValueAt(i);
+    }
+    Book** allBooksArray = mergeSort(allBooksTempArray,allBooks->itemCount(),numLines);
+    for(int i = 0; i < allBooks->itemCount(); i++){
+        allBooks->replaceValueAt(i,allBooksArray[i]);
+    }
+    delete[] allBooksTempArray;
+    delete[] allBooksArray;
 }
 
 /**
@@ -373,7 +378,7 @@ void Library::saveDeliveryRequestToFile(){
         requestBooksOUT << requestBooks->getValueAt(i)->getTitle() << '\n';
         requestBooksOUT << requestBooks->getValueAt(i)->getAuthor() << '\n';
         requestBooksOUT << requestBooks->getValueAt(i)->getIsbn() << '\n';
-        requestBooksOUT << requestBooks->getValueAt(i)->getHaveTotal() << '\n';
+        requestBooksOUT << requestBooks->getValueAt(i)->waitListLength() << '\n';
     }
     requestBooksOUT.close();
 }
@@ -410,7 +415,7 @@ Library::Library(const Library& libraryToCopy){
     members = new ArrayList<Member*>;
     for(int i = 0; i < libraryToCopy.members->itemCount(); i++){
         Member* copyMember = new Member(*libraryToCopy.members->getValueAt(i));
-        addMember(*copyMember);
+        addMember(copyMember);
     }
 
     runUIBool = true;
@@ -426,7 +431,7 @@ Library::Library(const Library& libraryToCopy){
 Library& Library::operator=(const Library& libraryToCopy){
     if(this!=&libraryToCopy){
         shelfBooks->clearList();
-        requestBooks->clearData();
+        requestBooks->clearList();
         allBooks->clearData();
         members->clearData();
 
@@ -445,7 +450,7 @@ Library& Library::operator=(const Library& libraryToCopy){
 
         for(int i = 0; i < libraryToCopy.members->itemCount(); i++){
             Member* copyMember = new Member(*libraryToCopy.members->getValueAt(i));
-            addMember(*copyMember);
+            addMember(copyMember);
         }
     }
     return *this;
@@ -455,7 +460,7 @@ Library& Library::operator=(const Library& libraryToCopy){
  * Destructor
  */
 Library::~Library(){
-    requestBooks->clearData();
+    requestBooks->clearList();
     delete requestBooks;
     shelfBooks->clearList();
     delete shelfBooks;
@@ -475,8 +480,8 @@ void Library::addMember(){
     members->insertAtEnd(newMember);
 }
 
-void Library::addMember(Member& memberToAdd){
-    members->insertAtEnd(&memberToAdd);
+void Library::addMember(Member* memberToAdd){
+    members->insertAtEnd(memberToAdd);
 }
 
 /**
@@ -514,7 +519,6 @@ void Library::addBook(std::string titleToAdd, int numToAdd){
         int isbn = checkIfNum(isbnStr);
         Book* newBook = new Book(titleToAdd,author,isbn,numToAdd);
         allBooks->insertAtEnd(newBook);
-        sortBookList();
     }
 }
 
@@ -528,7 +532,6 @@ void Library::addBook(Book& bookToAdd){
     }
     if(!inList) {
         allBooks->insertAtEnd(&bookToAdd);
-        sortBookList();
     }
 }
 
@@ -557,7 +560,7 @@ void Library::returnBook(std::string titleToReturn){
  * Puts a request in for book to be delivered
  * @param desiredBook
  */
-void Library::requestLoan(std::string desiredBookTitle){
+void Library::requestLoan(std::string& desiredBookTitle, std::string& memberName){
     bool inList = false;
     for(int i = 0; i < allBooks->itemCount(); i++){
         if(allBooks->getValueAt(i)->getTitle() == desiredBookTitle){
@@ -566,10 +569,23 @@ void Library::requestLoan(std::string desiredBookTitle){
                 std::cout << "We have this book in our library." << std::endl;
             }
             else{
-                Book* requestBook = new Book(*allBooks->getValueAt(i));
-                requestBook->modHaveTotal(-requestBook->getHaveTotal()+1); //makes it so it only does one
-                requestBooks->insertAtEnd(requestBook);
-                //add to waitlist
+                bool isMember = false;
+                Member* requestMember;
+                Book* requestBook = allBooks->getValueAt(i);
+                for(int i = 0; i < members->itemCount(); i++){
+                    if(memberName == members->getValueAt(i)->getName()){
+                        requestMember = members->getValueAt(i);
+                        isMember = true;
+                    }
+                }
+                if(!isMember){
+                    std::cout << "You don't appear to be in our database. Please sign up for a membership." << std::endl;
+                }
+                 //makes it so it only does one
+                else {
+                    requestBook->addWaiter(requestMember);//add to waitlist
+                    requestBooks->insertAtEnd(requestBook);
+                }
                 std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
             }
         }
@@ -582,34 +598,82 @@ void Library::requestLoan(std::string desiredBookTitle){
         std::cout << "What is the ISBN number of this book?" << std::endl;
         std::getline(std::cin,isbnStr);
         int isbn = checkIfNum(isbnStr);
-        Book* requestBook = new Book(desiredBookTitle,author,isbn,1);
-        requestBooks->insertAtEnd(requestBook);
+        Book* requestBook = new Book(desiredBookTitle,author,isbn,0);
+        bool isMember = false;
+        Member* requestMember;
+        for(int i = 0; i < members->itemCount(); i++){
+            if(memberName == members->getValueAt(i)->getName()){
+                requestMember = members->getValueAt(i);
+                isMember = true;
+            }
+        }
+        if(!isMember){
+            std::cout << "You don't appear to be in our database. Please sign up for a membership." << std::endl;
+            delete requestBook;
+        }
+        else{
+            requestBook->addWaiter(requestMember); //add to waitlist
+            requestBooks->insertAtEnd(requestBook);
+            allBooks->insertAtEnd(requestBook);
+            std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
+        }
     }
 }
 /**
  * Puts a request in for book to be delivered
+ * Used only for testing
  * @param desiredBook
  */
-void Library::requestLoan(Book& bookToRequest){
+void Library::requestLoan(Book* bookToRequest, Member* memberRequesting){
     bool inList = false;
     for(int i = 0; i < allBooks->itemCount(); i++){
-        if(allBooks->getValueAt(i)->getTitle() == bookToRequest.getTitle()){
+        if(allBooks->getValueAt(i)->getTitle() == bookToRequest->getTitle()){
             inList = true;
             if(allBooks->getValueAt(i)->getHaveShelf() > 0) {
                 std::cout << "We have this book in our library." << std::endl;
             }
             else{
-                Book* requestBook = new Book(*allBooks->getValueAt(i));
-                requestBook->modHaveTotal(-requestBook->getHaveTotal()+1); //makes it so it only does one
-                requestBooks->insertAtEnd(requestBook);
-                //add to waitlist
+                bool isMember = false;
+                Member* requestMember;
+                Book* requestBook = allBooks->getValueAt(i);
+                for(int i = 0; i < members->itemCount(); i++){
+                    if(memberRequesting->getName() == members->getValueAt(i)->getName()){
+                        requestMember = members->getValueAt(i);
+                        isMember = true;
+                    }
+                }
+                if(!isMember){
+                    std::cout << "You don't appear to be in our database. Please sign up for a membership." << std::endl;
+                }
+                    //makes it so it only does one
+                else {
+                    requestBook->addWaiter(requestMember);//add to waitlist
+                    requestBooks->insertAtEnd(requestBook);
+                }
                 std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
             }
         }
     }
     if(!inList){
-        Book* requestBook = new Book(bookToRequest);
-        requestBooks->insertAtEnd(requestBook);
+        Book* requestBook = new Book(*bookToRequest);
+        bool isMember = false;
+        Member* requestMember = memberRequesting;
+        for(int i = 0; i < members->itemCount(); i++){
+            if(memberRequesting->getName() == members->getValueAt(i)->getName()){
+                requestMember = members->getValueAt(i);
+                isMember = true;
+            }
+        }
+        if(!isMember){
+            std::cout << "You don't appear to be in our database. Please sign up for a membership." << std::endl;
+            delete requestBook;
+        }
+        else{
+            //requestBook->addWaiter(requestMember); //add to waitlist
+            requestBooks->insertAtEnd(requestBook);
+            allBooks->insertAtEnd(requestBook);
+            std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
+        }
     }
 }
 
@@ -714,6 +778,7 @@ void Library::bookDelivery(const std::string& deliveryFileName){
                     if (allBooks->getValueAt(i)->getTitle() == newBook->getTitle()) {
                         inList = true;
                         allBooks->getValueAt(i)->modHaveTotal(newBook->getHaveTotal());
+                        delete newBook;
                     }
                 }
                 if (!inList) {
@@ -873,9 +938,12 @@ bool Library::runUI(){
             bool yes = checkYesOrNo(userResponse);
             if(yes){
                 std::string bookTitle;
+                std::string memberName;
                 std::cout << "Please enter the title of the book you desire: ";
                 std::getline(std::cin,bookTitle);
-                requestLoan(bookTitle);
+                std::cout << "Please enter your name is it is registered in the database: ";
+                std::getline(std::cin,memberName);
+                requestLoan(bookTitle,memberName);
                 std::cout << "Returning to the main menu" << std::endl;
             }
             else{
