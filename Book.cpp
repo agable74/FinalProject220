@@ -32,6 +32,7 @@ Book::Book(const Book &bookToCopy) {
     else {
         waitList = nullptr;
     }
+    numWaiters = bookToCopy.numWaiters;
 }
 
 Book& Book::operator=(const Book &bookToCopy) {
@@ -46,11 +47,14 @@ Book& Book::operator=(const Book &bookToCopy) {
             waitList = new MemberLinkedQueue(*bookToCopy.waitList);
         } else
             waitList = nullptr;
+        numWaiters = bookToCopy.numWaiters;
     }
     return *this;
 }
 
-Book::~Book() {}
+Book::~Book() {
+    delete waitList;
+}
 
 std::string Book::getTitle() {
     return title;
@@ -145,13 +149,15 @@ std::string Book::waitListToString() {
         result += "none\n";
     else {
         MemberLinkedQueue* tempWaitList = waitList;
-        //MemberLinkedQueue* tempWaitList = new MemberLinkedQueue(*waitList);
-        waitList;
+        int test = numWaiters;
         while (numWaiters > 0) {
             Member* waiter = tempWaitList->dequeue();
             std::string waiterName = waiter->getName();
             result += waiterName + ", ";
             numWaiters--;
+        }
+        if (!result.empty() && result[result.size() - 2] == ',') {
+            result.erase(result.size() - 2);
         }
     }
     return result;

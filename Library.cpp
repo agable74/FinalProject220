@@ -618,8 +618,8 @@ void Library::requestLoan(std::string& desiredBookTitle, std::string& memberName
                 else {
                     requestBook->addWaiter(requestMember);//add to waitlist
                     requestBooks->insertAtEnd(requestBook);
+                    std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
                 }
-                std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
             }
         }
     }
@@ -673,6 +673,7 @@ void Library::requestLoan(Book* bookToRequest, Member* memberRequesting){
                     if(memberRequesting->getName() == memberList->getValueAt(i)->getName()){
                         requestMember = memberList->getValueAt(i);
                         isMember = true;
+                        std::cout << "member!! \n";
                     }
                 }
                 if(!isMember){
@@ -682,8 +683,8 @@ void Library::requestLoan(Book* bookToRequest, Member* memberRequesting){
                 else {
                     requestBook->addWaiter(requestMember);//add to waitlist
                     requestBooks->insertAtEnd(requestBook);
+                    std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
                 }
-                std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
             }
         }
     }

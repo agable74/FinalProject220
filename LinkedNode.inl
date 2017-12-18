@@ -18,7 +18,7 @@ T LinkedNode<T>::getItem(){
 
 template <class T>
 LinkedNode<T>::~LinkedNode(){
-    delete item;
+    //delete item;  //can't have the queue delete the item b/c it doesn't own the waitList of members
 }
 template <class T>
 LinkedNode<T>* LinkedNode<T>::getNext(){

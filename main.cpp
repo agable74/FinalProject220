@@ -94,12 +94,12 @@ void BookTester() {
     printAssertEquals(0, book5.getHaveShelf());
     printAssertEquals(0, book5.getHaveTotal());
 
-    std::cout << "\nTesting waitListToString [should print 2 passes]\n";
-    printAssertStringEqual("\nMembers waiting on 'Pride and Prejudice':\nnone\n", book6.waitListToString());
+    std::cout << "\nTesting waitListToString [should print 3 passes]\n";
+    printAssertStringEqual("none\n", book6.waitListToString());
     book6.addWaiter(&mem1);
-    printAssertStringEqual("\nMembers waiting on 'Pride and Prejudice':\nJoe Schmoe - JS2341657\n", book6.waitListToString());
+    printAssertStringEqual("Joe Schmoe", book6.waitListToString());
     book6.removeWaiter();
-    printAssertStringEqual("\nMembers waiting on 'Pride and Prejudice':\nnone\n", book6.waitListToString());
+    printAssertStringEqual("none\n", book6.waitListToString());
 }
 
 void runLibrary(){
@@ -108,8 +108,8 @@ void runLibrary(){
 }
 
 void libraryTester(){
-    //BookTester();
-    //MemberTester();
+    BookTester();
+    MemberTester();
     Library theTestLibrary = Library("BooksTester.txt","MembersTester.txt","DeliveryTester.txt");
     Library theTestLibraryCopy = theTestLibrary;
     theTestLibraryCopy.removeBook("Lord of the Flies",7);
@@ -132,8 +132,8 @@ void libraryTester(){
     Book* testBook = new Book("Little Women","Louisa May Alcott",34520,1);
     Member* testMember = new Member("Test McTesty",123456789,"test@test.com","TM1235","Phone call");
     testIOLibrary.addMember(testMember);
-    testIOLibrary.requestLoan(testBook,testMember); //NEED TO FIX ADD WAITER
-//    testIOLibrary.checkOutBook("The Great Gatsby");
+    testIOLibrary.requestLoan(testBook,testMember);
+    testIOLibrary.checkOutBook("The Great Gatsby");
 //    testIOLibrary.quit();
 }
 
@@ -141,34 +141,34 @@ void libraryTester(){
 
 int main() {
     //runLibrary();
-    //libraryTester();
+    libraryTester();
 
 
-    Member* testMember = new Member("Test McTesty",123456789,"test@test.com","TM1235","Phone call");
-    Member* testMember2 = new Member("Ken Pickens", 1052741034, "kp@gmail.com", "KP1234567", "Phone call");
-    MemberLinkedQueue testQ;
-    testQ.enqueue(testMember);
-    testQ.enqueue(testMember2);
-    std::cout << testQ.isEmpty() << std::endl;
-
-    MemberLinkedQueue testQCopy = testQ;
-    testQCopy.dequeue();
-    testQCopy.dequeue();
-    std::cout << testQCopy.isEmpty() << std::endl;
-    std::cout << testQ.isEmpty() << std::endl;
-
-    testQCopy = testQ;
-    std::cout << testQCopy.isEmpty() << std::endl;
-    std::cout << testQ.isEmpty() << std::endl;
-
+//    Member* testMember = new Member("Test McTesty",123456789,"test@test.com","TM1235","Phone call");
+//    Member* testMember2 = new Member("Ken Pickens", 1052741034, "kp@gmail.com", "KP1234567", "Phone call");
+//    MemberLinkedQueue testQ;
+//    testQ.enqueue(testMember);
+//    testQ.enqueue(testMember2);
+//    std::cout << testQ.isEmpty() << std::endl;
+//
+//    MemberLinkedQueue testQCopy = testQ;
+//    testQCopy.dequeue();
+//    testQCopy.dequeue();
+//    std::cout << testQCopy.isEmpty() << std::endl;
+//    std::cout << testQ.isEmpty() << std::endl;
+//
+//    testQCopy = testQ;
+//    std::cout << testQCopy.isEmpty() << std::endl;
+//    std::cout << testQ.isEmpty() << std::endl;
+//
 //    Book* testBook = new Book("Little Women","Louisa May Alcott",34520,1);
 //    testBook->checkBookOut();
 //    testBook->addWaiter(testMember);
+//    testBook->addWaiter(testMember2);
 //    std::string waiter = testBook->waitListToString();
 //
 //    std::cout << waiter << std::endl;
 
-    //need to add the waitlist part in requesting books
     //need to add member functionality to withdrawing and returning books
     return 0;
 }
