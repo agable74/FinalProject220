@@ -20,6 +20,7 @@ private:
     int haveShelf;
     int wantValue;
     MemberLinkedQueue* waitList;
+    int numWaiters;
 
 
 public:
@@ -99,11 +100,9 @@ public:
 
     void addWaiter(Member* waiter);
 
-    const int waitListLength();
+    int waitListLength();
 
     Member* removeWaiter();
-
-    std::string removeWaiter(Member* toRemove);
 
     std::string waitListToString();
 };
