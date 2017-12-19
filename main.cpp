@@ -146,7 +146,7 @@ void libraryTester(){
     testIOLibrary.requestLoan(testBook,testMember);
     testIOLibrary.requestLoan(testBook,testMember2);
     testIOLibrary.checkOutBook("The Great Gatsby");
-//    testIOLibrary.quit();
+    testIOLibrary.quit();
 }
 
 
