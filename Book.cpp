@@ -15,8 +15,11 @@ Book::Book(std::string titleIn, std::string authorIn, int isbnIn, int haveTotalI
     else
         haveShelf = haveShelfIn;
     wantValue = 0;
-    waitList = new MemberLinkedQueue;
     numWaiters = 0;
+    if(numWaiters!=0) {
+        waitList = new MemberLinkedQueue;
+    }
+    else{waitList = nullptr;}
 }
 
 Book::Book(const Book &bookToCopy) {
