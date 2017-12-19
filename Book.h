@@ -1,5 +1,6 @@
 //
 // Created by Ben on 11/28/2017.
+// Book holds onto information about the book and the waitlist of members for that book
 //
 
 #ifndef FINALPROJECT_BOOK_H

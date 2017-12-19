@@ -145,16 +145,18 @@ int Book::waitListLength() {
 
 std::string Book::waitListToString() {
     std::string result = "";
-    if (waitList->isEmpty())
+    int tempNumWaiters = numWaiters;
+    if (waitList->isEmpty()){
         result += "none\n";
+    }
     else {
-        MemberLinkedQueue* tempWaitList = waitList;
-        int test = numWaiters;
-        while (numWaiters > 0) {
+        MemberLinkedQueue* tempWaitList = new MemberLinkedQueue(*waitList);
+        while (tempNumWaiters > 0) {
             Member* waiter = tempWaitList->dequeue();
             std::string waiterName = waiter->getName();
             result += waiterName + ", ";
-            numWaiters--;
+            delete waiter;
+            tempNumWaiters--;
         }
         if (!result.empty() && result[result.size() - 2] == ',') {
             result.erase(result.size() - 2);

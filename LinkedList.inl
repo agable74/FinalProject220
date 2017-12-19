@@ -227,6 +227,7 @@ T LinkedList<T>::removeValueAt(int index){
     template <class T>
     void replaceValueAt(int index, T newItem){
         //need to implement
+        std::cout << "Error, not yet implemented for LinkedLists. Use ArrayLists instead." << std::endl;
     }
 
 
@@ -249,23 +250,24 @@ int LinkedList<T>::itemCount(){
 }
 
 /**
- * removes all valid items from the list
+ * removes all valid items from the list (deep)
  * @post the list is completely clear of valid items
  */
 template <class T>
-void LinkedList<T>::clearList(){
+void LinkedList<T>::clearData(){
     while(front != nullptr){
         removeValueAt(0);
     }
 }
 
 /**
- * removes all valid items from the list (deep)
- * @post the list os completely clear of valid items
+ * removes all valid items from the list (shallow)
+ * @post the list is completely clear of valid items
  */
 template <class T>
-void LinkedList<T>::clearData(){
-    //needs implementing
+void LinkedList<T>::clearList(){
+    //needs implementing - doesn't really make sense for LinkedLists though.
+    std::cout << "Error, not yet implemented for LinkedLists. Use ArrayLists instead." << std::endl;
 }
 
 /**

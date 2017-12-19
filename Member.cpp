@@ -102,14 +102,14 @@ std::string addEmail() {
     std::cin >> yesNo;
     if (yesNo[0] != 'y' && yesNo[0] != 'n') {
         std::cout << "Try again.\n";
-        addEmail();
+        emailIn = addEmail();
     }
     else {
         if (yesNo[0] == 'y') {
             std::cout << "Email confirmed.\n\n";
         } else {
             std::cout << "Okay, re-enter member email.\n";
-            addEmail();
+            emailIn = addEmail();
         }
     }
     return emailIn;

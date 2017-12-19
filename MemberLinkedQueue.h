@@ -1,12 +1,13 @@
 //
 // Created by Alex on 12/16/2017.
+// Holds onto a queue of pointers to members, only for use in waitlist in Book.h
 //
 
 #ifndef FINALPROJECT_LINKEDQUEUE_H
 #define FINALPROJECT_LINKEDQUEUE_H
 #include <string>
 #include <stdexcept>
-#include "LinkedNode.h"
+#include "MemberLinkedNode.h"
 #include "Member.h"
 
 /**
@@ -15,8 +16,8 @@
  */
 class MemberLinkedQueue {
 private:
-    LinkedNode<Member*>* front;
-    LinkedNode<Member*>* end;
+    MemberLinkedNode* front;
+    MemberLinkedNode* end;
 
 public:
 
@@ -28,6 +29,7 @@ public:
 
     //Destructor
     ~MemberLinkedQueue();
+    //doesn't cleanup the items in queue because it doesn't own the memory
 
     //Equals operator
     MemberLinkedQueue& operator=(const MemberLinkedQueue& memberQueueToCopy);

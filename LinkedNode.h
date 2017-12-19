@@ -6,6 +6,7 @@
 #define FINALPROJECT_LINKEDNODE_H
 
 #include <string>
+#include <iostream>
 template <class T>
 class LinkedNode {
 

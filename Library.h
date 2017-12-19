@@ -1,5 +1,6 @@
 //
 // Created by Alex on 11/30/2017.
+// The Library helps the Members and Books communicate, as well as handling all File I/O and user interaction
 //
 
 #ifndef FINALPROJECT_LIBRARY_H

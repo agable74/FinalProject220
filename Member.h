@@ -1,5 +1,6 @@
 //
 // Created by Ben on 12/4/2017.
+// Member holds onto information about the members
 //
 
 #ifndef FINALPROJECT_MEMBER_H

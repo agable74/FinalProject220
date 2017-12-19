@@ -14,7 +14,7 @@ MemberLinkedQueue::MemberLinkedQueue(){
 MemberLinkedQueue::MemberLinkedQueue(const MemberLinkedQueue& queueToCopy){
     front = nullptr;
     end = nullptr;
-    LinkedNode<Member*>* newFront = queueToCopy.front;
+    MemberLinkedNode* newFront = queueToCopy.front;
     while(newFront != queueToCopy.end){
         Member* itemToCopy = new Member(*newFront->getItem());
         enqueue(itemToCopy);
@@ -42,7 +42,7 @@ MemberLinkedQueue& MemberLinkedQueue::operator=(const MemberLinkedQueue& memberQ
         }
         front = nullptr;
         end = nullptr;
-        LinkedNode<Member*>* newFront = memberQueueToCopy.front;
+        MemberLinkedNode* newFront = memberQueueToCopy.front;
         while(newFront != memberQueueToCopy.end){
             Member* itemToCopy = new Member(*newFront->getItem());
             enqueue(itemToCopy);
@@ -58,7 +58,7 @@ MemberLinkedQueue& MemberLinkedQueue::operator=(const MemberLinkedQueue& memberQ
 
 //adds an item to the end of the queue
 void MemberLinkedQueue::enqueue(Member* item){
-    LinkedNode<Member*>* newNode = new LinkedNode<Member*>(item);
+    MemberLinkedNode* newNode = new MemberLinkedNode(item);
     //if front is nullptr, end should be nullptr too
     if (front == nullptr){
         front = newNode;
@@ -86,7 +86,7 @@ Member* MemberLinkedQueue::dequeue(){
         return queueItem;
     }
     // the queue has many items
-    LinkedNode<Member*>* tempFront = front;
+    MemberLinkedNode* tempFront = front;
     Member* queueItem = front->getItem();
     front = front->getNext();
     delete tempFront;

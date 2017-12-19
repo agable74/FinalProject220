@@ -110,9 +110,8 @@ bool checkYesOrNo(std::string& stringToCheck){
  * @param libraryListToCopy
  */
 Library::Library(const Library& libraryToCopy){
-    libMembersIN;
+    libMembersIN.open(memberListTxt);
     libMembersOUT;
-    //pointer to list of books owned by library
 
     allBooks = new ArrayList<Book*>;
     for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
@@ -120,13 +119,11 @@ Library::Library(const Library& libraryToCopy){
         allBooks->insertAtEnd(copyBook);
     }
 
-    //fstream parts
-    allBooksIN;
+    allBooksIN.open(bookListTxt);
     allBooksOUT;
-    //pointer to list of books in library
+
     shelfBooks = new ArrayList<Book*>;
     generateShelfBookList();
-    //list of people waiting for book
 
     requestBooks = new ArrayList<Book*>;
     for(int i = 0; i < libraryToCopy.requestBooks->itemCount(); i++){
@@ -140,9 +137,12 @@ Library::Library(const Library& libraryToCopy){
         addMember(copyMember);
     }
 
-    runUIBool = true;
+    runUIBool = libraryToCopy.runUIBool;
+    runMasterBool = libraryToCopy.runMasterBool;
+
     bookListTxt = libraryToCopy.bookListTxt;
     memberListTxt = libraryToCopy.memberListTxt;
+    deliveryTxt = libraryToCopy.deliveryTxt;
 }
 
 /**
@@ -155,8 +155,6 @@ Library& Library::operator=(const Library& libraryToCopy){
         requestBooks->clearList();
         allBooks->clearData();
         memberList->clearData();
-
-
 
         for(int i = 0; i < libraryToCopy.allBooks->itemCount(); i++){
             Book* copyBook = new Book(*libraryToCopy.allBooks->getValueAt(i));
@@ -174,6 +172,12 @@ Library& Library::operator=(const Library& libraryToCopy){
             Member* copyMember = new Member(*libraryToCopy.memberList->getValueAt(i));
             addMember(copyMember);
         }
+        runUIBool = libraryToCopy.runUIBool;
+        runMasterBool = libraryToCopy.runMasterBool;
+
+        bookListTxt = libraryToCopy.bookListTxt;
+        memberListTxt = libraryToCopy.memberListTxt;
+        deliveryTxt = libraryToCopy.deliveryTxt;
     }
     return *this;
 }
@@ -182,10 +186,12 @@ Library& Library::operator=(const Library& libraryToCopy){
  * Destructor
  */
 Library::~Library(){
+    //clearList sets list to be nullptrs
     requestBooks->clearList();
     delete requestBooks;
     shelfBooks->clearList();
     delete shelfBooks;
+    //clearData deletes the data the list is holding
     allBooks->clearData();
     delete allBooks;
     memberList->clearData();
@@ -204,13 +210,13 @@ void Library::generateAllBookList(){
         std::string numBooksSTR;
         std::string shelfBooksSTR;
         while (allBooksIN) {
-            getline(allBooksIN, title);
+            getline(allBooksIN, title); //brings in each line of the book from txt
             getline(allBooksIN, author);
             getline(allBooksIN, isbnSTR);
             getline(allBooksIN, numBooksSTR);
             getline(allBooksIN, shelfBooksSTR);
             if(allBooksIN) {    //makes sure that it doesn't duplicate the last line, and works on empty text files
-                if (!title.empty() && title[title.size() - 1] == '\r') {
+                if (!title.empty() && title[title.size() - 1] == '\r') {    //chops the \r from the end
                     title.erase(title.size() - 1);
                 }
                 if (!author.empty() && author[author.size() - 1] == '\r') {
@@ -292,7 +298,7 @@ void Library::generateMemberList(){
         }
     }
 }
-//HERE\\
+
 
 /**
  * Copies the array of Book pointers
@@ -616,14 +622,23 @@ void Library::requestLoan(std::string& desiredBookTitle, std::string& memberName
                 }
                  //makes it so it only does one
                 else {
-                    requestBook->addWaiter(requestMember);//add to waitlist
-                    requestBooks->insertAtEnd(requestBook);
+                    bool inRequest = false; //if someone else already requested
+                    for(int i = 0; i < requestBooks->itemCount(); i++){
+                        if(requestBooks->getValueAt(i)->getTitle() == requestBook->getTitle()){
+                            requestBooks->getValueAt(i)->addWaiter(requestMember);
+                            inRequest = true;
+                        }
+                    }
+                    if(!inRequest){ //if Library owns but nobody has requested and there are no copies
+                        requestBook->addWaiter(requestMember);//add to waitlist
+                        requestBooks->insertAtEnd(requestBook);
+                    }
                     std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
                 }
             }
         }
     }
-    if(!inList){
+    if(!inList){    //if not owned by library yet
         std::string author;
         std::cout << "Who is the author of this book?" << std::endl;
         std::getline(std::cin,author);
@@ -663,6 +678,7 @@ void Library::requestLoan(Book* bookToRequest, Member* memberRequesting){
         if(allBooks->getValueAt(i)->getTitle() == bookToRequest->getTitle()){
             inList = true;
             if(allBooks->getValueAt(i)->getHaveShelf() > 0) {
+                std::cout << allBooks->getValueAt(i)->getHaveShelf() << std::endl;
                 std::cout << "We have this book in our library." << std::endl;
             }
             else{
@@ -673,7 +689,6 @@ void Library::requestLoan(Book* bookToRequest, Member* memberRequesting){
                     if(memberRequesting->getName() == memberList->getValueAt(i)->getName()){
                         requestMember = memberList->getValueAt(i);
                         isMember = true;
-                        std::cout << "member!! \n";
                     }
                 }
                 if(!isMember){
@@ -681,14 +696,23 @@ void Library::requestLoan(Book* bookToRequest, Member* memberRequesting){
                 }
                     //makes it so it only does one
                 else {
-                    requestBook->addWaiter(requestMember);//add to waitlist
-                    requestBooks->insertAtEnd(requestBook);
+                    bool inRequest = false; //if someone already requested
+                    for(int i = 0; i < requestBooks->itemCount(); i++){
+                        if(requestBooks->getValueAt(i)->getTitle() == requestBook->getTitle()){
+                            requestBooks->getValueAt(i)->addWaiter(requestMember);
+                            inRequest = true;
+                        }
+                    }
+                    if(!inRequest){//if Library owns but nobody has requested and there are no copies
+                        requestBook->addWaiter(requestMember);//add to waitlist
+                        requestBooks->insertAtEnd(requestBook);
+                    }
                     std::cout << "Adding your request. We will contact you when it arrives." << std::endl;
                 }
             }
         }
     }
-    if(!inList){
+    if(!inList){    //if not owned by library yet
         Book* requestBook = new Book(*bookToRequest);
         bool isMember = false;
         Member* requestMember = memberRequesting;
@@ -928,8 +952,17 @@ bool Library::runUI(){
             }
         }
         else if(userInput == "n" || userInput == "N"){
-            std::cout << "You wish to add a new member." << std::endl;
-            addMember();
+            std::cout << "You wish to add a new member. Are you certain?" << std::endl;
+            std::string userResponse;
+            std::getline(std::cin,userResponse);
+            bool yes = checkYesOrNo(userResponse);
+            if(yes) {
+                addMember();
+                std::cout << "Returning to the main menu" << std::endl;
+            }
+            else{
+                std::cout << "Returning to the main menu" << std::endl;
+            }
         }
         else if(userInput == "r" || userInput == "R"){
             std::cout << "You wish to return a book. Are you certain?";
